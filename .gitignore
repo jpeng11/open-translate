@@ -1,0 +1,44 @@
+# --- AI / agent artifacts ---
+.cursor/
+.claude/
+.codex/
+.aider*
+CLAUDE.md
+AGENTS.md
+GEMINI.md
+.specstory/
+
+# --- Node ---
+node_modules/
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.npm/
+
+# --- WXT / Vite build output ---
+.output/
+.wxt/
+dist/
+stats.html
+stats-*.json
+web-ext.config.ts
+
+# --- Secrets (never commit keys) ---
+.env
+.env.*
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
