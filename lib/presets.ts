@@ -8,6 +8,8 @@ export interface ProviderPreset {
   model: string;
   authMode: AuthMode;
   note?: string;
+  /** Known-good model names, offered as suggestions in the options UI. */
+  modelSuggestions?: string[];
 }
 
 /**
@@ -28,6 +30,8 @@ export const PRESETS: ProviderPreset[] = [
     baseUrl: GROK_PROXY_BASE_URL,
     model: GROK_DEFAULT_MODEL,
     authMode: 'grokOauth',
+    // Verified live against the CLI proxy; grok-4-fast is ~2x faster than grok-4.6.
+    modelSuggestions: ['grok-4-fast', 'grok-4.6', 'grok-code-fast-1'],
     note:
       'Uses your SuperGrok or X Premium+ subscription via OAuth — no API key needed. ' +
       'If translation still fails with a permission error after signing in, switch to ' +
@@ -39,6 +43,7 @@ export const PRESETS: ProviderPreset[] = [
     baseUrl: 'https://api.x.ai/v1',
     model: GROK_DEFAULT_MODEL,
     authMode: 'apiKey',
+    modelSuggestions: ['grok-4-fast', 'grok-4.6', 'grok-code-fast-1'],
     note:
       'Pay-per-token key from console.x.ai. Not gated by subscription tier — use this ' +
       'when Grok OAuth sign-in succeeds but translation returns a permission error.',

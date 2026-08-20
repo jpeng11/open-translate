@@ -209,9 +209,17 @@ export default function App() {
             className={inputClass}
             type="text"
             placeholder="gpt-4o-mini"
+            list="ot-model-suggestions"
             value={settings.model}
             onChange={(e) => update({ model: e.target.value })}
           />
+          {preset?.modelSuggestions && (
+            <datalist id="ot-model-suggestions">
+              {preset.modelSuggestions.map((m) => (
+                <option key={m} value={m} />
+              ))}
+            </datalist>
+          )}
         </label>
 
         <div className="mt-4 flex items-center gap-3">
