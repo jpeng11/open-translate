@@ -1,6 +1,10 @@
 import type { Settings } from './settings';
 import { languageLabel } from './settings';
-import { ensureFreshAccessToken } from './grokAuth';
+import {
+  ensureFreshAccessToken,
+  GROK_CLIENT_VERSION,
+  GROK_CLIENT_IDENTIFIER,
+} from './grokAuth';
 
 interface ChatMessage {
   role: 'system' | 'user';
@@ -16,6 +20,10 @@ async function buildHeaders(settings: Settings): Promise<Record<string, string>>
     // routes by the model-override header rather than the JSON body.
     headers['X-XAI-Token-Auth'] = 'xai-grok-cli';
     headers['x-grok-model-override'] = settings.model;
+    // Without a client version the proxy rejects requests outright
+    // (verified live: adding this header is what makes inference work).
+    headers['x-grok-client-version'] = GROK_CLIENT_VERSION;
+    headers['x-grok-client-identifier'] = GROK_CLIENT_IDENTIFIER;
   } else if (settings.apiKey) {
     headers.Authorization = `Bearer ${settings.apiKey}`;
   }

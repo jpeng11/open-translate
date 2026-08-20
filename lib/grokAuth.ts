@@ -15,6 +15,13 @@ const SCOPE = 'openid profile email offline_access';
 
 export const GROK_PROXY_BASE_URL = 'https://cli-chat-proxy.grok.com/v1';
 export const GROK_DEFAULT_MODEL = 'grok-4.6';
+/**
+ * The proxy rejects clients without a version header (misleadingly reporting
+ * "does not have Grok Code CLI permission" or "version (none) is outdated").
+ * Pin a known-accepted version; the proxy requires >= 0.1.202.
+ */
+export const GROK_CLIENT_VERSION = '1.0.5';
+export const GROK_CLIENT_IDENTIFIER = 'grok-shell';
 
 export interface GrokTokens {
   accessToken: string;
