@@ -15,8 +15,8 @@ OpenRouter, DeepSeek, Groq, local Ollama, or anything custom.
 ## Install (development)
 
 ```bash
-npm install
-npm run build        # outputs to .output/chrome-mv3
+pnpm install
+pnpm build           # outputs to .output/chrome-mv3
 ```
 
 Then in Chrome/Edge: `chrome://extensions` → enable **Developer mode** →
@@ -25,7 +25,7 @@ Then in Chrome/Edge: `chrome://extensions` → enable **Developer mode** →
 For live-reload development:
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 ## Configure your model
