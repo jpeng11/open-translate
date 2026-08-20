@@ -105,9 +105,12 @@ export default defineBackground(() => {
     });
   });
 
-  browser.runtime.onMessage.addListener((msg: RuntimeMessage) => {
+  // Chrome MV3 ignores Promises returned from onMessage listeners,
+  // so async handlers must call sendResponse and return true.
+  browser.runtime.onMessage.addListener((msg: RuntimeMessage, _sender, sendResponse) => {
     if (msg?.type === 'testConnection') {
-      return testConnection(msg.settings);
+      void testConnection(msg.settings).then(sendResponse);
+      return true;
     }
   });
 });

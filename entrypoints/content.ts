@@ -264,18 +264,17 @@ export default defineContentScript({
 
     // --- message handling ------------------------------------------------------
 
-    browser.runtime.onMessage.addListener((msg: RuntimeMessage) => {
+    // Synchronous sendResponse — Chrome MV3 ignores Promises returned from listeners.
+    browser.runtime.onMessage.addListener((msg: RuntimeMessage, _sender, sendResponse) => {
       if (msg?.type === 'translatePage') {
         void translatePage();
-        return Promise.resolve({ ok: true });
-      }
-      if (msg?.type === 'restorePage') {
+        sendResponse({ ok: true });
+      } else if (msg?.type === 'restorePage') {
         restore();
-        return Promise.resolve({ ok: true });
-      }
-      if (msg?.type === 'getPageState') {
+        sendResponse({ ok: true });
+      } else if (msg?.type === 'getPageState') {
         const state: PageState = { translated, translating, blocksTranslated };
-        return Promise.resolve(state);
+        sendResponse(state);
       }
     });
   },
