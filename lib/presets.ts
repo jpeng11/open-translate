@@ -30,8 +30,10 @@ export const PRESETS: ProviderPreset[] = [
     authMode: 'grokOauth',
     note:
       'Uses your SuperGrok or X Premium+ subscription via OAuth — no API key needed. ' +
-      'xAI gates this endpoint by subscription; if translation returns 403 after ' +
-      'signing in, use an xAI API key (console.x.ai) with the Custom preset instead.',
+      'Note: xAI gates this endpoint by account entitlement; if translation fails with ' +
+      '403 or "does not have Grok Code CLI permission" after signing in, your tier is ' +
+      'not allowlisted — use an xAI API key (console.x.ai, base URL https://api.x.ai/v1) ' +
+      'with the Custom preset instead.',
   },
   {
     id: 'openrouter',
