@@ -20,7 +20,9 @@ Original branding, MIT license, no proprietary code copied.
 
 ## Current focus
 
-**Phase 2 — Bilingual webpage MVP** (Phases 0–1 in this working session)
+**Phase 3 — Quick translate tools** (Phases 0–2 shipped; MVP needs manual
+verification with a real API key: load `.output/chrome-mv3` unpacked,
+configure a provider, translate a long article, check Restore)
 
 ## Phase 0 — Scaffold and tracker
 
@@ -45,17 +47,17 @@ Original branding, MIT license, no proprietary code copied.
 
 ## Phase 2 — Bilingual webpage (MVP)
 
-- [ ] Leaf-block detection (p, h1–h6, li, blockquote, td, …; skip nav/code/pre/script)
-- [ ] Batch ~20–40 strings per request via background worker
-- [ ] Inline markup: MVP translates block plain text (original stays visible in
+- [x] Leaf-block detection (p, h1–h6, li, blockquote, td, …; skip nav/code/pre/script)
+- [x] Batch ~20–40 strings per request via background worker (≤30 items / ≤4k chars)
+- [x] Inline markup: MVP translates block plain text (original stays visible in
       bilingual mode); tag preservation deferred to Phase 7
-- [ ] Inject translation under original (bilingual) or hide original
+- [x] Inject translation under original (bilingual) or hide original
       (translation-only); data attributes for restore
-- [ ] Translation cache `(text, targetLang, model)` in `storage.session`
-- [ ] Cost guard: per-page char cap (default 100k) + "translate rest" affordance
-- [ ] MutationObserver for SPA content (debounced, ignores own nodes)
-- [ ] Per-batch error indication
-- [ ] Site exclude list
+- [x] Translation cache `(text, targetLang, model)` in `storage.session`
+- [x] Cost guard: per-page char cap (default 100k) + "Translate rest" button
+- [x] MutationObserver for SPA content (debounced, ignores own nodes)
+- [x] Per-batch error indication (inline error chip with message tooltip)
+- [x] Site exclude list (popup toggle + options textarea)
 
 **MVP definition of done:** On a long English article in Chrome, configure an
 OpenAI-compatible key, click Translate, see stable bilingual paragraphs;
