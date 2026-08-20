@@ -9,6 +9,7 @@ Guidance for AI coding agents working on Open Translate (see [agents.md](https:/
 - **Build (Chrome MV3):** `pnpm build` → `.output/chrome-mv3/`
 - **Build (Firefox):** `pnpm build:firefox`
 - **Unit tests:** `pnpm test` (Vitest; tests live in `tests/unit/`)
+- **E2E test:** `pnpm test:e2e` (Playwright + built extension; run `pnpm build` first)
 - **Dev with live reload:** `pnpm dev`
 - **Store zip:** `pnpm zip`
 

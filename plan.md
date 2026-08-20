@@ -21,8 +21,8 @@ manager: **pnpm**.
 
 ## Current focus
 
-**Testing & final audit** (Phases 0–7 shipped; Grok OAuth verified live
-end-to-end. Remaining: Playwright E2E smoke test, manual pass, final audit)
+**Maintenance** — all planned phases (0–7) and the test suite are shipped;
+`v0.1.0` tagged. Remaining ideas live as deferred/stretch checkboxes below.
 
 ## Phase 0 — Scaffold and tracker
 
@@ -108,3 +108,16 @@ Restore works; keys never logged.
       original formatting visible, so the payoff doesn't justify the protocol risk yet
 - [x] Per-site auto-translate rules (hostname + subdomains; skips unconfigured/excluded)
 - [x] Privacy policy (PRIVACY.md), Ollama/CORS docs, README feature list refresh
+
+## Testing & release
+
+- [x] Unit suite: Vitest + `wxt/testing` fake browser, 78 tests across provider
+      (batch protocol, auth headers), cache, settings, presets, Grok OAuth,
+      content DOM logic, documents (SRT/ASS/TXT/HTML export, chunking),
+      subtitles, images, glossary (`pnpm test`)
+- [x] E2E smoke: Playwright loads the built extension into Chromium, drives a
+      real translate + restore against a mock OpenAI server (`pnpm test:e2e`,
+      requires `pnpm build` first)
+- [x] Grok OAuth verified live end-to-end (device flow, scopes, proxy headers)
+- [x] Both targets build clean; store zips generate (`pnpm zip`, `pnpm zip:firefox`)
+- [x] Tagged `v0.1.0`
