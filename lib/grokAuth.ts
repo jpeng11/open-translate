@@ -11,7 +11,14 @@ const DEVICE_CODE_URL = `${AUTH_BASE}/oauth2/device/code`;
 const TOKEN_URL = `${AUTH_BASE}/oauth2/token`;
 /** Public client id used by the official Grok CLI (no secret; device + PKCE flows only). */
 const CLIENT_ID = 'b1a00492-073a-47ea-816f-4c329264a828';
-const SCOPE = 'openid profile email offline_access';
+/**
+ * `grok-cli:access` is what grants inference through the CLI proxy — without it
+ * the proxy rejects with "User does not have Grok Code CLI permission".
+ * The remaining scopes match what the official Grok CLI requests.
+ */
+const SCOPE =
+  'openid profile email offline_access grok-cli:access api:access ' +
+  'conversations:read conversations:write workspaces:read workspaces:write';
 
 export const GROK_PROXY_BASE_URL = 'https://cli-chat-proxy.grok.com/v1';
 export const GROK_DEFAULT_MODEL = 'grok-4.6';
