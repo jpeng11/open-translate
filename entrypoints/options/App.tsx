@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { browser } from 'wxt/browser';
 import { getSettings, saveSettings, LANGUAGES, DEFAULT_SETTINGS } from '@/lib/settings';
 import type { Settings } from '@/lib/settings';
 import { PRESETS } from '@/lib/presets';
+import { startDeviceFlow, pollForTokens } from '@/lib/grokAuth';
+import type { DeviceCode } from '@/lib/grokAuth';
 
 const inputClass =
   'mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm ' +
@@ -16,6 +18,9 @@ export default function App() {
   const [saved, setSaved] = useState(false);
   const [testing, setTesting] = useState(false);
   const [testResult, setTestResult] = useState<{ ok: boolean; message: string } | null>(null);
+  const [device, setDevice] = useState<DeviceCode | null>(null);
+  const [signInError, setSignInError] = useState('');
+  const signInCancelled = useRef(false);
 
   useEffect(() => {
     void getSettings().then((s) => {
@@ -24,6 +29,9 @@ export default function App() {
       setPresetId(match?.id ?? 'custom');
       setLoaded(true);
     });
+    return () => {
+      signInCancelled.current = true;
+    };
   }, []);
 
   const preset = PRESETS.find((p) => p.id === presetId);
@@ -38,8 +46,36 @@ export default function App() {
     setPresetId(id);
     const p = PRESETS.find((x) => x.id === id);
     if (p && p.id !== 'custom') {
-      update({ baseUrl: p.baseUrl, model: p.model });
+      update({ baseUrl: p.baseUrl, model: p.model, authMode: p.authMode });
+    } else if (p) {
+      update({ authMode: p.authMode });
     }
+  };
+
+  const signInWithGrok = async () => {
+    setSignInError('');
+    signInCancelled.current = false;
+    try {
+      const dc = await startDeviceFlow();
+      setDevice(dc);
+      window.open(dc.verificationUriComplete, '_blank');
+      const tokens = await pollForTokens(dc, () => signInCancelled.current);
+      const next = { ...settings, authMode: 'grokOauth' as const, grokTokens: tokens };
+      setSettings(next);
+      await saveSettings(next);
+      setSaved(true);
+    } catch (err) {
+      setSignInError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setDevice(null);
+    }
+  };
+
+  const signOutGrok = async () => {
+    signInCancelled.current = true;
+    const next = { ...settings, grokTokens: null };
+    setSettings(next);
+    await saveSettings(next);
   };
 
   const save = async () => {
@@ -104,25 +140,68 @@ export default function App() {
           />
         </label>
 
-        <label className="mt-3 block text-xs text-slate-600">
-          API key
-          <div className="mt-1 flex gap-2">
-            <input
-              className={`${inputClass} mt-0 flex-1`}
-              type={showKey ? 'text' : 'password'}
-              placeholder="sk-…"
-              value={settings.apiKey}
-              onChange={(e) => update({ apiKey: e.target.value })}
-            />
-            <button
-              type="button"
-              className="rounded-md border border-slate-300 px-3 text-xs hover:bg-slate-100"
-              onClick={() => setShowKey((v) => !v)}
-            >
-              {showKey ? 'Hide' : 'Show'}
-            </button>
+        {settings.authMode === 'grokOauth' ? (
+          <div className="mt-3">
+            <span className="block text-xs text-slate-600">Account</span>
+            {settings.grokTokens ? (
+              <div className="mt-1 flex items-center gap-3">
+                <span className="text-xs text-emerald-700">✓ Signed in with X / Grok</span>
+                <button
+                  type="button"
+                  className="rounded-md border border-slate-300 px-3 py-1.5 text-xs hover:bg-slate-100"
+                  onClick={() => void signOutGrok()}
+                >
+                  Sign out
+                </button>
+              </div>
+            ) : device ? (
+              <div className="mt-1 rounded-md bg-slate-100 px-3 py-2 text-xs text-slate-700">
+                <p>
+                  Approve the sign-in in the opened tab. If asked for a code, enter{' '}
+                  <span className="font-mono text-sm font-bold">{device.userCode}</span>
+                </p>
+                <a
+                  className="text-blue-600 underline"
+                  href={device.verificationUriComplete}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Open the approval page again
+                </a>
+                <p className="mt-1 animate-pulse">Waiting for approval…</p>
+              </div>
+            ) : (
+              <button
+                type="button"
+                className="mt-1 rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-slate-800"
+                onClick={() => void signInWithGrok()}
+              >
+                Sign in with X (Grok)
+              </button>
+            )}
+            {signInError && <p className="mt-1 text-xs text-red-600">✗ {signInError}</p>}
           </div>
-        </label>
+        ) : (
+          <label className="mt-3 block text-xs text-slate-600">
+            API key
+            <div className="mt-1 flex gap-2">
+              <input
+                className={`${inputClass} mt-0 flex-1`}
+                type={showKey ? 'text' : 'password'}
+                placeholder="sk-…"
+                value={settings.apiKey}
+                onChange={(e) => update({ apiKey: e.target.value })}
+              />
+              <button
+                type="button"
+                className="rounded-md border border-slate-300 px-3 text-xs hover:bg-slate-100"
+                onClick={() => setShowKey((v) => !v)}
+              >
+                {showKey ? 'Hide' : 'Show'}
+              </button>
+            </div>
+          </label>
+        )}
 
         <label className="mt-3 block text-xs text-slate-600">
           Model

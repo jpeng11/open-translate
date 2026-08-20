@@ -71,7 +71,10 @@ export default function App() {
 
   if (!settings) return <div className="w-72 p-4 text-sm">Loading…</div>;
 
-  const configured = settings.apiKey !== '' || settings.baseUrl.includes('localhost');
+  const configured =
+    settings.authMode === 'grokOauth'
+      ? settings.grokTokens !== null
+      : settings.apiKey !== '' || settings.baseUrl.includes('localhost');
   const isExcluded = hostname !== '' && settings.excludedSites.includes(hostname);
   let providerHost = settings.baseUrl;
   try {

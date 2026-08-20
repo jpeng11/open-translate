@@ -1,15 +1,30 @@
 import type { Settings } from './settings';
 import { languageLabel } from './settings';
+import { ensureFreshAccessToken } from './grokAuth';
 
 interface ChatMessage {
   role: 'system' | 'user';
   content: string;
 }
 
+async function buildHeaders(settings: Settings): Promise<Record<string, string>> {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (settings.authMode === 'grokOauth') {
+    const accessToken = await ensureFreshAccessToken(settings);
+    headers.Authorization = `Bearer ${accessToken}`;
+    // The Grok CLI proxy validates session tokens via this header and
+    // routes by the model-override header rather than the JSON body.
+    headers['X-XAI-Token-Auth'] = 'xai-grok-cli';
+    headers['x-grok-model-override'] = settings.model;
+  } else if (settings.apiKey) {
+    headers.Authorization = `Bearer ${settings.apiKey}`;
+  }
+  return headers;
+}
+
 async function chatCompletion(settings: Settings, messages: ChatMessage[]): Promise<string> {
   const url = `${settings.baseUrl.replace(/\/+$/, '')}/chat/completions`;
-  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-  if (settings.apiKey) headers.Authorization = `Bearer ${settings.apiKey}`;
+  const headers = await buildHeaders(settings);
 
   const res = await fetch(url, {
     method: 'POST',

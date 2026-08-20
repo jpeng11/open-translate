@@ -1,10 +1,15 @@
 import { browser } from 'wxt/browser';
+import type { GrokTokens } from './grokAuth';
 
 export type DisplayMode = 'bilingual' | 'translationOnly';
+export type AuthMode = 'apiKey' | 'grokOauth';
 
 export interface Settings {
+  authMode: AuthMode;
   baseUrl: string;
   apiKey: string;
+  /** Present when signed in with X/Grok (authMode 'grokOauth'). */
+  grokTokens: GrokTokens | null;
   model: string;
   targetLang: string;
   neverTranslateLangs: string[];
@@ -14,8 +19,10 @@ export interface Settings {
 }
 
 export const DEFAULT_SETTINGS: Settings = {
+  authMode: 'apiKey',
   baseUrl: 'https://api.openai.com/v1',
   apiKey: '',
+  grokTokens: null,
   model: 'gpt-4o-mini',
   targetLang: '',
   neverTranslateLangs: [],

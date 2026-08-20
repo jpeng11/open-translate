@@ -73,7 +73,11 @@ export default defineBackground(() => {
           let response: TranslateResponse;
           try {
             const settings = await getSettings();
-            if (!settings.apiKey && !settings.baseUrl.includes('localhost')) {
+            if (settings.authMode === 'grokOauth') {
+              if (!settings.grokTokens) {
+                throw new Error('Not signed in with Grok. Open the extension options first.');
+              }
+            } else if (!settings.apiKey && !settings.baseUrl.includes('localhost')) {
               throw new Error('No API key configured. Open the extension options first.');
             }
             const translations = await translateWithCache(req.texts, settings);
