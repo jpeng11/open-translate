@@ -31,6 +31,16 @@ beforeEach(() => {
   vi.restoreAllMocks();
 });
 
+describe('request timeout', () => {
+  it('maps a fetch timeout to a clear error instead of hanging', async () => {
+    vi.spyOn(globalThis, 'fetch').mockRejectedValue(
+      new DOMException('The operation timed out', 'TimeoutError'),
+    );
+    // Both batch attempts and the per-item fallback hit the same timeout.
+    await expect(translateBatch(['x'], settings)).rejects.toThrow(/did not respond within 90s/);
+  });
+});
+
 describe('translateImage — vision-model OCR', () => {
   it('sends the image as an image_url content part', async () => {
     const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(okResponse('翻译结果'));

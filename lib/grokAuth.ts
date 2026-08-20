@@ -21,7 +21,12 @@ const SCOPE =
   'conversations:read conversations:write workspaces:read workspaces:write';
 
 export const GROK_PROXY_BASE_URL = 'https://cli-chat-proxy.grok.com/v1';
-export const GROK_DEFAULT_MODEL = 'grok-4.6';
+/**
+ * grok-4-fast: measured 8.5s vs grok-4.6's 18.7s for a 30-item translation
+ * batch through the proxy, with equal translation quality — reasoning-heavy
+ * models buy nothing for translation.
+ */
+export const GROK_DEFAULT_MODEL = 'grok-4-fast';
 /**
  * The proxy rejects clients without a version header (misleadingly reporting
  * "does not have Grok Code CLI permission" or "version (none) is outdated").
@@ -51,6 +56,8 @@ async function postForm(url: string, params: Record<string, string>): Promise<Re
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams(params).toString(),
+    // A hung auth endpoint must not wedge token refresh (and with it, translation).
+    signal: AbortSignal.timeout(30_000),
   });
 }
 

@@ -30,6 +30,14 @@ Run `pnpm compile` and `pnpm test` before every commit; run `pnpm build` before 
 - `plan.md` — the project tracker; update its checkboxes when you complete roadmap work
 - `tests/unit/` — Vitest unit tests
 
+## Landing site sync
+
+User-facing product changes (README Features, presets, settings, popup/content UX, privacy)
+must be mirrored in the sibling site at `../open-translate-landing` (marketing homepage +
+`/docs`). After shipping a feature there: update docs/homepage, set `FEATURE_SYNC.md`
+**Synced commit** to this repo’s `HEAD`, and run `pnpm sync:check` in the landing repo.
+Non-product commits can use `pnpm sync:bump` in the landing repo instead.
+
 ## Project Invariants
 
 - **Batch protocol is locked:** translation requests send a JSON array of strings; the model

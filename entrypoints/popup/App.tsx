@@ -16,6 +16,17 @@ export default function App() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
 
+  const refreshPageState = async () => {
+    const tab = await activeTab();
+    if (tab?.id) {
+      try {
+        setPageState(await browser.tabs.sendMessage(tab.id, { type: 'getPageState' }));
+      } catch {
+        setPageState(null); // content script not present (chrome:// page or pre-install tab)
+      }
+    }
+  };
+
   const refresh = async () => {
     setSettings(await getSettings());
     const tab = await activeTab();
@@ -26,17 +37,14 @@ export default function App() {
         setHostname('');
       }
     }
-    if (tab?.id) {
-      try {
-        setPageState(await browser.tabs.sendMessage(tab.id, { type: 'getPageState' }));
-      } catch {
-        setPageState(null); // content script not present (chrome:// page or pre-install tab)
-      }
-    }
+    await refreshPageState();
   };
 
   useEffect(() => {
     void refresh();
+    // Poll while the popup is open so "Translating…" and the block count are live.
+    const timer = setInterval(() => void refreshPageState(), 1000);
+    return () => clearInterval(timer);
   }, []);
 
   const send = async (type: 'translatePage' | 'restorePage') => {

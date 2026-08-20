@@ -34,15 +34,29 @@ async function buildHeaders(settings: Settings): Promise<Record<string, string>>
   return headers;
 }
 
+/** A hung provider request must never wedge a translation forever. */
+const REQUEST_TIMEOUT_MS = 90_000;
+
 async function chatCompletion(settings: Settings, messages: ChatMessage[]): Promise<string> {
   const url = `${settings.baseUrl.replace(/\/+$/, '')}/chat/completions`;
   const headers = await buildHeaders(settings);
 
-  const res = await fetch(url, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({ model: settings.model, messages, temperature: 0.2 }),
-  });
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ model: settings.model, messages, temperature: 0.2 }),
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+    });
+  } catch (err) {
+    if (err instanceof Error && (err.name === 'TimeoutError' || err.name === 'AbortError')) {
+      throw new Error(
+        `Model did not respond within ${REQUEST_TIMEOUT_MS / 1000}s — try a faster model`,
+      );
+    }
+    throw err;
+  }
 
   if (!res.ok) {
     let detail = '';

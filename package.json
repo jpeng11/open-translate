@@ -2,7 +2,7 @@
   "name": "open-translate",
   "description": "Bilingual web translation with your own AI model",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "packageManager": "pnpm@10.14.0",
   "scripts": {

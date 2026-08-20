@@ -15,6 +15,25 @@ import type {
 const MAX_CONCURRENT = 3;
 const IMAGE_MENU_ID = 'ot-translate-image';
 
+/**
+ * Chrome kills an idle MV3 service worker after ~30s, and a pending fetch does
+ * NOT count as activity. While provider calls are in flight, poke an extension
+ * API every 20s to reset the idle timer so slow models can't get us killed
+ * mid-translation.
+ */
+let inFlightJobs = 0;
+let keepaliveTimer: ReturnType<typeof setInterval> | undefined;
+
+function trackJob(delta: 1 | -1): void {
+  inFlightJobs += delta;
+  if (inFlightJobs > 0 && keepaliveTimer === undefined) {
+    keepaliveTimer = setInterval(() => void browser.runtime.getPlatformInfo(), 20_000);
+  } else if (inFlightJobs === 0 && keepaliveTimer !== undefined) {
+    clearInterval(keepaliveTimer);
+    keepaliveTimer = undefined;
+  }
+}
+
 async function handleImageTranslation(srcUrl: string, tabId: number): Promise<void> {
   const send = (msg: ImageTranslationMessage) =>
     browser.tabs.sendMessage(tabId, msg).catch(() => {
@@ -22,6 +41,7 @@ async function handleImageTranslation(srcUrl: string, tabId: number): Promise<vo
     });
 
   await send({ type: 'imageTranslation', status: 'pending', srcUrl });
+  trackJob(1);
   try {
     const settings = await getSettings();
     const dataUrl = await fetchImageAsDataUrl(srcUrl);
@@ -34,6 +54,8 @@ async function handleImageTranslation(srcUrl: string, tabId: number): Promise<vo
       srcUrl,
       message: err instanceof Error ? err.message : String(err),
     });
+  } finally {
+    trackJob(-1);
   }
 }
 
@@ -66,6 +88,7 @@ export default defineBackground(() => {
       while (!disconnected && active < MAX_CONCURRENT && queue.length > 0) {
         const req = queue.shift()!;
         active++;
+        trackJob(1);
         void (async () => {
           let response: TranslateResponse;
           try {
@@ -87,6 +110,7 @@ export default defineBackground(() => {
             };
           }
           active--;
+          trackJob(-1);
           if (!disconnected) {
             try {
               port.postMessage(response);
