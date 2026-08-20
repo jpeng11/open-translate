@@ -1,3 +1,7 @@
+# --- Playwright ---
+test-results/
+playwright-report/
+
 # --- AI / agent artifacts ---
 # (AGENTS.md is intentionally tracked — it's the agent development guide)
 .cursor/
