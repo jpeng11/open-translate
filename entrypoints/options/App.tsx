@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { browser } from 'wxt/browser';
 import { getSettings, saveSettings, LANGUAGES, DEFAULT_SETTINGS } from '@/lib/settings';
 import type { Settings } from '@/lib/settings';
+import type { ModelsResponse } from '@/lib/messaging';
 import { PRESETS } from '@/lib/presets';
 import { startDeviceFlow, pollForTokens } from '@/lib/grokAuth';
 import type { DeviceCode } from '@/lib/grokAuth';
@@ -20,6 +21,9 @@ export default function App() {
   const [testResult, setTestResult] = useState<{ ok: boolean; message: string } | null>(null);
   const [device, setDevice] = useState<DeviceCode | null>(null);
   const [signInError, setSignInError] = useState('');
+  const [fetchedModels, setFetchedModels] = useState<string[]>([]);
+  const [fetchingModels, setFetchingModels] = useState(false);
+  const [modelsError, setModelsError] = useState('');
   const signInCancelled = useRef(false);
 
   useEffect(() => {
@@ -93,6 +97,23 @@ export default function App() {
       setTestResult({ ok: false, message: err instanceof Error ? err.message : String(err) });
     } finally {
       setTesting(false);
+    }
+  };
+
+  const fetchModels = async () => {
+    setFetchingModels(true);
+    setModelsError('');
+    try {
+      const result: ModelsResponse = await browser.runtime.sendMessage({
+        type: 'listModels',
+        settings,
+      });
+      if (!result.ok) throw new Error(result.message);
+      setFetchedModels(result.models);
+    } catch (err) {
+      setModelsError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setFetchingModels(false);
     }
   };
 
@@ -205,21 +226,35 @@ export default function App() {
 
         <label className="mt-3 block text-xs text-slate-600">
           Model
-          <input
-            className={inputClass}
-            type="text"
-            placeholder="gpt-4o-mini"
-            list="ot-model-suggestions"
-            value={settings.model}
-            onChange={(e) => update({ model: e.target.value })}
-          />
-          {preset?.modelSuggestions && (
-            <datalist id="ot-model-suggestions">
-              {preset.modelSuggestions.map((m) => (
-                <option key={m} value={m} />
-              ))}
-            </datalist>
+          <div className="flex gap-2">
+            <input
+              className={inputClass}
+              type="text"
+              placeholder="gpt-4o-mini"
+              list="ot-model-suggestions"
+              value={settings.model}
+              onChange={(e) => update({ model: e.target.value })}
+            />
+            <button
+              className="mt-1 shrink-0 rounded-md border border-slate-300 px-3 py-2 text-xs hover:bg-slate-100 disabled:opacity-50"
+              disabled={fetchingModels || !settings.baseUrl}
+              onClick={() => void fetchModels()}
+              title="Query this provider's /models endpoint"
+            >
+              {fetchingModels ? 'Fetching…' : 'Fetch models'}
+            </button>
+          </div>
+          <datalist id="ot-model-suggestions">
+            {[...new Set([...(preset?.modelSuggestions ?? []), ...fetchedModels])].map((m) => (
+              <option key={m} value={m} />
+            ))}
+          </datalist>
+          {fetchedModels.length > 0 && (
+            <span className="mt-1 block text-emerald-700">
+              {fetchedModels.length} models available — click the field to pick one
+            </span>
           )}
+          {modelsError && <span className="mt-1 block text-red-600">{modelsError}</span>}
         </label>
 
         <div className="mt-4 flex items-center gap-3">

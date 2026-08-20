@@ -1,6 +1,6 @@
 import { browser } from 'wxt/browser';
 import { defineBackground } from 'wxt/utils/define-background';
-import { testConnection, translateImage } from '@/lib/provider';
+import { listModels, testConnection, translateImage } from '@/lib/provider';
 import { translateWithCache } from '@/lib/cache';
 import { fetchImageAsDataUrl } from '@/lib/images';
 import { getSettings } from '@/lib/settings';
@@ -148,6 +148,14 @@ export default defineBackground(() => {
   browser.runtime.onMessage.addListener((msg: RuntimeMessage, _sender, sendResponse) => {
     if (msg?.type === 'testConnection') {
       void testConnection(msg.settings).then(sendResponse);
+      return true;
+    }
+    if (msg?.type === 'listModels') {
+      void listModels(msg.settings)
+        .then((models) => sendResponse({ ok: true, models }))
+        .catch((err) =>
+          sendResponse({ ok: false, message: err instanceof Error ? err.message : String(err) }),
+        );
       return true;
     }
     if (msg?.type === 'translateSnippets') {

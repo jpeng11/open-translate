@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { translateBatch, translateImage, testConnection } from '@/lib/provider';
+import { translateBatch, translateImage, testConnection, listModels } from '@/lib/provider';
 import { DEFAULT_SETTINGS } from '@/lib/settings';
 import type { Settings } from '@/lib/settings';
 
@@ -29,6 +29,40 @@ function errorResponse(status: number, message: string) {
 
 beforeEach(() => {
   vi.restoreAllMocks();
+});
+
+describe('listModels', () => {
+  it('fetches, dedupes, and sorts model ids from /models', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({ data: [{ id: 'b-model' }, { id: 'a-model' }, { id: 'b-model' }] }),
+    } as Response);
+
+    const models = await listModels(settings);
+    expect(models).toEqual(['a-model', 'b-model']);
+    expect(fetchMock.mock.calls[0]![0]).toBe('https://api.openai.com/v1/models');
+    const headers = (fetchMock.mock.calls[0]![1] as RequestInit).headers as Record<string, string>;
+    expect(headers.Authorization).toBe('Bearer sk-test');
+  });
+
+  it('gives a clear error when the endpoint is unsupported', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: false,
+      status: 404,
+      json: async () => ({}),
+    } as Response);
+    await expect(listModels(settings)).rejects.toThrow(/may not support \/models/);
+  });
+
+  it('rejects an empty model list', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({ data: [] }),
+    } as Response);
+    await expect(listModels(settings)).rejects.toThrow(/no models/);
+  });
 });
 
 describe('request timeout', () => {

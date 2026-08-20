@@ -195,6 +195,20 @@ export async function translateImage(settings: Settings, imageDataUrl: string): 
   return content.trim();
 }
 
+/** List model ids from the provider's /models endpoint (OpenAI-compatible). */
+export async function listModels(settings: Settings): Promise<string[]> {
+  const url = `${settings.baseUrl.replace(/\/+$/, '')}/models`;
+  const headers = await buildHeaders(settings);
+  const res = await fetch(url, { headers, signal: AbortSignal.timeout(20_000) });
+  if (!res.ok) throw new Error(`HTTP ${res.status}: this provider may not support /models`);
+  const body = await res.json();
+  const ids = (Array.isArray(body?.data) ? body.data : [])
+    .map((m: { id?: unknown }) => m?.id)
+    .filter((id: unknown): id is string => typeof id === 'string');
+  if (ids.length === 0) throw new Error('Provider returned no models');
+  return [...new Set<string>(ids)].sort();
+}
+
 export async function testConnection(
   settings: Settings,
 ): Promise<{ ok: boolean; message: string }> {

@@ -21,9 +21,12 @@ export type ImageTranslationMessage =
   | { type: 'imageTranslation'; status: 'done'; srcUrl: string; text: string }
   | { type: 'imageTranslation'; status: 'error'; srcUrl: string; message: string };
 
+export type ModelsResponse = { ok: true; models: string[] } | { ok: false; message: string };
+
 // One-shot runtime messages
 export type RuntimeMessage =
   | { type: 'testConnection'; settings: Settings }
+  | { type: 'listModels'; settings: Settings }
   | { type: 'translateSnippets'; texts: string[] }
   | { type: 'translatePage' }
   | { type: 'restorePage' }
