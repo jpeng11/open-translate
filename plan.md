@@ -21,9 +21,9 @@ manager: **pnpm**.
 
 ## Current focus
 
-**Phase 5 — Video subtitles** (Phases 0–4 shipped; Grok OAuth verified live
+**Phase 6 — Images** (Phases 0–5 shipped; Grok OAuth verified live
 end-to-end. Manual verification still worthwhile: load `.output/chrome-mv3`
-unpacked, translate a long article, try a document upload)
+unpacked, translate a long article, try a document upload and a YouTube video)
 
 ## Phase 0 — Scaffold and tracker
 
@@ -84,9 +84,12 @@ Restore works; keys never logged.
 
 ## Phase 5 — Video subtitles
 
-- [ ] YouTube caption tracks → bilingual overlay (DOM-scrape fallback)
-- [ ] Cue-level translation cache
-- [ ] Additional platforms where feasible without brittle private APIs
+- [x] YouTube bilingual overlay via caption-DOM mirroring (robust against private
+      API changes; works for auto-generated and live captions); stale-result guard
+- [x] Cue-level translation cache (normalized cues route through the session cache)
+- [x] Settings toggle (`videoSubtitles`, on by default; respects excluded sites)
+- [ ] Additional platforms where feasible without brittle private APIs (deferred —
+      Netflix/Prime DRM players make DOM mirroring unreliable; revisit on demand)
 
 ## Phase 6 — Images
 

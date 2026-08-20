@@ -16,6 +16,8 @@ export interface Settings {
   displayMode: DisplayMode;
   maxCharsPerPage: number;
   excludedSites: string[];
+  /** Bilingual video subtitle overlay (YouTube). */
+  videoSubtitles: boolean;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -29,6 +31,7 @@ export const DEFAULT_SETTINGS: Settings = {
   displayMode: 'bilingual',
   maxCharsPerPage: 100_000,
   excludedSites: [],
+  videoSubtitles: true,
 };
 
 export const LANGUAGES: { code: string; label: string }[] = [

@@ -265,6 +265,15 @@ export default function App() {
           </label>
         </div>
 
+        <label className="mt-3 flex items-center gap-2 text-xs text-slate-600">
+          <input
+            type="checkbox"
+            checked={settings.videoSubtitles}
+            onChange={(e) => update({ videoSubtitles: e.target.checked })}
+          />
+          Bilingual video subtitles on YouTube (translates the native captions)
+        </label>
+
         <label className="mt-3 block text-xs text-slate-600">
           Max characters translated per page (cost guard)
           <input

@@ -6,6 +6,7 @@ import { TRANSLATE_PORT } from '@/lib/messaging';
 import type { TranslateResponse, RuntimeMessage, PageState } from '@/lib/messaging';
 import { collectBlocks, ensureStyles, injectTranslation, markError } from './dom';
 import { initQuickTools } from './quick-tools';
+import { initSubtitles, isYouTubeWatchPage } from './subtitles';
 
 const MAX_BATCH_ITEMS = 30;
 const MAX_BATCH_CHARS = 4000;
@@ -218,5 +219,13 @@ export default defineContentScript({
     });
 
     initQuickTools();
+
+    if (isYouTubeWatchPage()) {
+      void getSettings().then((settings) => {
+        if (settings.videoSubtitles && !settings.excludedSites.includes(location.hostname)) {
+          initSubtitles();
+        }
+      });
+    }
   },
 });
