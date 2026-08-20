@@ -116,5 +116,17 @@ export default defineBackground(() => {
       void testConnection(msg.settings).then(sendResponse);
       return true;
     }
+    if (msg?.type === 'translateSnippets') {
+      void (async () => {
+        try {
+          const settings = await getSettings();
+          const translations = await translateWithCache(msg.texts, settings);
+          sendResponse({ ok: true, translations });
+        } catch (err) {
+          sendResponse({ ok: false, message: err instanceof Error ? err.message : String(err) });
+        }
+      })();
+      return true;
+    }
   });
 });

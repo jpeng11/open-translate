@@ -10,7 +10,8 @@ where users connect their own AI models (OpenAI-compatible endpoints).
 Original branding, MIT license, no proprietary code copied.
 
 **Stack:** WXT + React 19 + TypeScript + Vite, Tailwind CSS (popup/options),
-`chrome.storage.local` for settings/keys, Vitest (later), MV3.
+`chrome.storage.local` for settings/keys, Vitest (later), MV3. Package
+manager: **pnpm**.
 
 **Privacy rules (non-negotiable):**
 
@@ -20,9 +21,9 @@ Original branding, MIT license, no proprietary code copied.
 
 ## Current focus
 
-**Phase 3 — Quick translate tools** (Phases 0–2 shipped; MVP needs manual
-verification with a real API key: load `.output/chrome-mv3` unpacked,
-configure a provider, translate a long article, check Restore)
+**Phase 4 — Documents** (Phases 0–3 shipped. Manual verification pending:
+load `.output/chrome-mv3` unpacked, sign in with X/Grok or an API key,
+translate a long article, check Restore + quick tools)
 
 ## Phase 0 — Scaffold and tracker
 
@@ -44,6 +45,10 @@ configure a provider, translate a long article, check Restore)
 - [x] Options page: provider form + Test connection
 - [x] Popup: target language, Translate/Restore, provider status
 - [x] MV3 keepalive: long-lived Port from content script during translation
+- [x] Grok OAuth ("Sign in with X"): device-code flow against `auth.x.ai`,
+      tokens auto-refresh, requests via `cli-chat-proxy.grok.com/v1` with
+      `X-XAI-Token-Auth` + `x-grok-model-override` headers (SuperGrok /
+      X Premium+ subscription; useful for keyless testing)
 
 ## Phase 2 — Bilingual webpage (MVP)
 
@@ -65,9 +70,9 @@ Restore works; keys never logged.
 
 ## Phase 3 — Quick translate tools
 
-- [ ] Selection translation floating panel
-- [ ] Hover translation (hotkey or delay)
-- [ ] Input-box translation shortcut
+- [x] Selection translation floating panel (select text → "⇄ Translate" button)
+- [x] Hover translation (hold Alt/Option and hover a paragraph)
+- [x] Input-box translation (press Space 3× quickly inside an input/textarea)
 
 ## Phase 4 — Documents
 

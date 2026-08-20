@@ -18,9 +18,14 @@ export type TranslateResponse =
 // One-shot runtime messages
 export type RuntimeMessage =
   | { type: 'testConnection'; settings: Settings }
+  | { type: 'translateSnippets'; texts: string[] }
   | { type: 'translatePage' }
   | { type: 'restorePage' }
   | { type: 'getPageState' };
+
+export type SnippetResponse =
+  | { ok: true; translations: string[] }
+  | { ok: false; message: string };
 
 export interface PageState {
   translated: boolean;
