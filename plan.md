@@ -21,7 +21,7 @@ manager: **pnpm**.
 
 ## Current focus
 
-**Phase 6 — Images** (Phases 0–5 shipped; Grok OAuth verified live
+**Phase 7 — Hardening** (Phases 0–6 shipped; Grok OAuth verified live
 end-to-end. Manual verification still worthwhile: load `.output/chrome-mv3`
 unpacked, translate a long article, try a document upload and a YouTube video)
 
@@ -93,8 +93,11 @@ Restore works; keys never logged.
 
 ## Phase 6 — Images
 
-- [ ] Image OCR (Tesseract.wasm or user-configured cloud OCR) → translate → overlay
-- [ ] Manga balloon detection (stretch)
+- [x] Right-click "Translate this image" → the user's own vision-capable model does
+      OCR + translation in one call (BYO-model instead of bundling ~15 MB Tesseract
+      WASM, which is also CSP-hostile in MV3); result panel anchored to the image
+- [x] 6 MB image cap; data-URL passthrough; clear error for fetch failures
+- [ ] Manga balloon detection (stretch — deferred)
 
 ## Phase 7 — Hardening
 

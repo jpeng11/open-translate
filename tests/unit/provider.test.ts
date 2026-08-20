@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { translateBatch, testConnection } from '@/lib/provider';
+import { translateBatch, translateImage, testConnection } from '@/lib/provider';
 import { DEFAULT_SETTINGS } from '@/lib/settings';
 import type { Settings } from '@/lib/settings';
 
@@ -29,6 +29,22 @@ function errorResponse(status: number, message: string) {
 
 beforeEach(() => {
   vi.restoreAllMocks();
+});
+
+describe('translateImage — vision-model OCR', () => {
+  it('sends the image as an image_url content part', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(okResponse('翻译结果'));
+    const dataUrl = 'data:image/png;base64,AAAA';
+
+    const result = await translateImage(settings, dataUrl);
+    expect(result).toBe('翻译结果');
+
+    const body = JSON.parse((fetchMock.mock.calls[0]![1] as RequestInit).body as string);
+    const userContent = body.messages[1].content;
+    expect(Array.isArray(userContent)).toBe(true);
+    expect(userContent[1]).toEqual({ type: 'image_url', image_url: { url: dataUrl } });
+    expect(body.messages[0].content).toContain('简体中文');
+  });
 });
 
 describe('translateBatch — locked JSON-array protocol', () => {

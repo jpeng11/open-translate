@@ -6,9 +6,13 @@ import {
   GROK_CLIENT_IDENTIFIER,
 } from './grokAuth';
 
+type ContentPart =
+  | { type: 'text'; text: string }
+  | { type: 'image_url'; image_url: { url: string } };
+
 interface ChatMessage {
   role: 'system' | 'user';
-  content: string;
+  content: string | ContentPart[];
 }
 
 async function buildHeaders(settings: Settings): Promise<Record<string, string>> {
@@ -123,6 +127,31 @@ export async function translateBatch(texts: string[], settings: Settings): Promi
     results.push(await translateOne(text, settings));
   }
   return results;
+}
+
+/**
+ * Extract and translate text in an image using the user's own vision-capable
+ * model — the BYO-model take on OCR (no bundled Tesseract, no third-party OCR).
+ */
+export async function translateImage(settings: Settings, imageDataUrl: string): Promise<string> {
+  const lang = `${languageLabel(settings.targetLang)} (${settings.targetLang})`;
+  const content = await chatCompletion(settings, [
+    {
+      role: 'system',
+      content:
+        `Extract all text from the user's image and translate it into ${lang}. ` +
+        `Preserve the reading order and use line breaks to reflect the layout. ` +
+        `Reply with only the translated text. If the image contains no text, reply exactly: (no text found)`,
+    },
+    {
+      role: 'user',
+      content: [
+        { type: 'text', text: `Extract and translate the text in this image into ${lang}.` },
+        { type: 'image_url', image_url: { url: imageDataUrl } },
+      ],
+    },
+  ]);
+  return content.trim();
 }
 
 export async function testConnection(

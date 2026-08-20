@@ -1,14 +1,56 @@
 import { browser } from 'wxt/browser';
 import { defineBackground } from 'wxt/utils/define-background';
-import { testConnection } from '@/lib/provider';
+import { testConnection, translateImage } from '@/lib/provider';
 import { translateWithCache } from '@/lib/cache';
+import { fetchImageAsDataUrl } from '@/lib/images';
 import { getSettings } from '@/lib/settings';
 import { TRANSLATE_PORT } from '@/lib/messaging';
-import type { TranslateRequest, TranslateResponse, RuntimeMessage } from '@/lib/messaging';
+import type {
+  TranslateRequest,
+  TranslateResponse,
+  RuntimeMessage,
+  ImageTranslationMessage,
+} from '@/lib/messaging';
 
 const MAX_CONCURRENT = 3;
+const IMAGE_MENU_ID = 'ot-translate-image';
+
+async function handleImageTranslation(srcUrl: string, tabId: number): Promise<void> {
+  const send = (msg: ImageTranslationMessage) =>
+    browser.tabs.sendMessage(tabId, msg).catch(() => {
+      // Tab navigated away or has no content script — nothing to report to.
+    });
+
+  await send({ type: 'imageTranslation', status: 'pending', srcUrl });
+  try {
+    const settings = await getSettings();
+    const dataUrl = await fetchImageAsDataUrl(srcUrl);
+    const text = await translateImage(settings, dataUrl);
+    await send({ type: 'imageTranslation', status: 'done', srcUrl, text });
+  } catch (err) {
+    await send({
+      type: 'imageTranslation',
+      status: 'error',
+      srcUrl,
+      message: err instanceof Error ? err.message : String(err),
+    });
+  }
+}
 
 export default defineBackground(() => {
+  browser.runtime.onInstalled.addListener(() => {
+    browser.contextMenus.create({
+      id: IMAGE_MENU_ID,
+      title: 'Translate this image',
+      contexts: ['image'],
+    });
+  });
+
+  browser.contextMenus.onClicked.addListener((info, tab) => {
+    if (info.menuItemId !== IMAGE_MENU_ID || !info.srcUrl || !tab?.id) return;
+    void handleImageTranslation(info.srcUrl, tab.id);
+  });
+
   browser.runtime.onConnect.addListener((port) => {
     if (port.name !== TRANSLATE_PORT) return;
 

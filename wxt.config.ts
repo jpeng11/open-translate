@@ -7,7 +7,7 @@ export default defineConfig({
   manifest: {
     name: 'Open Translate',
     description: 'Bilingual web translation with your own AI model',
-    permissions: ['storage', 'activeTab'],
+    permissions: ['storage', 'activeTab', 'contextMenus'],
     // Required to reach whatever endpoint the user configures (incl. localhost Ollama).
     host_permissions: ['<all_urls>'],
   },

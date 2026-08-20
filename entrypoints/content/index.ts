@@ -7,6 +7,7 @@ import type { TranslateResponse, RuntimeMessage, PageState } from '@/lib/messagi
 import { collectBlocks, ensureStyles, injectTranslation, markError } from './dom';
 import { initQuickTools } from './quick-tools';
 import { initSubtitles, isYouTubeWatchPage } from './subtitles';
+import { showImagePanel } from './image-panel';
 
 const MAX_BATCH_ITEMS = 30;
 const MAX_BATCH_CHARS = 4000;
@@ -206,6 +207,9 @@ export default defineContentScript({
         sendResponse({ ok: true });
       } else if (msg?.type === 'restorePage') {
         restore();
+        sendResponse({ ok: true });
+      } else if (msg?.type === 'imageTranslation') {
+        showImagePanel(msg);
         sendResponse({ ok: true });
       } else if (msg?.type === 'getPageState') {
         const blocksTranslated = doneCount();
