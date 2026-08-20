@@ -15,6 +15,11 @@ import type {
 const MAX_CONCURRENT = 3;
 const IMAGE_MENU_ID = 'ot-translate-image';
 
+/** Progress logging: counts and timings only — never page text, keys, or tokens. */
+function log(...args: unknown[]): void {
+  console.log('[open-translate]', new Date().toISOString().slice(11, 19), ...args);
+}
+
 /**
  * Chrome kills an idle MV3 service worker after ~30s, and a pending fetch does
  * NOT count as activity. While provider calls are in flight, poke an extension
@@ -42,18 +47,17 @@ async function handleImageTranslation(srcUrl: string, tabId: number): Promise<vo
 
   await send({ type: 'imageTranslation', status: 'pending', srcUrl });
   trackJob(1);
+  log('image translation started');
   try {
     const settings = await getSettings();
     const dataUrl = await fetchImageAsDataUrl(srcUrl);
     const text = await translateImage(settings, dataUrl);
     await send({ type: 'imageTranslation', status: 'done', srcUrl, text });
+    log('image translation done');
   } catch (err) {
-    await send({
-      type: 'imageTranslation',
-      status: 'error',
-      srcUrl,
-      message: err instanceof Error ? err.message : String(err),
-    });
+    const message = err instanceof Error ? err.message : String(err);
+    log('image translation FAILED —', message);
+    await send({ type: 'imageTranslation', status: 'error', srcUrl, message });
   } finally {
     trackJob(-1);
   }
@@ -75,6 +79,7 @@ export default defineBackground(() => {
 
   browser.runtime.onConnect.addListener((port) => {
     if (port.name !== TRANSLATE_PORT) return;
+    log('translation session started');
 
     let active = 0;
     const queue: TranslateRequest[] = [];
@@ -82,6 +87,7 @@ export default defineBackground(() => {
     port.onDisconnect.addListener(() => {
       disconnected = true;
       queue.length = 0;
+      log('translation session ended');
     });
 
     const pump = async () => {
@@ -91,6 +97,10 @@ export default defineBackground(() => {
         trackJob(1);
         void (async () => {
           let response: TranslateResponse;
+          const chars = req.texts.reduce((sum, t) => sum + t.length, 0);
+          const started = Date.now();
+          log(`batch #${req.id}: started (${req.texts.length} items, ${chars} chars; ` +
+            `${active} active, ${queue.length} queued)`);
           try {
             const settings = await getSettings();
             if (settings.authMode === 'grokOauth') {
@@ -102,12 +112,15 @@ export default defineBackground(() => {
             }
             const translations = await translateWithCache(req.texts, settings);
             response = { type: 'result', id: req.id, translations };
+            log(`batch #${req.id}: done in ${((Date.now() - started) / 1000).toFixed(1)}s`);
           } catch (err) {
             response = {
               type: 'error',
               id: req.id,
               message: err instanceof Error ? err.message : String(err),
             };
+            log(`batch #${req.id}: FAILED after ${((Date.now() - started) / 1000).toFixed(1)}s —`,
+              response.message);
           }
           active--;
           trackJob(-1);
