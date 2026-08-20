@@ -58,7 +58,12 @@ export async function getSettings(): Promise<Settings> {
   const stored = await browser.storage.local.get('settings');
   const settings: Settings = { ...DEFAULT_SETTINGS, ...(stored.settings ?? {}) };
   if (!settings.targetLang) {
-    const ui = browser.i18n?.getUILanguage?.() ?? 'en';
+    let ui = 'en';
+    try {
+      ui = browser.i18n?.getUILanguage?.() ?? 'en';
+    } catch {
+      // i18n is unavailable in some contexts (and in test fakes) — keep the fallback.
+    }
     settings.targetLang = LANGUAGES.some((l) => l.code === ui) ? ui : ui.split('-')[0] || 'en';
   }
   return settings;
