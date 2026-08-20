@@ -55,6 +55,14 @@ export function collectBlocks(): HTMLElement[] {
   return all.filter(isTranslatableBlock);
 }
 
+/** Un-mark failed blocks and drop their error chips so the next run retries them. */
+export function clearErrors(): void {
+  document.querySelectorAll<HTMLElement>('[data-ot-state="error"]').forEach((el) => {
+    el.querySelectorAll('.ot-error-chip').forEach((chip) => chip.remove());
+    delete el.dataset.otState;
+  });
+}
+
 export function injectTranslation(el: HTMLElement, translation: string, mode: DisplayMode) {
   if (mode === 'translationOnly') {
     // Wrap originals so they can be hidden and later restored losslessly.

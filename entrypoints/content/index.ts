@@ -4,7 +4,7 @@ import { getSettings, matchesSite } from '@/lib/settings';
 import type { Settings } from '@/lib/settings';
 import { TRANSLATE_PORT } from '@/lib/messaging';
 import type { TranslateResponse, RuntimeMessage, PageState } from '@/lib/messaging';
-import { collectBlocks, ensureStyles, injectTranslation, markError } from './dom';
+import { clearErrors, collectBlocks, ensureStyles, injectTranslation, markError } from './dom';
 import { initQuickTools } from './quick-tools';
 import { initSubtitles, isYouTubeWatchPage } from './subtitles';
 import { showImagePanel } from './image-panel';
@@ -189,6 +189,7 @@ export default defineContentScript({
       const settings = await getSettings();
       if (settings.excludedSites.includes(location.hostname)) return;
 
+      clearErrors(); // failed blocks from a previous run get retried
       const blocks = collectBlocks();
       const { within, beyond, used } = splitByBudget(blocks, settings.maxCharsPerPage - charsUsed);
       charsUsed += used;

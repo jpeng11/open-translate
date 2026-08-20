@@ -4,6 +4,7 @@ import {
   collectBlocks,
   injectTranslation,
   markError,
+  clearErrors,
 } from '@/entrypoints/content/dom';
 
 // happy-dom reports no client rects for detached/unstyled nodes; the
@@ -19,6 +20,21 @@ function make(html: string): HTMLElement {
   document.body.innerHTML = html;
   return document.body.firstElementChild as HTMLElement;
 }
+
+describe('clearErrors', () => {
+  it('makes failed blocks collectable again and removes their chips', () => {
+    const el = make('<p>This paragraph failed to translate last time.</p>');
+    markError(el, 'HTTP 404: model does not exist');
+    // Regression: error-marked blocks were skipped forever, so a page whose
+    // first run failed could never be translated again without a restore.
+    expect(collectBlocks()).toHaveLength(0);
+
+    clearErrors();
+    expect(el.dataset.otState).toBeUndefined();
+    expect(el.querySelector('.ot-error-chip')).toBeNull();
+    expect(collectBlocks()).toEqual([el]);
+  });
+});
 
 describe('isTranslatableBlock', () => {
   it('accepts a plain paragraph', () => {
