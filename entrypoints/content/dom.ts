@@ -82,7 +82,9 @@ export function markError(el: HTMLElement, message: string) {
   el.dataset.otState = 'error' satisfies OtState;
   const chip = document.createElement('span');
   chip.className = 'ot-translation ot-error-chip';
-  chip.textContent = '⚠ translation failed';
+  // Show the reason inline — users don't discover hover tooltips.
+  const short = message.length > 140 ? `${message.slice(0, 140)}…` : message;
+  chip.textContent = `⚠ translation failed — ${short}`;
   chip.title = message;
   el.appendChild(chip);
 }
