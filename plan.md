@@ -21,9 +21,9 @@ manager: **pnpm**.
 
 ## Current focus
 
-**Phase 4 — Documents** (Phases 0–3 shipped. Manual verification pending:
-load `.output/chrome-mv3` unpacked, sign in with X/Grok or an API key,
-translate a long article, check Restore + quick tools)
+**Phase 5 — Video subtitles** (Phases 0–4 shipped; Grok OAuth verified live
+end-to-end. Manual verification still worthwhile: load `.output/chrome-mv3`
+unpacked, translate a long article, try a document upload)
 
 ## Phase 0 — Scaffold and tracker
 
@@ -76,10 +76,11 @@ Restore works; keys never logged.
 
 ## Phase 4 — Documents
 
-- [ ] Upload page/side panel: PDF / EPUB / TXT / SRT|ASS
-- [ ] PDF text-layer extraction (pdf.js); layout-preserved bilingual = stretch
-- [ ] EPUB chapter walk + bilingual HTML export
-- [ ] Bilingual SRT/ASS download
+- [x] Upload page (`documents.html`, linked from popup): PDF / EPUB / TXT / MD / SRT / ASS
+- [x] PDF text-layer extraction (pdf.js, line/paragraph reconstruction); scanned-PDF OCR
+      deferred to Phase 6+; layout-preserved bilingual remains a stretch goal
+- [x] EPUB chapter walk (container → OPF → spine) + bilingual HTML export
+- [x] Bilingual SRT/ASS download (round-trip-valid SRT; ASS override tags preserved)
 
 ## Phase 5 — Video subtitles
 

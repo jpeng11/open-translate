@@ -154,6 +154,15 @@ export default function App() {
         </button>
       </div>
 
+      <button
+        className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm hover:bg-slate-100"
+        onClick={() =>
+          void browser.tabs.create({ url: browser.runtime.getURL('/documents.html') })
+        }
+      >
+        Translate a document (PDF / EPUB / SRT…)
+      </button>
+
       {pageState?.translated && (
         <p className="text-xs text-slate-500">
           {pageState.blocksTranslated} blocks translated on this page.
