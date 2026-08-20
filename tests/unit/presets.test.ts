@@ -33,4 +33,25 @@ describe('provider presets', () => {
     const ollama = PRESETS.find((p) => p.id === 'ollama');
     expect(ollama?.note).toMatch(/OLLAMA_ORIGINS/);
   });
+
+  it('covers the major OpenAI-compatible providers', () => {
+    const ids = PRESETS.map((p) => p.id);
+    for (const id of [
+      'openai',
+      'anthropic',
+      'gemini',
+      'mistral',
+      'openrouter',
+      'deepseek',
+      'groq',
+      'together',
+      'fireworks',
+      'cerebras',
+      'moonshot',
+      'ollama',
+      'lmstudio',
+    ]) {
+      expect(ids, `missing preset: ${id}`).toContain(id);
+    }
+  });
 });
