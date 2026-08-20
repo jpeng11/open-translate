@@ -8,6 +8,10 @@ import { startDeviceFlow, pollForTokens } from '@/lib/grokAuth';
 import type { DeviceCode } from '@/lib/grokAuth';
 import { startCopilotDeviceFlow, completeCopilotSignIn } from '@/lib/copilotAuth';
 import type { CopilotDeviceCode } from '@/lib/copilotAuth';
+import { startClaudeSignIn, exchangeClaudeCode } from '@/lib/claudeAuth';
+import type { ClaudePkceSession } from '@/lib/claudeAuth';
+import { startCodexDeviceFlow, completeCodexSignIn } from '@/lib/codexAuth';
+import type { CodexDeviceCode } from '@/lib/codexAuth';
 
 const inputClass =
   'mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm ' +
@@ -23,6 +27,9 @@ export default function App() {
   const [testResult, setTestResult] = useState<{ ok: boolean; message: string } | null>(null);
   const [device, setDevice] = useState<DeviceCode | null>(null);
   const [copilotDevice, setCopilotDevice] = useState<CopilotDeviceCode | null>(null);
+  const [claudeSession, setClaudeSession] = useState<ClaudePkceSession | null>(null);
+  const [claudeCode, setClaudeCode] = useState('');
+  const [codexDevice, setCodexDevice] = useState<CodexDeviceCode | null>(null);
   const [signInError, setSignInError] = useState('');
   const [fetchedModels, setFetchedModels] = useState<string[]>([]);
   const [fetchingModels, setFetchingModels] = useState(false);
@@ -107,6 +114,62 @@ export default function App() {
   const signOutCopilot = async () => {
     signInCancelled.current = true;
     const next = { ...settings, copilotTokens: null };
+    setSettings(next);
+    await saveSettings(next);
+  };
+
+  const signInWithClaude = async () => {
+    setSignInError('');
+    const session = await startClaudeSignIn();
+    setClaudeSession(session);
+    setClaudeCode('');
+    window.open(session.url, '_blank');
+  };
+
+  const submitClaudeCode = async () => {
+    if (!claudeSession) return;
+    setSignInError('');
+    try {
+      const tokens = await exchangeClaudeCode(claudeCode, claudeSession.verifier);
+      const next = { ...settings, authMode: 'claudeOauth' as const, claudeTokens: tokens };
+      setSettings(next);
+      await saveSettings(next);
+      setSaved(true);
+      setClaudeSession(null);
+      setClaudeCode('');
+    } catch (err) {
+      setSignInError(err instanceof Error ? err.message : String(err));
+    }
+  };
+
+  const signOutClaude = async () => {
+    const next = { ...settings, claudeTokens: null };
+    setSettings(next);
+    await saveSettings(next);
+  };
+
+  const signInWithCodex = async () => {
+    setSignInError('');
+    signInCancelled.current = false;
+    try {
+      const dc = await startCodexDeviceFlow();
+      setCodexDevice(dc);
+      window.open(dc.verificationUri, '_blank');
+      const tokens = await completeCodexSignIn(dc, () => signInCancelled.current);
+      const next = { ...settings, authMode: 'codexOauth' as const, codexTokens: tokens };
+      setSettings(next);
+      await saveSettings(next);
+      setSaved(true);
+    } catch (err) {
+      setSignInError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setCodexDevice(null);
+    }
+  };
+
+  const signOutCodex = async () => {
+    signInCancelled.current = true;
+    const next = { ...settings, codexTokens: null };
     setSettings(next);
     await saveSettings(next);
   };
@@ -268,6 +331,102 @@ export default function App() {
                 onClick={() => void signInWithCopilot()}
               >
                 Sign in with GitHub (Copilot)
+              </button>
+            )}
+            {signInError && <p className="mt-1 text-xs text-red-600">✗ {signInError}</p>}
+          </div>
+        ) : settings.authMode === 'claudeOauth' ? (
+          <div className="mt-3">
+            <span className="block text-xs text-slate-600">Account</span>
+            {settings.claudeTokens ? (
+              <div className="mt-1 flex items-center gap-3">
+                <span className="text-xs text-emerald-700">✓ Signed in with Claude</span>
+                <button
+                  type="button"
+                  className="rounded-md border border-slate-300 px-3 py-1.5 text-xs hover:bg-slate-100"
+                  onClick={() => void signOutClaude()}
+                >
+                  Sign out
+                </button>
+              </div>
+            ) : claudeSession ? (
+              <div className="mt-1 rounded-md bg-slate-100 px-3 py-2 text-xs text-slate-700">
+                <p>
+                  Approve the sign-in on the opened Claude page, then paste the code it shows
+                  you here:
+                </p>
+                <div className="mt-2 flex gap-2">
+                  <input
+                    className={`${inputClass} mt-0 flex-1 font-mono`}
+                    placeholder="Paste the code here"
+                    value={claudeCode}
+                    onChange={(e) => setClaudeCode(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="rounded-md bg-black px-3 py-1.5 text-xs font-medium text-white hover:bg-slate-800"
+                    onClick={() => void submitClaudeCode()}
+                  >
+                    Confirm
+                  </button>
+                </div>
+                <a
+                  className="text-blue-600 underline"
+                  href={claudeSession.url}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Open the approval page again
+                </a>
+              </div>
+            ) : (
+              <button
+                type="button"
+                className="mt-1 rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-slate-800"
+                onClick={() => void signInWithClaude()}
+              >
+                Sign in with Claude (Pro/Max)
+              </button>
+            )}
+            {signInError && <p className="mt-1 text-xs text-red-600">✗ {signInError}</p>}
+          </div>
+        ) : settings.authMode === 'codexOauth' ? (
+          <div className="mt-3">
+            <span className="block text-xs text-slate-600">Account</span>
+            {settings.codexTokens ? (
+              <div className="mt-1 flex items-center gap-3">
+                <span className="text-xs text-emerald-700">✓ Signed in with ChatGPT</span>
+                <button
+                  type="button"
+                  className="rounded-md border border-slate-300 px-3 py-1.5 text-xs hover:bg-slate-100"
+                  onClick={() => void signOutCodex()}
+                >
+                  Sign out
+                </button>
+              </div>
+            ) : codexDevice ? (
+              <div className="mt-1 rounded-md bg-slate-100 px-3 py-2 text-xs text-slate-700">
+                <p>
+                  On the opened page, sign in to ChatGPT and enter the code{' '}
+                  <span className="font-mono text-sm font-bold">{codexDevice.userCode}</span>
+                </p>
+                <a
+                  className="text-blue-600 underline"
+                  href={codexDevice.verificationUri}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Open the approval page again
+                </a>
+                <p className="mt-1 animate-pulse">Waiting for approval…</p>
+              </div>
+            ) : (
+              <button
+                type="button"
+                className="mt-1 rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-slate-800"
+                onClick={() => void signInWithCodex()}
+              >
+                Sign in with ChatGPT (Plus/Pro)
               </button>
             )}
             {signInError && <p className="mt-1 text-xs text-red-600">✗ {signInError}</p>}

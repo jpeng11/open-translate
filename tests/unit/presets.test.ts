@@ -28,6 +28,21 @@ describe('provider presets', () => {
     expect(oauth[0]!.baseUrl).toBe('https://api.githubcopilot.com');
   });
 
+  it('pairs every subscription OAuth preset with an API-key fallback', () => {
+    const byId = new Map(PRESETS.map((p) => [p.id, p]));
+    expect(byId.get('claude-oauth')?.authMode).toBe('claudeOauth');
+    expect(byId.get('codex-oauth')?.authMode).toBe('codexOauth');
+    // OAuth ↔ API-key pairs (GitHub has no key path: GitHub Models retired 2026-07-30).
+    for (const [oauth, apiKey] of [
+      ['grok-oauth', 'xai-key'],
+      ['claude-oauth', 'anthropic'],
+      ['codex-oauth', 'openai'],
+    ] as const) {
+      expect(byId.get(oauth), oauth).toBeDefined();
+      expect(byId.get(apiKey)?.authMode, apiKey).toBe('apiKey');
+    }
+  });
+
   it('offers an xAI API-key fallback preset', () => {
     const xai = PRESETS.find((p) => p.id === 'xai-key');
     expect(xai).toBeDefined();

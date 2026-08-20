@@ -137,6 +137,77 @@ describe('translateBatch — locked JSON-array protocol', () => {
     expect(headers['Editor-Version']).toMatch(/^vscode\//);
   });
 
+  it('uses the Anthropic Messages dialect with the Claude Code identity in claudeOauth mode', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({ content: [{ type: 'text', text: '["a"]' }] }),
+    } as Response);
+    const claudeSettings: Settings = {
+      ...settings,
+      authMode: 'claudeOauth',
+      baseUrl: 'https://api.anthropic.com/v1',
+      model: 'claude-haiku-4-5',
+      claudeTokens: {
+        accessToken: 'claude-access',
+        refreshToken: 'rt',
+        expiresAt: Date.now() + 60 * 60 * 1000,
+      },
+    };
+    const result = await translateBatch(['x'], claudeSettings);
+    expect(result).toEqual(['a']);
+
+    const [url, init] = fetchMock.mock.calls[0]!;
+    expect(url).toBe('https://api.anthropic.com/v1/messages?beta=true');
+    const headers = (init as RequestInit).headers as Record<string, string>;
+    expect(headers.Authorization).toBe('Bearer claude-access');
+    expect(headers['anthropic-beta']).toBe('oauth-2025-04-20');
+    expect(headers['anthropic-version']).toBe('2023-06-01');
+    const body = JSON.parse((init as RequestInit).body as string);
+    expect(body.system[0].text).toMatch(/^You are Claude Code/);
+    expect(body.max_tokens).toBeGreaterThan(0);
+    expect(body.messages[0].role).toBe('user');
+  });
+
+  it('uses the Codex Responses dialect and parses SSE output in codexOauth mode', async () => {
+    const sse = [
+      'data: {"type":"response.output_text.delta","delta":"[\\"a"}',
+      'data: {"type":"response.output_text.delta","delta":"\\"]"}',
+      'data: [DONE]',
+      '',
+    ].join('\n');
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      status: 200,
+      text: async () => sse,
+    } as Response);
+    const codexSettings: Settings = {
+      ...settings,
+      authMode: 'codexOauth',
+      baseUrl: 'https://chatgpt.com/backend-api/codex',
+      model: 'gpt-5.1',
+      codexTokens: {
+        accessToken: 'codex-access',
+        refreshToken: 'rt',
+        accountId: 'acct-123',
+        expiresAt: Date.now() + 60 * 60 * 1000,
+      },
+    };
+    const result = await translateBatch(['x'], codexSettings);
+    expect(result).toEqual(['a']);
+
+    const [url, init] = fetchMock.mock.calls[0]!;
+    expect(url).toBe('https://chatgpt.com/backend-api/codex/responses');
+    const headers = (init as RequestInit).headers as Record<string, string>;
+    expect(headers.Authorization).toBe('Bearer codex-access');
+    expect(headers['chatgpt-account-id']).toBe('acct-123');
+    const body = JSON.parse((init as RequestInit).body as string);
+    expect(body.stream).toBe(true);
+    expect(body.store).toBe(false);
+    expect(body.input[0].content[0].type).toBe('input_text');
+    expect(typeof body.instructions).toBe('string');
+  });
+
   it('sends Grok proxy headers in grokOauth mode', async () => {
     const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(okResponse('["a"]'));
     const grokSettings: Settings = {

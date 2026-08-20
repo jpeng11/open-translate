@@ -1,9 +1,11 @@
 import { browser } from 'wxt/browser';
 import type { GrokTokens } from './grokAuth';
 import type { CopilotTokens } from './copilotAuth';
+import type { ClaudeTokens } from './claudeAuth';
+import type { CodexTokens } from './codexAuth';
 
 export type DisplayMode = 'bilingual' | 'translationOnly';
-export type AuthMode = 'apiKey' | 'grokOauth' | 'copilotOauth';
+export type AuthMode = 'apiKey' | 'grokOauth' | 'copilotOauth' | 'claudeOauth' | 'codexOauth';
 
 export interface Settings {
   authMode: AuthMode;
@@ -13,6 +15,10 @@ export interface Settings {
   grokTokens: GrokTokens | null;
   /** Present when signed in with GitHub Copilot (authMode 'copilotOauth'). */
   copilotTokens: CopilotTokens | null;
+  /** Present when signed in with a Claude Pro/Max subscription (authMode 'claudeOauth'). */
+  claudeTokens: ClaudeTokens | null;
+  /** Present when signed in with a ChatGPT subscription (authMode 'codexOauth'). */
+  codexTokens: CodexTokens | null;
   model: string;
   targetLang: string;
   neverTranslateLangs: string[];
@@ -33,6 +39,8 @@ export const DEFAULT_SETTINGS: Settings = {
   apiKey: '',
   grokTokens: null,
   copilotTokens: null,
+  claudeTokens: null,
+  codexTokens: null,
   model: 'gpt-4o-mini',
   targetLang: '',
   neverTranslateLangs: [],
@@ -51,6 +59,10 @@ export function isConfigured(settings: Settings): boolean {
       return settings.grokTokens !== null;
     case 'copilotOauth':
       return settings.copilotTokens !== null;
+    case 'claudeOauth':
+      return settings.claudeTokens !== null;
+    case 'codexOauth':
+      return settings.codexTokens !== null;
     default:
       return settings.apiKey !== '' || settings.baseUrl.includes('localhost');
   }

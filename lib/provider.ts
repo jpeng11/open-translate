@@ -6,6 +6,8 @@ import {
   GROK_CLIENT_IDENTIFIER,
 } from './grokAuth';
 import { ensureFreshCopilotToken, COPILOT_HEADERS } from './copilotAuth';
+import { ensureFreshClaudeToken, CLAUDE_OAUTH_BETA } from './claudeAuth';
+import { ensureFreshCodexTokens } from './codexAuth';
 
 type ContentPart =
   | { type: 'text'; text: string }
@@ -33,6 +35,12 @@ async function buildHeaders(settings: Settings): Promise<Record<string, string>>
     const copilotToken = await ensureFreshCopilotToken(settings);
     headers.Authorization = `Bearer ${copilotToken}`;
     Object.assign(headers, COPILOT_HEADERS);
+  } else if (settings.authMode === 'claudeOauth') {
+    const accessToken = await ensureFreshClaudeToken(settings);
+    headers.Authorization = `Bearer ${accessToken}`;
+    headers['anthropic-version'] = '2023-06-01';
+    headers['anthropic-beta'] = CLAUDE_OAUTH_BETA;
+    headers['anthropic-dangerous-direct-browser-access'] = 'true';
   } else if (settings.apiKey) {
     headers.Authorization = `Bearer ${settings.apiKey}`;
   }
@@ -42,16 +50,17 @@ async function buildHeaders(settings: Settings): Promise<Record<string, string>>
 /** A hung provider request must never wedge a translation forever. */
 const REQUEST_TIMEOUT_MS = 90_000;
 
-async function chatCompletion(settings: Settings, messages: ChatMessage[]): Promise<string> {
-  const url = `${settings.baseUrl.replace(/\/+$/, '')}/chat/completions`;
-  const headers = await buildHeaders(settings);
-
+async function postWithTimeout(
+  url: string,
+  headers: Record<string, string>,
+  body: unknown,
+): Promise<Response> {
   let res: Response;
   try {
     res = await fetch(url, {
       method: 'POST',
       headers,
-      body: JSON.stringify({ model: settings.model, messages, temperature: 0.2 }),
+      body: JSON.stringify(body),
       signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     });
   } catch (err) {
@@ -66,14 +75,166 @@ async function chatCompletion(settings: Settings, messages: ChatMessage[]): Prom
   if (!res.ok) {
     let detail = '';
     try {
-      const body = await res.json();
-      detail = body?.error?.message ?? JSON.stringify(body).slice(0, 200);
+      const errBody = await res.json();
+      detail = errBody?.error?.message ?? JSON.stringify(errBody).slice(0, 200);
     } catch {
       detail = await res.text().then((t) => t.slice(0, 200)).catch(() => '');
     }
     throw new Error(`HTTP ${res.status}${detail ? `: ${detail}` : ''}`);
   }
+  return res;
+}
 
+/**
+ * Claude subscription entitlement is fingerprinted to Claude Code: OAuth
+ * tokens are only accepted when the request identifies as it, so the system
+ * prompt must lead with the Claude Code identity line.
+ */
+const CLAUDE_CODE_IDENTITY = "You are Claude Code, Anthropic's official CLI for Claude.";
+
+/** Anthropic Messages dialect, used for Claude Pro/Max OAuth tokens. */
+async function anthropicCompletion(settings: Settings, messages: ChatMessage[]): Promise<string> {
+  const accessToken = await ensureFreshClaudeToken(settings);
+  const url = `${settings.baseUrl.replace(/\/+$/, '')}/messages?beta=true`;
+
+  const systemText = messages
+    .filter((m) => m.role === 'system')
+    .map((m) => (typeof m.content === 'string' ? m.content : ''))
+    .join('\n');
+  const userMessages = messages
+    .filter((m) => m.role === 'user')
+    .map((m) => ({
+      role: 'user' as const,
+      content:
+        typeof m.content === 'string'
+          ? m.content
+          : m.content.map((part) =>
+              part.type === 'text'
+                ? { type: 'text' as const, text: part.text }
+                : {
+                    type: 'image' as const,
+                    source: {
+                      type: 'base64' as const,
+                      media_type: part.image_url.url.slice(5).split(';')[0] ?? 'image/png',
+                      data: part.image_url.url.split(',')[1] ?? '',
+                    },
+                  },
+            ),
+    }));
+
+  const res = await postWithTimeout(
+    url,
+    {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+      'anthropic-version': '2023-06-01',
+      'anthropic-beta': CLAUDE_OAUTH_BETA,
+      'anthropic-dangerous-direct-browser-access': 'true',
+    },
+    {
+      model: settings.model,
+      max_tokens: 8192,
+      system: [
+        { type: 'text', text: CLAUDE_CODE_IDENTITY },
+        ...(systemText ? [{ type: 'text', text: systemText }] : []),
+      ],
+      messages: userMessages,
+      temperature: 0.2,
+    },
+  );
+
+  const body = await res.json();
+  const text = (Array.isArray(body?.content) ? body.content : [])
+    .filter((block: { type?: unknown }) => block?.type === 'text')
+    .map((block: { text?: unknown }) => (typeof block.text === 'string' ? block.text : ''))
+    .join('');
+  if (!text) throw new Error('Provider returned no message content');
+  return text;
+}
+
+/** ChatGPT Codex backend (Responses API dialect, SSE), used for codexOauth. */
+async function codexCompletion(settings: Settings, messages: ChatMessage[]): Promise<string> {
+  const tokens = await ensureFreshCodexTokens(settings);
+  const url = `${settings.baseUrl.replace(/\/+$/, '')}/responses`;
+
+  const instructions = messages
+    .filter((m) => m.role === 'system')
+    .map((m) => (typeof m.content === 'string' ? m.content : ''))
+    .join('\n');
+  const input = messages
+    .filter((m) => m.role === 'user')
+    .map((m) => ({
+      type: 'message' as const,
+      role: 'user' as const,
+      content:
+        typeof m.content === 'string'
+          ? [{ type: 'input_text' as const, text: m.content }]
+          : m.content.map((part) =>
+              part.type === 'text'
+                ? { type: 'input_text' as const, text: part.text }
+                : { type: 'input_image' as const, image_url: part.image_url.url },
+            ),
+    }));
+
+  const res = await postWithTimeout(
+    url,
+    {
+      'Content-Type': 'application/json',
+      Accept: 'text/event-stream',
+      Authorization: `Bearer ${tokens.accessToken}`,
+      'chatgpt-account-id': tokens.accountId,
+      'OpenAI-Beta': 'responses=experimental',
+      originator: 'codex_cli_rs',
+      session_id: crypto.randomUUID(),
+    },
+    // The Codex backend requires streaming; store must be false for stateless use.
+    { model: settings.model, instructions, input, store: false, stream: true },
+  );
+
+  // Accumulate output_text deltas from the SSE stream; fall back to the
+  // completed response object if the server sent no deltas.
+  const raw = await res.text();
+  let text = '';
+  let completedText = '';
+  for (const line of raw.split('\n')) {
+    if (!line.startsWith('data:')) continue;
+    const payload = line.slice(5).trim();
+    if (!payload || payload === '[DONE]') continue;
+    try {
+      const event = JSON.parse(payload);
+      if (event?.type === 'response.output_text.delta' && typeof event.delta === 'string') {
+        text += event.delta;
+      } else if (event?.type === 'response.completed') {
+        const output = Array.isArray(event?.response?.output) ? event.response.output : [];
+        for (const item of output) {
+          if (item?.type !== 'message' || !Array.isArray(item.content)) continue;
+          for (const part of item.content) {
+            if (part?.type === 'output_text' && typeof part.text === 'string') {
+              completedText += part.text;
+            }
+          }
+        }
+      }
+    } catch {
+      // Skip malformed SSE lines.
+    }
+  }
+  const result = text || completedText;
+  if (!result) throw new Error('Provider returned no message content');
+  return result;
+}
+
+async function chatCompletion(settings: Settings, messages: ChatMessage[]): Promise<string> {
+  if (settings.authMode === 'claudeOauth') return anthropicCompletion(settings, messages);
+  if (settings.authMode === 'codexOauth') return codexCompletion(settings, messages);
+
+  const url = `${settings.baseUrl.replace(/\/+$/, '')}/chat/completions`;
+  const headers = await buildHeaders(settings);
+  const res = await postWithTimeout(url, headers, {
+    model: settings.model,
+    messages,
+    temperature: 0.2,
+  });
   const body = await res.json();
   const content = body?.choices?.[0]?.message?.content;
   if (typeof content !== 'string') throw new Error('Provider returned no message content');
@@ -202,6 +363,9 @@ export async function translateImage(settings: Settings, imageDataUrl: string): 
 
 /** List model ids from the provider's /models endpoint (OpenAI-compatible). */
 export async function listModels(settings: Settings): Promise<string[]> {
+  if (settings.authMode === 'codexOauth') {
+    throw new Error('The ChatGPT backend has no model list — use the suggested models');
+  }
   const url = `${settings.baseUrl.replace(/\/+$/, '')}/models`;
   const headers = await buildHeaders(settings);
   const res = await fetch(url, { headers, signal: AbortSignal.timeout(20_000) });

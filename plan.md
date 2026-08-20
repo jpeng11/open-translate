@@ -116,22 +116,40 @@ Sign in with a coding-agent subscription instead of an API key. Each of these
 is its own OAuth flow and must be verified live before being called done —
 the Grok flow taught us that scopes/headers fail with misleading errors.
 
-- [x] Grok / SuperGrok (Sign in with X) — shipped and verified live (Phase 1)
-- [x] GitHub Copilot — device flow + `copilot_internal/v2/token` exchange +
+Every agent supports both paths where the vendor allows it: OAuth subscription
+sign-in and an API-key preset. All endpoints verified against official docs
+(GitHub device flow docs, developers.openai.com/codex/auth, Anthropic +
+Gemini OpenAI-compat docs) on 2026-08-20.
+
+- [x] Grok / SuperGrok (Sign in with X) — shipped and verified live (Phase 1);
+      API-key pair: `xai-key`
+- [x] GitHub Copilot — device flow (official GitHub OAuth device endpoints) +
+      `copilot_internal/v2/token` exchange with `Copilot-Integration-Id`
+      (scopes the issued token — required for full model access) +
       editor headers against the OpenAI-compatible `api.githubcopilot.com`
-      (`lib/copilotAuth.ts`); **needs live verification by a Copilot subscriber**
-- [ ] Claude Pro/Max (Claude Code OAuth) — requires an Anthropic `/v1/messages`
-      dialect adapter, not just headers; entitlement is fingerprinted to Claude
-      Code, so this is brittle/ToS-gray — implement only on explicit demand
-- [ ] ChatGPT Plus/Pro (Codex OAuth) — requires the `responses` API dialect;
-      same caveats as above
-- [ ] Gemini CLI (Google OAuth) — requires the cloudcode `generateContent`
-      dialect; same caveats as above
+      (`lib/copilotAuth.ts`); **needs live verification by a Copilot subscriber**.
+      No API-key pair exists: GitHub Models was retired 2026-07-30 (official docs)
+- [x] Claude Pro/Max — Claude Code OAuth PKCE in copy/paste mode (no localhost
+      redirect needed) + Anthropic `/v1/messages` dialect with
+      `anthropic-beta: oauth-2025-04-20` and the Claude Code identity system
+      block (`lib/claudeAuth.ts`); **needs live verification by a subscriber**.
+      API-key pair: `anthropic` (OpenAI-compat endpoint)
+- [x] ChatGPT Plus/Pro — Codex device-auth flow (officially documented for
+      headless devices; requires the "Device code authorization" toggle in
+      ChatGPT Settings → Security) + ChatGPT Codex backend Responses/SSE
+      dialect (`lib/codexAuth.ts`); **needs live verification by a subscriber**.
+      API-key pair: `openai`
+- [ ] Gemini CLI (Google OAuth) — **infeasible in a browser extension**:
+      Google installed-app OAuth requires a loopback redirect (extensions
+      can't listen on localhost), the device flow disallows cloud scopes, and
+      OOB copy/paste was retired. API-key pair `gemini` (official
+      OpenAI-compat endpoint) is the supported path
 
 ## Testing & release
 
-- [x] Unit suite: Vitest + `wxt/testing` fake browser, 78 tests across provider
-      (batch protocol, auth headers), cache, settings, presets, Grok OAuth,
+- [x] Unit suite: Vitest + `wxt/testing` fake browser, 110+ tests across
+      provider (batch protocol, auth headers, Anthropic/Codex dialects),
+      cache, settings, presets, OAuth flows (Grok, Copilot, Claude, Codex),
       content DOM logic, documents (SRT/ASS/TXT/HTML export, chunking),
       subtitles, images, glossary (`pnpm test`)
 - [x] E2E smoke: Playwright loads the built extension into Chromium, drives a

@@ -1,6 +1,8 @@
 import type { AuthMode } from './settings';
 import { GROK_PROXY_BASE_URL, GROK_DEFAULT_MODEL } from './grokAuth';
 import { COPILOT_BASE_URL, COPILOT_DEFAULT_MODEL } from './copilotAuth';
+import { CLAUDE_BASE_URL, CLAUDE_DEFAULT_MODEL } from './claudeAuth';
+import { CODEX_BASE_URL, CODEX_DEFAULT_MODEL } from './codexAuth';
 
 export interface ProviderPreset {
   id: string;
@@ -48,6 +50,29 @@ export const PRESETS: ProviderPreset[] = [
     note:
       'Uses your GitHub Copilot subscription via OAuth — no API key needed. ' +
       'After signing in, click "Fetch models" to see what your plan includes.',
+  },
+  {
+    id: 'claude-oauth',
+    label: 'Claude Pro/Max — Sign in with Claude',
+    baseUrl: CLAUDE_BASE_URL,
+    model: CLAUDE_DEFAULT_MODEL,
+    authMode: 'claudeOauth',
+    modelSuggestions: ['claude-haiku-4-5', 'claude-sonnet-4-5'],
+    note:
+      'Uses your Claude Pro or Max subscription via OAuth — no API key needed. ' +
+      'For pay-per-token access use the "Anthropic (Claude)" preset instead.',
+  },
+  {
+    id: 'codex-oauth',
+    label: 'ChatGPT Plus/Pro — Sign in with ChatGPT',
+    baseUrl: CODEX_BASE_URL,
+    model: CODEX_DEFAULT_MODEL,
+    authMode: 'codexOauth',
+    modelSuggestions: ['gpt-5.1', 'gpt-5.1-codex', 'gpt-5.1-codex-mini'],
+    note:
+      'Uses your ChatGPT subscription via the Codex device sign-in. Requires ' +
+      '"Device code authorization" enabled under ChatGPT Settings → Security. ' +
+      'For pay-per-token access use the "OpenAI" preset instead.',
   },
   {
     id: 'xai-key',
