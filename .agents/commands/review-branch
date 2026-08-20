@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# Review the changes on the current branch (or uncommitted work on main).
+#
+# This command produces a REVIEW PROMPT for an AI agent. The agent running it
+# must NOT write any code — only produce a review summary.
+set -euo pipefail
+
+cd "$(git rev-parse --show-toplevel)"
+
+branch="$(git rev-parse --abbrev-ref HEAD)"
+if [ "$branch" = "main" ]; then
+  range_desc="uncommitted changes on main"
+  diff="$(git diff HEAD)"
+  log=""
+else
+  base="$(git merge-base main HEAD)"
+  range_desc="branch '$branch' vs main"
+  diff="$(git diff "$base"...HEAD)"
+  log="$(git log --oneline "$base"..HEAD)"
+fi
+
+if [ -z "$diff" ]; then
+  echo "Nothing to review: no changes found for $range_desc."
+  exit 0
+fi
+
+cat <<PROMPT
+You are reviewing $range_desc of Open Translate. Do NOT write or modify any
+code. Produce only a review summary: correctness issues first, then risks,
+then style nits. Check especially against the project invariants in AGENTS.md:
+
+- Batch protocol: JSON array in -> same-length JSON array out, index-validated
+- MV3 messaging: sendResponse + return true, never a returned Promise
+- Privacy: no keys/tokens in logs; content goes only to the configured endpoint
+- Grok OAuth: grok-cli:access scope and x-grok-client-version header intact
+- DOM: leaf blocks only, data-ot-state markers, lossless restore
+
+Commits:
+$log
+
+Diff:
+$diff
+PROMPT

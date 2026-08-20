@@ -1,6 +1,9 @@
 # Agent Development Guide
 
 Guidance for AI coding agents working on Open Translate (see [agents.md](https://agents.md/)).
+`CLAUDE.md` is a symlink to this file for Claude Code. See [AI_POLICY.md](AI_POLICY.md) for
+the AI contribution policy, and `.agents/` for reusable skills and commands
+(e.g. `.agents/commands/review-branch`).
 
 ## Commands
 

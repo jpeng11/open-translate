@@ -3,12 +3,12 @@ test-results/
 playwright-report/
 
 # --- AI / agent artifacts ---
-# (AGENTS.md is intentionally tracked — it's the agent development guide)
+# (AGENTS.md, CLAUDE.md → AGENTS.md, AI_POLICY.md, and .agents/ are
+#  intentionally tracked — they're the project's agent support files)
 .cursor/
 .claude/
 .codex/
 .aider*
-CLAUDE.md
 GEMINI.md
 .specstory/
 
