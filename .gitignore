@@ -1,10 +1,10 @@
 # --- AI / agent artifacts ---
+# (AGENTS.md is intentionally tracked — it's the agent development guide)
 .cursor/
 .claude/
 .codex/
 .aider*
 CLAUDE.md
-AGENTS.md
 GEMINI.md
 .specstory/
 
