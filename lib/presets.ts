@@ -32,8 +32,17 @@ export const PRESETS: ProviderPreset[] = [
       'Uses your SuperGrok or X Premium+ subscription via OAuth — no API key needed. ' +
       'Note: xAI gates this endpoint by account entitlement; if translation fails with ' +
       '403 or "does not have Grok Code CLI permission" after signing in, your tier is ' +
-      'not allowlisted — use an xAI API key (console.x.ai, base URL https://api.x.ai/v1) ' +
-      'with the Custom preset instead.',
+      'not allowlisted — switch to the "xAI Grok (API key)" preset instead.',
+  },
+  {
+    id: 'xai-key',
+    label: 'xAI Grok (API key)',
+    baseUrl: 'https://api.x.ai/v1',
+    model: GROK_DEFAULT_MODEL,
+    authMode: 'apiKey',
+    note:
+      'Pay-per-token key from console.x.ai. Not gated by subscription tier — use this ' +
+      'when Grok OAuth sign-in succeeds but translation returns a permission error.',
   },
   {
     id: 'openrouter',
