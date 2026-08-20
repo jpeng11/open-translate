@@ -9,7 +9,8 @@ OpenRouter, DeepSeek, Groq, local Ollama, or anything custom.
 - Bilingual webpage translation: translations injected under the original
   paragraphs, with one-click restore; SPA-aware via MutationObserver
 - Bring-your-own model: base URL + API key + model name, stored locally —
-  plus **Sign in with X (Grok)** OAuth, no API key needed
+  or sign in with a coding-agent subscription instead of a key:
+  **Sign in with X (Grok)** and **Sign in with GitHub (Copilot)** OAuth
 - Quick tools: selection translate, hover translate, input-box translate
 - Document translation: PDF, EPUB, TXT, Markdown, SRT, ASS → bilingual output
 - YouTube bilingual subtitles (translates the native captions live)

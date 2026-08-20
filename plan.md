@@ -21,8 +21,9 @@ manager: **pnpm**.
 
 ## Current focus
 
-**Maintenance** — all planned phases (0–7) and the test suite are shipped;
-`v0.1.0` tagged. Remaining ideas live as deferred/stretch checkboxes below.
+**Phase 8 — coding-agent subscriptions.** Most target users already pay for a
+coding agent, so let them sign in with that subscription instead of buying API
+keys. Grok OAuth (Phase 1) proved the pattern; Copilot is next.
 
 ## Phase 0 — Scaffold and tracker
 
@@ -108,6 +109,24 @@ Restore works; keys never logged.
       original formatting visible, so the payoff doesn't justify the protocol risk yet
 - [x] Per-site auto-translate rules (hostname + subdomains; skips unconfigured/excluded)
 - [x] Privacy policy (PRIVACY.md), Ollama/CORS docs, README feature list refresh
+
+## Phase 8 — Coding-agent subscriptions (bring-your-own agent)
+
+Sign in with a coding-agent subscription instead of an API key. Each of these
+is its own OAuth flow and must be verified live before being called done —
+the Grok flow taught us that scopes/headers fail with misleading errors.
+
+- [x] Grok / SuperGrok (Sign in with X) — shipped and verified live (Phase 1)
+- [x] GitHub Copilot — device flow + `copilot_internal/v2/token` exchange +
+      editor headers against the OpenAI-compatible `api.githubcopilot.com`
+      (`lib/copilotAuth.ts`); **needs live verification by a Copilot subscriber**
+- [ ] Claude Pro/Max (Claude Code OAuth) — requires an Anthropic `/v1/messages`
+      dialect adapter, not just headers; entitlement is fingerprinted to Claude
+      Code, so this is brittle/ToS-gray — implement only on explicit demand
+- [ ] ChatGPT Plus/Pro (Codex OAuth) — requires the `responses` API dialect;
+      same caveats as above
+- [ ] Gemini CLI (Google OAuth) — requires the cloudcode `generateContent`
+      dialect; same caveats as above
 
 ## Testing & release
 

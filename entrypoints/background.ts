@@ -3,7 +3,7 @@ import { defineBackground } from 'wxt/utils/define-background';
 import { listModels, testConnection, translateImage } from '@/lib/provider';
 import { translateWithCache } from '@/lib/cache';
 import { fetchImageAsDataUrl } from '@/lib/images';
-import { getSettings } from '@/lib/settings';
+import { getSettings, isConfigured } from '@/lib/settings';
 import { TRANSLATE_PORT } from '@/lib/messaging';
 import type {
   TranslateRequest,
@@ -103,12 +103,12 @@ export default defineBackground(() => {
             `${active} active, ${queue.length} queued)`);
           try {
             const settings = await getSettings();
-            if (settings.authMode === 'grokOauth') {
-              if (!settings.grokTokens) {
-                throw new Error('Not signed in with Grok. Open the extension options first.');
-              }
-            } else if (!settings.apiKey && !settings.baseUrl.includes('localhost')) {
-              throw new Error('No API key configured. Open the extension options first.');
+            if (!isConfigured(settings)) {
+              throw new Error(
+                settings.authMode === 'apiKey'
+                  ? 'No API key configured. Open the extension options first.'
+                  : 'Not signed in. Open the extension options and sign in first.',
+              );
             }
             const translations = await translateWithCache(req.texts, settings);
             response = { type: 'result', id: req.id, translations };

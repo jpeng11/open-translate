@@ -1,6 +1,6 @@
 import { browser } from 'wxt/browser';
 import { defineContentScript } from 'wxt/utils/define-content-script';
-import { getSettings, matchesSite } from '@/lib/settings';
+import { getSettings, isConfigured, matchesSite } from '@/lib/settings';
 import type { Settings } from '@/lib/settings';
 import { TRANSLATE_PORT } from '@/lib/messaging';
 import type { TranslateResponse, RuntimeMessage, PageState } from '@/lib/messaging';
@@ -233,11 +233,7 @@ export default defineContentScript({
         initSubtitles();
       }
 
-      const configured =
-        settings.authMode === 'grokOauth'
-          ? settings.grokTokens !== null
-          : settings.apiKey !== '' || settings.baseUrl.includes('localhost');
-      if (configured && matchesSite(location.hostname, settings.autoTranslateSites)) {
+      if (isConfigured(settings) && matchesSite(location.hostname, settings.autoTranslateSites)) {
         void translatePage();
       }
     });

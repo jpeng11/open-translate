@@ -22,6 +22,12 @@ describe('provider presets', () => {
     expect(oauth[0]!.baseUrl).toBe(GROK_PROXY_BASE_URL);
   });
 
+  it('exactly one preset uses Copilot OAuth and it points at the Copilot API', () => {
+    const oauth = PRESETS.filter((p) => p.authMode === 'copilotOauth');
+    expect(oauth).toHaveLength(1);
+    expect(oauth[0]!.baseUrl).toBe('https://api.githubcopilot.com');
+  });
+
   it('offers an xAI API-key fallback preset', () => {
     const xai = PRESETS.find((p) => p.id === 'xai-key');
     expect(xai).toBeDefined();

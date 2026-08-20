@@ -115,6 +115,28 @@ describe('translateBatch — locked JSON-array protocol', () => {
     expect(headers.Authorization).toBe('Bearer sk-test');
   });
 
+  it('sends the Copilot bearer and editor headers in copilotOauth mode', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(okResponse('["a"]'));
+    const copilotSettings: Settings = {
+      ...settings,
+      authMode: 'copilotOauth',
+      baseUrl: 'https://api.githubcopilot.com',
+      model: 'gpt-4o-mini',
+      copilotTokens: {
+        githubToken: 'gho_test',
+        copilotToken: 'copilot-bearer',
+        expiresAt: Date.now() + 60 * 60 * 1000,
+      },
+    };
+    await translateBatch(['x'], copilotSettings);
+    const [url, init] = fetchMock.mock.calls[0]!;
+    expect(url).toBe('https://api.githubcopilot.com/chat/completions');
+    const headers = (init as RequestInit).headers as Record<string, string>;
+    expect(headers.Authorization).toBe('Bearer copilot-bearer');
+    expect(headers['Copilot-Integration-Id']).toBe('vscode-chat');
+    expect(headers['Editor-Version']).toMatch(/^vscode\//);
+  });
+
   it('sends Grok proxy headers in grokOauth mode', async () => {
     const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(okResponse('["a"]'));
     const grokSettings: Settings = {

@@ -5,6 +5,7 @@ import {
   GROK_CLIENT_VERSION,
   GROK_CLIENT_IDENTIFIER,
 } from './grokAuth';
+import { ensureFreshCopilotToken, COPILOT_HEADERS } from './copilotAuth';
 
 type ContentPart =
   | { type: 'text'; text: string }
@@ -28,6 +29,10 @@ async function buildHeaders(settings: Settings): Promise<Record<string, string>>
     // (verified live: adding this header is what makes inference work).
     headers['x-grok-client-version'] = GROK_CLIENT_VERSION;
     headers['x-grok-client-identifier'] = GROK_CLIENT_IDENTIFIER;
+  } else if (settings.authMode === 'copilotOauth') {
+    const copilotToken = await ensureFreshCopilotToken(settings);
+    headers.Authorization = `Bearer ${copilotToken}`;
+    Object.assign(headers, COPILOT_HEADERS);
   } else if (settings.apiKey) {
     headers.Authorization = `Bearer ${settings.apiKey}`;
   }

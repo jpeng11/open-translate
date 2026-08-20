@@ -1,8 +1,9 @@
 import { browser } from 'wxt/browser';
 import type { GrokTokens } from './grokAuth';
+import type { CopilotTokens } from './copilotAuth';
 
 export type DisplayMode = 'bilingual' | 'translationOnly';
-export type AuthMode = 'apiKey' | 'grokOauth';
+export type AuthMode = 'apiKey' | 'grokOauth' | 'copilotOauth';
 
 export interface Settings {
   authMode: AuthMode;
@@ -10,6 +11,8 @@ export interface Settings {
   apiKey: string;
   /** Present when signed in with X/Grok (authMode 'grokOauth'). */
   grokTokens: GrokTokens | null;
+  /** Present when signed in with GitHub Copilot (authMode 'copilotOauth'). */
+  copilotTokens: CopilotTokens | null;
   model: string;
   targetLang: string;
   neverTranslateLangs: string[];
@@ -29,6 +32,7 @@ export const DEFAULT_SETTINGS: Settings = {
   baseUrl: 'https://api.openai.com/v1',
   apiKey: '',
   grokTokens: null,
+  copilotTokens: null,
   model: 'gpt-4o-mini',
   targetLang: '',
   neverTranslateLangs: [],
@@ -39,6 +43,18 @@ export const DEFAULT_SETTINGS: Settings = {
   glossary: '',
   autoTranslateSites: [],
 };
+
+/** True when the settings have working credentials for their auth mode. */
+export function isConfigured(settings: Settings): boolean {
+  switch (settings.authMode) {
+    case 'grokOauth':
+      return settings.grokTokens !== null;
+    case 'copilotOauth':
+      return settings.copilotTokens !== null;
+    default:
+      return settings.apiKey !== '' || settings.baseUrl.includes('localhost');
+  }
+}
 
 /** True when `hostname` equals a rule or is a subdomain of one. */
 export function matchesSite(hostname: string, rules: string[]): boolean {

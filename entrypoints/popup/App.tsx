@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { browser } from 'wxt/browser';
-import { getSettings, saveSettings, LANGUAGES } from '@/lib/settings';
+import { getSettings, saveSettings, isConfigured, LANGUAGES } from '@/lib/settings';
 import type { Settings } from '@/lib/settings';
 import type { PageState } from '@/lib/messaging';
 
@@ -79,10 +79,7 @@ export default function App() {
 
   if (!settings) return <div className="w-72 p-4 text-sm">Loading…</div>;
 
-  const configured =
-    settings.authMode === 'grokOauth'
-      ? settings.grokTokens !== null
-      : settings.apiKey !== '' || settings.baseUrl.includes('localhost');
+  const configured = isConfigured(settings);
   const isExcluded = hostname !== '' && settings.excludedSites.includes(hostname);
   let providerHost = settings.baseUrl;
   try {

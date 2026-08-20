@@ -1,5 +1,6 @@
 import type { AuthMode } from './settings';
 import { GROK_PROXY_BASE_URL, GROK_DEFAULT_MODEL } from './grokAuth';
+import { COPILOT_BASE_URL, COPILOT_DEFAULT_MODEL } from './copilotAuth';
 
 export interface ProviderPreset {
   id: string;
@@ -36,6 +37,17 @@ export const PRESETS: ProviderPreset[] = [
       'Uses your SuperGrok or X Premium+ subscription via OAuth — no API key needed. ' +
       'If translation still fails with a permission error after signing in, switch to ' +
       'the "xAI Grok (API key)" preset instead.',
+  },
+  {
+    id: 'copilot-oauth',
+    label: 'GitHub Copilot — Sign in with GitHub',
+    baseUrl: COPILOT_BASE_URL,
+    model: COPILOT_DEFAULT_MODEL,
+    authMode: 'copilotOauth',
+    modelSuggestions: ['gpt-4o-mini', 'gpt-4o', 'gpt-4.1'],
+    note:
+      'Uses your GitHub Copilot subscription via OAuth — no API key needed. ' +
+      'After signing in, click "Fetch models" to see what your plan includes.',
   },
   {
     id: 'xai-key',
