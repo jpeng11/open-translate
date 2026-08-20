@@ -21,9 +21,8 @@ manager: **pnpm**.
 
 ## Current focus
 
-**Phase 7 — Hardening** (Phases 0–6 shipped; Grok OAuth verified live
-end-to-end. Manual verification still worthwhile: load `.output/chrome-mv3`
-unpacked, translate a long article, try a document upload and a YouTube video)
+**Testing & final audit** (Phases 0–7 shipped; Grok OAuth verified live
+end-to-end. Remaining: Playwright E2E smoke test, manual pass, final audit)
 
 ## Phase 0 — Scaffold and tracker
 
@@ -101,8 +100,11 @@ Restore works; keys never logged.
 
 ## Phase 7 — Hardening
 
-- [ ] Firefox build via WXT
-- [ ] Custom glossary (term mappings forced into prompt)
-- [ ] Inline-tag preservation (placeholder tokens)
-- [ ] Per-site auto-translate rules
-- [ ] Store listing assets, privacy policy page, Ollama/CORS docs
+- [x] Firefox build via WXT (`pnpm build:firefox` → `.output/firefox-mv2`) + store zips
+      (`pnpm zip`, `pnpm zip:firefox`)
+- [x] Custom glossary ("term = translation" lines; only entries present in the batch
+      are injected into the prompt)
+- [ ] Inline-tag preservation (placeholder tokens) — deferred: bilingual mode keeps the
+      original formatting visible, so the payoff doesn't justify the protocol risk yet
+- [x] Per-site auto-translate rules (hostname + subdomains; skips unconfigured/excluded)
+- [x] Privacy policy (PRIVACY.md), Ollama/CORS docs, README feature list refresh

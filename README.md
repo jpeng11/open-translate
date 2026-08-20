@@ -4,19 +4,26 @@ Open-source bilingual web translation — like Immersive Translate, but you
 connect **your own AI model**. Any OpenAI-compatible endpoint works: OpenAI,
 OpenRouter, DeepSeek, Groq, local Ollama, or anything custom.
 
-## Features (MVP)
+## Features
 
 - Bilingual webpage translation: translations injected under the original
-  paragraphs, with one-click restore
-- Bring-your-own model: base URL + API key + model name, stored locally
-- Translation-only display mode
-- Per-page cost guard and session translation cache
+  paragraphs, with one-click restore; SPA-aware via MutationObserver
+- Bring-your-own model: base URL + API key + model name, stored locally —
+  plus **Sign in with X (Grok)** OAuth, no API key needed
+- Quick tools: selection translate, hover translate, input-box translate
+- Document translation: PDF, EPUB, TXT, Markdown, SRT, ASS → bilingual output
+- YouTube bilingual subtitles (translates the native captions live)
+- Right-click **Translate this image** using your vision-capable model
+- Custom glossary, per-site auto-translate, excluded sites
+- Translation-only display mode, per-page cost guard, session translation cache
 
 ## Install (development)
 
 ```bash
 pnpm install
 pnpm build           # outputs to .output/chrome-mv3
+pnpm build:firefox   # outputs to .output/firefox-mv2
+pnpm zip             # store-ready zip in .output/
 ```
 
 Then in Chrome/Edge: `chrome://extensions` → enable **Developer mode** →
@@ -36,20 +43,22 @@ pnpm dev
 3. Paste your API key, adjust the model if needed, click **Test connection**,
    then **Save**.
 
-**Ollama note:** the browser sends requests from an extension origin, so you
-must allow it: start Ollama with `OLLAMA_ORIGINS=*` (or set it to the
-extension origin) or requests will fail with 403.
+**Ollama / local models (CORS):** the browser sends requests from an extension
+origin, so you must allow it — start Ollama with
+`OLLAMA_ORIGINS=chrome-extension://*` (or `OLLAMA_ORIGINS=*`), otherwise
+requests fail with 403. Same idea applies to LM Studio and other local servers:
+enable CORS for extension origins. Local endpoints need no API key.
 
 ## Privacy
 
-- Your API key is stored in `chrome.storage.local` on your machine only.
-- Page text is sent **only** to the endpoint you configure — no other servers,
-  no telemetry, no content retention by this extension.
+No backend, no telemetry, no analytics. Your keys stay in `chrome.storage.local`;
+page text is sent **only** to the endpoint you configure. Full policy:
+[PRIVACY.md](PRIVACY.md).
 
 ## Roadmap
 
-See [plan.md](plan.md) — documents (PDF/EPUB/subtitles), video bilingual
-subtitles, image OCR, glossaries, and Firefox support are planned phases.
+See [plan.md](plan.md) for the full phase history and remaining stretch goals
+(layout-preserved PDF, more subtitle platforms, manga mode).
 
 ## License
 

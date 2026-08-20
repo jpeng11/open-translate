@@ -18,6 +18,10 @@ export interface Settings {
   excludedSites: string[];
   /** Bilingual video subtitle overlay (YouTube). */
   videoSubtitles: boolean;
+  /** Custom glossary, one "term = translation" per line; forced into prompts. */
+  glossary: string;
+  /** Hostnames (or parent domains) that translate automatically on load. */
+  autoTranslateSites: string[];
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -32,7 +36,18 @@ export const DEFAULT_SETTINGS: Settings = {
   maxCharsPerPage: 100_000,
   excludedSites: [],
   videoSubtitles: true,
+  glossary: '',
+  autoTranslateSites: [],
 };
+
+/** True when `hostname` equals a rule or is a subdomain of one. */
+export function matchesSite(hostname: string, rules: string[]): boolean {
+  return rules.some((rule) => {
+    const r = rule.trim().toLowerCase();
+    if (!r) return false;
+    return hostname === r || hostname.endsWith(`.${r}`);
+  });
+}
 
 export const LANGUAGES: { code: string; label: string }[] = [
   { code: 'en', label: 'English' },

@@ -76,6 +76,30 @@ function parseJsonStringArray(content: string): string[] | null {
   }
 }
 
+/** Parse "term = translation" lines into entries; malformed lines are skipped. */
+export function parseGlossary(raw: string): [string, string][] {
+  const entries: [string, string][] = [];
+  for (const line of raw.split(/\r?\n/)) {
+    const idx = line.indexOf('=');
+    if (idx === -1) continue;
+    const term = line.slice(0, idx).trim();
+    const translation = line.slice(idx + 1).trim();
+    if (term && translation) entries.push([term, translation]);
+  }
+  return entries;
+}
+
+/** Prompt clause with only the glossary entries that actually occur in the texts. */
+function glossaryClause(texts: string[], settings: Settings): string {
+  const relevant = parseGlossary(settings.glossary ?? '').filter(([term]) => {
+    const needle = term.toLowerCase();
+    return texts.some((t) => t.toLowerCase().includes(needle));
+  });
+  if (relevant.length === 0) return '';
+  const rules = relevant.map(([term, translation]) => `"${term}" -> "${translation}"`).join('; ');
+  return ` Always use this glossary for these terms: ${rules}.`;
+}
+
 function batchMessages(texts: string[], settings: Settings): ChatMessage[] {
   const lang = `${languageLabel(settings.targetLang)} (${settings.targetLang})`;
   return [
@@ -86,7 +110,8 @@ function batchMessages(texts: string[], settings: Settings): ChatMessage[] {
         `Translate each string into ${lang}. ` +
         `Reply with ONLY a JSON array of the translated strings, exactly the same length and order as the input. ` +
         `Keep numbers, URLs, code identifiers, and proper nouns intact where appropriate. ` +
-        `If a string is already in ${lang}, return it unchanged. No explanations, no markdown fences.`,
+        `If a string is already in ${lang}, return it unchanged. No explanations, no markdown fences.` +
+        glossaryClause(texts, settings),
     },
     { role: 'user', content: JSON.stringify(texts) },
   ];
@@ -97,7 +122,9 @@ async function translateOne(text: string, settings: Settings): Promise<string> {
   const content = await chatCompletion(settings, [
     {
       role: 'system',
-      content: `Translate the user's text into ${lang}. Reply with only the translation, nothing else.`,
+      content:
+        `Translate the user's text into ${lang}. Reply with only the translation, nothing else.` +
+        glossaryClause([text], settings),
     },
     { role: 'user', content: text },
   ]);

@@ -1,6 +1,6 @@
 import { browser } from 'wxt/browser';
 import { defineContentScript } from 'wxt/utils/define-content-script';
-import { getSettings } from '@/lib/settings';
+import { getSettings, matchesSite } from '@/lib/settings';
 import type { Settings } from '@/lib/settings';
 import { TRANSLATE_PORT } from '@/lib/messaging';
 import type { TranslateResponse, RuntimeMessage, PageState } from '@/lib/messaging';
@@ -224,12 +224,21 @@ export default defineContentScript({
 
     initQuickTools();
 
-    if (isYouTubeWatchPage()) {
-      void getSettings().then((settings) => {
-        if (settings.videoSubtitles && !settings.excludedSites.includes(location.hostname)) {
-          initSubtitles();
-        }
-      });
-    }
+    void getSettings().then((settings) => {
+      const excluded = settings.excludedSites.includes(location.hostname);
+      if (excluded) return;
+
+      if (isYouTubeWatchPage() && settings.videoSubtitles) {
+        initSubtitles();
+      }
+
+      const configured =
+        settings.authMode === 'grokOauth'
+          ? settings.grokTokens !== null
+          : settings.apiKey !== '' || settings.baseUrl.includes('localhost');
+      if (configured && matchesSite(location.hostname, settings.autoTranslateSites)) {
+        void translatePage();
+      }
+    });
   },
 });

@@ -302,6 +302,34 @@ export default function App() {
             }
           />
         </label>
+
+        <label className="mt-3 block text-xs text-slate-600">
+          Auto-translate sites (one hostname per line; subdomains included)
+          <textarea
+            className={`${inputClass} h-24 font-mono`}
+            placeholder={'lemonde.fr\nnews.example.com'}
+            value={settings.autoTranslateSites.join('\n')}
+            onChange={(e) =>
+              update({
+                autoTranslateSites: e.target.value
+                  .split('\n')
+                  .map((s) => s.trim())
+                  .filter(Boolean),
+              })
+            }
+          />
+        </label>
+
+        <label className="mt-3 block text-xs text-slate-600">
+          Glossary — forced translations, one <span className="font-mono">term = translation</span>{' '}
+          per line
+          <textarea
+            className={`${inputClass} h-24 font-mono`}
+            placeholder={'LLM = 大语言模型\nprompt = 提示词'}
+            value={settings.glossary}
+            onChange={(e) => update({ glossary: e.target.value })}
+          />
+        </label>
       </section>
 
       <div className="mt-5 flex items-center gap-3">
