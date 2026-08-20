@@ -32,16 +32,16 @@ Original branding, MIT license, no proprietary code copied.
 
 ## Phase 1 — Bring-your-own AI
 
-- [ ] Manifest: `host_permissions: ["<all_urls>"]`, `storage` + `activeTab` permissions
-- [ ] Settings schema: `baseUrl`, `apiKey`, `model`, `targetLang`,
+- [x] Manifest: `host_permissions: ["<all_urls>"]`, `storage` + `activeTab` permissions
+- [x] Settings schema: `baseUrl`, `apiKey`, `model`, `targetLang`,
       `neverTranslateLangs[]`, `displayMode`, `maxCharsPerPage`, `excludedSites`
-- [ ] Presets (fill base URL/model only): OpenAI, OpenRouter, DeepSeek, Groq,
+- [x] Presets (fill base URL/model only): OpenAI, OpenRouter, DeepSeek, Groq,
       Ollama (`http://localhost:11434/v1` + `OLLAMA_ORIGINS` note), Custom
-- [ ] Provider client: JSON-array batch protocol, index validation, retry once,
+- [x] Provider client: JSON-array batch protocol, index validation, retry once,
       per-item fallback, concurrency limit
-- [ ] Options page: provider form + Test connection
-- [ ] Popup: target language, Translate/Restore, provider status
-- [ ] MV3 keepalive: long-lived Port from content script during translation
+- [x] Options page: provider form + Test connection
+- [x] Popup: target language, Translate/Restore, provider status
+- [x] MV3 keepalive: long-lived Port from content script during translation
 
 ## Phase 2 — Bilingual webpage (MVP)
 
