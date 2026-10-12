@@ -56,7 +56,7 @@ python3 -m open_translate --backend agy --timeout 180
 
 Then connect the extension using the URL printed by the server. No OpenAI API URL or API key is needed for this backend. If `agy` is outside your PATH, add `--agy-command /absolute/path/to/agy`.
 
-The CLI uses its cached login; sign in through an interactive `agy` session first if needed. The adapter uses [Google's documented headless stdin and structured-output protocol](https://antigravity.google/docs/cli/headless/). Each batch starts a fresh process in an empty temporary workspace and sends source text over stdin. AGY uses its existing account and settings; translations consume your account's AI credits and may be recorded by the CLI or provider.
+The CLI uses its cached login; sign in through an interactive `agy` session first if needed. The adapter uses [Google's documented headless stdin and structured-output protocol](https://antigravity.google/docs/cli/headless/). Each batch starts a fresh process in a fresh temporary workspace containing its translation profile and sends source text over stdin. AGY uses its existing account and settings; translations consume your account's AI credits and may be recorded by the CLI or provider.
 
 AGY's current default model is used unless you supply `--model`. Use `agy models` to find an available model slug. Start with one text group per extension request and concurrency one. A 180-second bridge timeout needs an extension timeout of at least 210,000 milliseconds; generate the matching settings with:
 
@@ -66,7 +66,7 @@ python3 -m open_translate --backend agy --timeout 180 --print-extension-config
 python3 -m open_translate --backend agy --timeout 180
 ```
 
-The adapter requests translation only, selects the default approval mode and enables AGY's terminal sandbox. Existing CLI permissions, hooks and MCP integrations still apply. A tool event makes the translation fail validation; that check happens after the CLI run and does not prevent tool execution. Use a translation-only account/profile if your existing CLI setup grants tools access you do not want webpage text to influence.
+The adapter requests translation only, selects the default approval mode and enables AGY's terminal sandbox. It selects a declarative translation profile requesting only structured completion and opting out of inherited customizations. AGY 1.3.2 still advertises its default tools at startup; existing account settings, permissions and hooks can remain applicable. A tool event makes the translation fail validation; that check happens after the CLI run and does not prevent tool execution. Use a translation-only account/profile if your existing CLI setup grants tools access you do not want webpage text to influence.
 
 ## Connect Immersive Translate
 
@@ -200,6 +200,6 @@ python3 -m pip install -e .
 open-translate --help
 ```
 
-Automated tests use mocks. A live macOS run with AGY 1.3.2 also passed the connection check and the authenticated HTTP translation route, preserving markup and placeholders. See [validation results](docs/validation.md) and [the Mac setup guide](docs/mac-setup.md). See the validation document for standalone extension acceptance.
+Automated tests use mocks. A live macOS run with AGY 1.3.2 also passed the connection check and the authenticated HTTP translation route, preserving markup and placeholders. See [validation results](validation.md) and [the Mac setup guide](mac-setup.md). See the validation document for standalone extension acceptance.
 
 See [architecture and protocol notes](docs/architecture.md). Licensed under [MIT](LICENSE).

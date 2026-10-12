@@ -92,11 +92,11 @@ A batch launches the configured `agy` executable with stdin/output `stream-json`
 
 The bridge accepts exactly one successful terminal result, rejects tool events and applies the shared ID/markup validation. Authentication, quota and timeout failures become bridge errors without forwarding CLI diagnostics. A timeout kills the process group on macOS/Linux. The bridge reads at most 2 MiB of captured stdout after the run; temporary output files may grow until the process exits or times out.
 
-Each process runs in a fresh empty temporary directory. It does not resume a conversation. User-level AGY settings, credentials, permissions, MCP tools and hooks remain applicable. Rejecting a reported tool event is output validation, not a tool-execution barrier. The bridge does not change global CLI configuration or persist a translation cache; the CLI and provider may keep their own history.
+Each process runs in a fresh temporary directory containing only our declarative translation profile. The profile selects `finish` for structured completion, opts out of inherited customizations and disables subagent invocation and automatic command execution. It is selected explicitly with `--agent`; slash command expansion is disabled. In AGY 1.3.2, the startup envelope still advertises the default tool list, so these settings are not treated as an execution barrier. It does not resume a conversation. User-level AGY settings, credentials, permissions, MCP tools and hooks remain applicable. Rejecting a reported tool event is output validation, not a tool-execution barrier. The bridge does not change global CLI configuration or persist a translation cache; the CLI and provider may keep their own history.
 
 ## Scope of validation
 
-Tests cover real local sockets between the bridge and a mock Chat Completions server. They verify protocol behavior, not model translation quality or the extension's entire browser pipeline. Source-text prompt instructions are treated as data in the prompt, but model adherence is probabilistic; callers should use an endpoint dedicated to translation.
+Tests cover real local sockets between the bridge and a mock Chat Completions server. The standalone extension also has actual Chromium Manifest V3 acceptance tests; see [validation](validation.md). These verify behavior, rather than model translation quality. Source-text prompt instructions are treated as data in the prompt, but model adherence is probabilistic; callers should use an endpoint dedicated to translation.
 
 The bridge binds to `127.0.0.1`, caps simultaneous provider calls and input/output sizes, and keeps endpoint credentials server-side. It is intended to run alongside a desktop browser.
 

@@ -1,7 +1,7 @@
 import {candidates,serialize,insertTranslation,restoreElement,sourceNodes,own,PAGE_STYLE} from './dom.mjs';
 const api=globalThis.browser || chrome;
 let config={},active=false,epoch=0,processing=false,scanTimer,hovered,input,lastSelection='',captionOn=false,captionLast='';
-const states=new Map(),queue=new Set(),roots=new Set();let completed=0,failed=0;
+const states=new Map(),queue=new Set(),roots=new Set();let completed=0,failed=0,lastError='';
 const send=async message=>{const response=await api.runtime.sendMessage(message);if(!response?.ok)throw new Error(response?.error?.message || 'Open Translate is unavailable.');return response.result;};
 const translate=texts=>send({type:'translate',job:{source_lang:config.source || 'auto',target_lang:config.target || 'en',text_list:texts}});
 let host,panel;
@@ -67,16 +67,17 @@ async function drain() {
           const state=work[index];
           if(!state.element.isConnected || serialize(state.element).text!==state.text){states.delete(state.element);return;}
           try{insertTranslation(state.element,state.serialized.render(entry.text),config);state.status='done';completed++;}
-          catch(error){state.status='error';failed++;notification(error.message);}
+          catch(error){state.status='error';failed++;lastError=error.message;notification(error.message);}
         });report();
-      }catch(error){if(currentEpoch===epoch){for(const state of work)state.status='error';failed+=work.length;notification(error.message);}}
+      }catch(error){if(currentEpoch===epoch){for(const state of work)state.status='error';failed+=work.length;lastError=error.message;notification(error.message);}}
     }
   }finally{processing=false;if(active && queue.size)void drain();}
 }
 async function start() {
   config=await send({type:'settings.public'});
   if(config.disabled)throw new Error('Translation is disabled for this site. Change its rule in Settings.');
-  active=true;completed=failed=0;epoch++;addRoot(document);scan();return {active:true};
+  if(active || states.size)restore();
+  active=true;completed=failed=0;lastError='';epoch++;addRoot(document);scan();return {active:true};
 }
 function restore(){active=false;epoch++;queue.clear();visibility.disconnect();for(const element of states.keys())restoreElement(element);states.clear();completed=failed=0;host?.remove();return {active:false};}
 async function selection(text) {
@@ -117,7 +118,7 @@ api.runtime.onMessage.addListener((message,_sender,reply)=>{
       case 'page.restore':return restore();
       case 'translate-selection':config=await send({type:'settings.public'});return selection(message.selection);
       case 'translate-input':config=await send({type:'settings.public'});return translateInput();
-      case 'page.status':return {active,completed,failed};
+      case 'page.status':return {active,completed,failed,error:lastError};
       case 'captions.toggle':config=await send({type:'settings.public'});captionOn=!captionOn;addRoot(document);scanCaptions();notification(captionOn?'Caption translation is on. Enable the video’s subtitles.':'Caption translation is off.');return {captionOn};
       case 'page.mode':{config.mode=message.mode;for(const [el,state]of states)if(state.status==='done'){restoreElement(el);states.delete(el);}if(active)scan();return {};}
       default:return {};

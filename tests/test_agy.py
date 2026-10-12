@@ -33,7 +33,7 @@ from pathlib import Path
 args = sys.argv[1:]
 event = json.loads(sys.stdin.readline())
 job = json.loads(event['message']['content'].rsplit('\\n\\n', 1)[-1])
-Path(RECORD).write_text(json.dumps({'args': args, 'event': event, 'cwd': os.getcwd(), 'files': os.listdir('.')}))
+Path(RECORD).write_text(json.dumps({'args': args, 'event': event, 'cwd': os.getcwd(), 'files': os.listdir('.'), 'profile': Path('.agents/agents/open-translate-translator/agent.md').read_text()}))
 items = [{'id': i['id'], 'text': i['text'].replace('Bonjour', 'Hello').replace('monde', 'world'), 'detected_source_lang': 'fr'} for i in reversed(job['items'])]
 print(json.dumps({'event': 'init', 'session_id': 'fake'}))
 print(json.dumps({'event': 'result', 'result': {'status': 'SUCCESS', 'structured_output': {'translations': items}}}))
@@ -44,13 +44,16 @@ print(json.dumps({'event': 'result', 'result': {'status': 'SUCCESS', 'structured
         result = agent.translate(validate_job({**JOB, 'text_list': ['Bonjour <b>{0}</b>', ' ', 'Bonjour monde']}))
         self.assertEqual([i['text'] for i in result['translations']], ['Hello <b>{0}</b>', ' ', 'Hello world'])
         record = json.loads(self.record.read_text())
-        self.assertEqual(record['files'], [])
+        self.assertEqual(record['files'], ['.agents'])
+        for setting in ('tools: [finish]', 'subagent: false', 'inheritCustomizations: false', 'skills: []', 'plugins: []'):
+            self.assertIn(setting, record['profile'])
         self.assertFalse(Path(record['cwd']).exists())
         args = record['args']
         for flag, value in (('--input-format', 'stream-json'), ('--output-format', 'stream-json'),
-                            ('--model', 'selected-model'), ('--mode', 'default'), ('--print-timeout', '3s')):
+                            ('--agent', 'open-translate-translator'), ('--model', 'selected-model'), ('--mode', 'default'), ('--print-timeout', '3s')):
             self.assertEqual(args[args.index(flag) + 1], value)
         self.assertIn('--sandbox', args)
+        self.assertIn('--disable-slash-commands', args)
         self.assertNotIn('Bonjour', ' '.join(args))
         self.assertNotIn('--continue', args)
         self.assertNotIn('--dangerously-skip-permissions', args)

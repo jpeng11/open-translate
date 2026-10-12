@@ -8,7 +8,7 @@ The current public product also advertises document/PDF/EPUB, image/OCR, subtitl
 
 | Area | Replacement acceptance |
 | --- | --- |
-| Browser | Own installable Chrome/Edge build; Firefox deferred; source available under MIT |
+| Browser | Own installable Chrome/Edge build; Firefox deferred; original code under MIT; Rare UI components have separate terms |
 | Webpages | Bilingual and translated views, dynamic content, viewport scheduling, inline links/formatting, editable/code exclusions, restoration, site rules |
 | Quick translation | Selection popup, hover shortcut, input translation, context menus, keyboard shortcuts, pronunciation |
 | Engines | User-owned OpenAI-compatible endpoint, local AGY bridge, models and credentials configured by user |

@@ -4,12 +4,13 @@ from dataclasses import dataclass
 import json
 import math
 import os
+from pathlib import Path
 import shutil
 import signal
 import subprocess
 import tempfile
 
-from .agent import BatchTranslator, BridgeError, MAX_RESPONSE
+from .agent import BatchTranslator, BridgeError, MAX_RESPONSE, INSTRUCTIONS
 
 
 SCHEMA = {
@@ -56,12 +57,20 @@ class AgyAgent(BatchTranslator):
         event = {"event": "user", "message": {"content": prompt}}
         command = [self.executable, "--input-format", "stream-json", "--output-format", "stream-json",
                    "--json-schema", json.dumps(SCHEMA), "--mode", "default", "--sandbox",
+                   "--agent", "open-translate-translator", "--disable-slash-commands",
                    "--print-timeout", f"{max(1, math.ceil(self.timeout))}s"]
         if self.model:
             command += ["--model", self.model]
-        # A fresh empty workspace prevents the source from inheriting project files.
+        # A fresh workspace supplies only our declarative translation profile.
         # Auth and account settings remain with the installed official CLI.
         with tempfile.TemporaryDirectory(prefix="open-translate-agy-") as workspace:
+            profile = Path(workspace) / ".agents" / "agents" / "open-translate-translator" / "agent.md"
+            profile.parent.mkdir(parents=True)
+            profile.write_text("---\nname: open-translate-translator\n"
+                "description: Translate supplied text and return structured JSON without tools.\n"
+                "tools: [finish]\nmainAgent: true\nsubagent: false\ninheritCustomizations: false\n"
+                "mcpServers: []\nskills: []\nplugins: []\ncommandExecutionPolicy: 'off'\n---\n\n"
+                + INSTRUCTIONS, encoding="utf-8")
             with tempfile.TemporaryFile() as output, tempfile.TemporaryFile() as diagnostics:
                 try:
                     process = subprocess.Popen(command, cwd=workspace, stdin=subprocess.PIPE,

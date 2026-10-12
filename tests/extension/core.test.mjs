@@ -55,3 +55,14 @@ test('empty batches avoid provider calls and batching bounds requests',async()=>
  assert.deepEqual(batches(['a','b','c'],2),[['a','b'],['c']]);
  assert.deepEqual(batches(['aaa','bbb'],5,5),[['aaa'],['bbb']]);
 });
+test('bridge preserves its native placeholder contract without redundant opaque wrapping',async()=>{
+ const config={...DEFAULTS,bridgeUrl:'http://127.0.0.1:8765/translate?token=private'};
+ const job={source_lang:'fr',target_lang:'en',text_list:['Bonjour {0}monde{1} {2}.']};
+ const fetcher=async(_url,init)=>{assert.equal(JSON.parse(init.body).text_list[0],job.text_list[0]);return new Response(JSON.stringify({translations:[{text:'Hello {0}world{1} {2}.'}]}));};
+ assert.equal((await translateBatch(job,config,fetcher)).translations[0].text,'Hello {0}world{1} {2}.');
+ await assert.rejects(translateBatch(job,config,async()=>new Response(JSON.stringify({translations:[{text:'Hello world.'}]}))),error=>error.code==='placeholder_mismatch');
+});
+test('known bridge errors have useful messages without exposing response bodies',async()=>{
+ const job={source_lang:'fr',target_lang:'en',text_list:['Bonjour']};
+ await assert.rejects(translateBatch(job,DEFAULTS,async()=>new Response(JSON.stringify({error:{code:'agy_tool_use',message:'private source secret'}}),{status:502})),error=>error.code==='agy_tool_use' && !error.message.includes('private source secret'));
+});
