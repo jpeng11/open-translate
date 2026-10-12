@@ -1,0 +1,15 @@
+{
+  "name": "open-translate",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/extension/*.test.mjs",
+    "test:browser": "playwright test",
+    "check": "npm test && npm run build && npm run test:browser"
+  },
+  "dependencies": {"fflate":"0.8.3","pdf-lib":"1.17.1","pdfjs-dist":"6.4.299","tesseract.js":"7.0.0"},
+  "devDependencies": {"@playwright/test":"1.64.0","esbuild":"0.28.2"}
+}
