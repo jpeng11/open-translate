@@ -15,7 +15,7 @@ npm run build
 
 1. Open `chrome://extensions` or `edge://extensions` and enable **Developer mode**.
 2. Choose **Load unpacked** and select this repository’s `dist/chrome` directory.
-3. Open the extension’s **Preferences → Your engine**.
+3. Open the extension popup and click the engine name under **Your engine**.
 4. Choose **OpenAI-compatible endpoint**, enter your API base URL, model and optional API key, then **Save & test**.
 5. Choose your target language in **Preferences** or the extension popup. Open a webpage and click **Translate this page**.
 
@@ -32,7 +32,7 @@ python3 -m open_translate --backend agy --timeout 180 --check
 python3 -m open_translate --backend agy --timeout 180
 ```
 
-In **Preferences → Your engine**, choose **Local bridge** and paste the full printed translation URL, including its private token. Set request timeout to at least 210 seconds. Choose batch size one for slow CLI agents. You can import an existing `extension-config.json` instead.
+In the workspace’s **Your engine** page, choose **Local bridge** and paste the full printed translation URL, including its private token. Set request timeout to at least 210 seconds. Choose batch size one for slow CLI agents. You can import an existing `extension-config.json` instead.
 
 The bridge must run on the same computer as the browser, or be reachable through an explicitly configured tunnel. CLI authentication and usage charges belong to your account. The CLI’s existing tool permissions remain active; use an agent profile intended for translation. See the [Mac setup](docs/mac-setup.md) and [bridge reference](docs/bridge.md).
 

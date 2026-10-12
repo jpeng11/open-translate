@@ -1,5 +1,7 @@
 # Evidence-driven REA workflow
 
+> Current product direction (2026-10-12): [accepted behavior](accepted-behavior.md) and an independent UI supersede the earlier exact-parity release goal. The paired tests below remain historical research. `npm run parity -- --strict` still measures literal reference parity; it is not the Open Translate product acceptance gate. Use `npm run acceptance` and `npm run acceptance:verify`.
+
 This implements the useful parts of the [requested REA tutorial](https://x.com/0xlangeai/status/2109544824135467312): observe the real target in an isolated browser, inspect its runtime scripts and interfaces, build an independent implementation, then reproduce the same checkpoints. REA is pinned to `rea-agents@6.4.0`; it is actually executed, rather than used as a name for a screenshot recreation. [Upstream REA](https://github.com/morluto/rea), [browser guide](https://rea.tools/guides/browser/).
 
 ## Capture
