@@ -1,4 +1,5 @@
 from contextlib import contextmanager
+from http.client import HTTPConnection
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import io
 import json
@@ -163,9 +164,21 @@ class BridgeIntegrationTests(unittest.TestCase):
         self.assertEqual(self.upstream.requests, [])
 
     def test_limits_on_body_and_text(self):
-        for text in ("a" * 20001, "a" * (MAX_BODY + 1)):
-            status, _, _ = request(self.translate_url, {**JOB, "text_list": [text]})
-            self.assertEqual(status, 413)
+        status, _, _ = request(self.translate_url, {**JOB, "text_list": ["a" * 20001]})
+        self.assertEqual(status, 413)
+        # An oversized declared body is rejected before upload. Sending the whole
+        # body first can race the response and cause a TCP reset on macOS.
+        connection = HTTPConnection("127.0.0.1", self.bridge.server_port, timeout=3)
+        try:
+            connection.putrequest("POST", "/translate?token=bridge-secret")
+            connection.putheader("Content-Type", "application/json")
+            connection.putheader("Content-Length", str(MAX_BODY + 1))
+            connection.endheaders()
+            response = connection.getresponse()
+            self.assertEqual(response.status, 413)
+            self.assertEqual(json.loads(response.read())["error"]["code"], "body_too_large")
+        finally:
+            connection.close()
         self.assertEqual(self.upstream.requests, [])
 
     def test_no_json_mode_for_compatible_endpoints(self):
