@@ -1,6 +1,6 @@
 # Architecture and protocol
 
-Open Translate is a small independent adapter between Immersive Translate's Custom API and a user-configured OpenAI-compatible endpoint. It is based on the public interface, official API documentation and static inspection of extension version 1.33.3 at official release-repository commit `c470f0aca3c75b2785c9009a0ac48e78ead34126`.
+Open Translate is a small independent adapter between Immersive Translate's Custom API and a user-configured OpenAI-compatible endpoint or the installed AGY CLI. It is based on the public interface, official API documentation and static inspection of extension version 1.33.3 at official release-repository commit `c470f0aca3c75b2785c9009a0ac48e78ead34126`.
 
 No proprietary extension bundles are included in this repository.
 
@@ -10,8 +10,8 @@ No proprietary extension bundles are included in this repository.
 2. The local HTTP server checks its access token, browser origin, body size and request schema.
 3. The adapter skips blank items and gives each remaining item its original zero-based index as an ID.
 4. Numeric placeholders and inline tags are replaced with per-request opaque markers. The original-to-marker map remains in memory.
-5. The bridge sends a nonstreaming Chat Completions request to the configured endpoint. The system prompt describes the translation contract; the user message carries source language, target language and items as JSON data.
-6. The response must contain a JSON translation object in `choices[0].message.content`. The bridge validates count, IDs, language codes, nonempty output and preservation of protected tokens.
+5. The OpenAI backend sends a nonstreaming Chat Completions request to the configured endpoint. The AGY backend sends the same translation instructions and job JSON through the CLI stdin protocol. The system prompt describes the translation contract; the user message carries source language, target language and items as JSON data.
+6. The endpoint response must contain a JSON translation object in `choices[0].message.content`; AGY returns it in the terminal event's `structured_output`. The bridge validates count, IDs, language codes, nonempty output and preservation of protected tokens.
 7. It restores protected markup, orders results by the original request, and returns the extension's response schema. The extension handles final rendering.
 
 ## Extension-facing API
@@ -78,6 +78,14 @@ The marker above is illustrative; the bridge creates a fresh random prefix for e
 
 Response order may differ from request order. Each supplied integer ID and each protected marker must occur exactly once in its own item. JSON mode improves formatting reliability but does not replace application-level validation. A response fully enclosed in a JSON Markdown fence is tolerated; arbitrary prose is not extracted or guessed.
 
+## AGY backend
+
+A batch launches the configured `agy` executable with stdin/output `stream-json`, a translation JSON schema, default approval mode, terminal sandbox and an explicit timeout. It sends one user event, closes stdin and waits for completion. [Google documents this single-turn stdin lifecycle and result envelope](https://antigravity.google/docs/cli/headless/).
+
+The bridge accepts exactly one successful terminal result, rejects tool events and applies the shared ID/markup validation. Authentication, quota and timeout failures become bridge errors without forwarding CLI diagnostics. A timeout kills the process group on macOS/Linux. The bridge reads at most 2 MiB of captured stdout after the run; temporary output files may grow until the process exits or times out.
+
+Each process runs in a fresh empty temporary directory. It does not resume a conversation. User-level AGY settings, credentials, permissions, MCP tools and hooks remain applicable. Rejecting a reported tool event is output validation, not a tool-execution barrier. The bridge does not change global CLI configuration or persist a translation cache; the CLI and provider may keep their own history.
+
 ## Scope of validation
 
 Tests cover real local sockets between the bridge and a mock Chat Completions server. They verify protocol behavior, not model translation quality or the extension's entire browser pipeline. Source-text prompt instructions are treated as data in the prompt, but model adherence is probabilistic; callers should use an endpoint dedicated to translation.
@@ -91,3 +99,5 @@ The bridge binds to `127.0.0.1`, caps simultaneous provider calls and input/outp
 - [Official extension release repository at inspected commit](https://github.com/immersive-translate/immersive-translate/tree/c470f0aca3c75b2785c9009a0ac48e78ead34126/dist/chrome)
 - [OpenAI Chat Completions API reference](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create)
 - [OpenAI JSON mode and structured output guidance](https://developers.openai.com/api/docs/guides/structured-outputs?api-mode=chat)
+
+- [Google Antigravity CLI headless protocol](https://antigravity.google/docs/cli/headless/)

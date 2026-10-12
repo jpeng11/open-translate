@@ -1,6 +1,6 @@
 # Open Translate
 
-Connect Immersive Translate to your own OpenAI-compatible local or hosted AI endpoint. The extension handles webpage selection and bilingual rendering; Open Translate adapts its Custom API requests into Chat Completions requests to your agent.
+Connect Immersive Translate to your own OpenAI-compatible endpoint or Google Antigravity (`agy`) CLI. The extension handles webpage selection and bilingual rendering; Open Translate adapts its Custom API requests to your chosen agent.
 
 This is an independent implementation of the documented integration contract. It does not contain Immersive Translate's compiled bundles or source.
 
@@ -44,6 +44,30 @@ The upstream key stays in the bridge process. It is never included in the extens
 
 An API base URL such as `/v1` or `/api/v1`, or the complete `/chat/completions` URL, is accepted. A bare host URL defaults to `/v1/chat/completions`. Query parameters on the supplied endpoint are preserved. Redirects are rejected; configure the final endpoint URL directly.
 
+## Use Google Antigravity on your Mac
+
+Run the bridge on the Mac where your browser and signed-in `agy` CLI are installed:
+
+```bash
+agy --version
+python3 -m open_translate --backend agy --timeout 180 --check
+python3 -m open_translate --backend agy --timeout 180
+```
+
+Then connect the extension using the URL printed by the server. No OpenAI API URL or API key is needed for this backend. If `agy` is outside your PATH, add `--agy-command /absolute/path/to/agy`.
+
+The CLI uses its cached login; sign in through an interactive `agy` session first if needed. The adapter uses [Google's documented headless stdin and structured-output protocol](https://antigravity.google/docs/cli/headless/). Each batch starts a fresh process in an empty temporary workspace and sends source text over stdin. AGY uses its existing account and settings; translations consume your account's AI credits and may be recorded by the CLI or provider.
+
+AGY's current default model is used unless you supply `--model`. Use `agy models` to find an available model slug. Start with one text group per extension request and concurrency one. A 180-second bridge timeout needs an extension timeout of at least 210,000 milliseconds; generate the matching settings with:
+
+```bash
+export OPEN_TRANSLATE_TOKEN="$(python3 -c 'import secrets; print(secrets.token_urlsafe(32))')"
+python3 -m open_translate --backend agy --timeout 180 --print-extension-config
+python3 -m open_translate --backend agy --timeout 180
+```
+
+The adapter requests translation only, selects the default approval mode and enables AGY's terminal sandbox. Existing CLI permissions, hooks and MCP integrations still apply. A tool event makes the translation fail validation; that check happens after the CLI run and does not prevent tool execution. Use a translation-only account/profile if your existing CLI setup grants tools access you do not want webpage text to influence.
+
 ## Connect Immersive Translate
 
 1. Install Immersive Translate in your browser.
@@ -67,7 +91,7 @@ python3 -m open_translate --print-extension-config
 python3 -m open_translate
 ```
 
-Merge the printed `translationService` and `translationServices.custom` settings into **Developer settings → Edit Full User Config**. Preserve your other settings. The snippet sets a 120-second extension timeout, compared with the bridge's default 90-second agent socket timeout. It includes common languages; add other language codes to `langs` as needed.
+Merge the printed `translationService` and `translationServices.custom` settings into **Developer settings → Edit Full User Config**. Preserve your other settings. The snippet sets an extension timeout of at least 120 seconds and at least 30 seconds longer than the configured bridge timeout. It includes common languages; add other language codes to `langs` as needed.
 
 `OPEN_TRANSLATE_TOKEN` makes the extension URL stable while this environment is kept. Store it in your preferred local environment configuration if you want to reuse it after restarting your terminal. Without it, each bridge start generates a fresh token and the extension URL must be updated. Open Translate does not automatically load `.env` files.
 
@@ -104,13 +128,15 @@ curl 'http://127.0.0.1:8765/translate?token=YOUR_BRIDGE_TOKEN' \
 
 | Setting | Purpose | Default |
 | --- | --- | --- |
-| `--base-url` / `OPEN_TRANSLATE_BASE_URL` | Your agent API base or full Chat Completions URL | Required |
-| `--model` / `OPEN_TRANSLATE_MODEL` | Model identifier accepted by that endpoint | Required |
+| `--backend` / `OPEN_TRANSLATE_BACKEND` | `openai` endpoint or `agy` CLI | `openai` |
+| `--agy-command` / `OPEN_TRANSLATE_AGY_COMMAND` | AGY executable name or absolute path | `agy` |
+| `--base-url` / `OPEN_TRANSLATE_BASE_URL` | Your agent API base or full Chat Completions URL | Required for `openai` |
+| `--model` / `OPEN_TRANSLATE_MODEL` | Endpoint model identifier or optional AGY model slug | Required for `openai` |
 | `OPEN_TRANSLATE_API_KEY` | Optional upstream bearer key | Unset |
 | `OPEN_TRANSLATE_TOKEN` | Access token for the local bridge | Generated at startup |
 | `--port` | Local HTTP port | `8765` |
-| `--timeout` | Agent socket timeout in seconds | `90` |
-| `--concurrency` | Maximum simultaneous agent calls | `2` |
+| `--timeout` | Agent timeout in seconds | `90` |
+| `--concurrency` | Maximum simultaneous agent calls | `2` for `openai`; `1` for `agy` |
 | `--no-json-mode` | Omit `response_format` from upstream requests | JSON mode enabled |
 | `--allow-origin` | Additional exact browser origin; repeatable | Extension origins only |
 | `--print-extension-config` | Print settings without starting a server; requires a stable token | Off |
@@ -132,8 +158,8 @@ That command assumes URL/model environment variables are already set. Arbitrary 
 - No additional translation cache is written to disk. The extension may use its own cache.
 - Bridge access requires a query token or `Authorization: Bearer` header. The query form works with the extension's Custom API URL field.
 - Access logs are disabled, and upstream error bodies are not echoed to clients. The startup URL contains the bridge token; keep it private.
-- Only the text selected for translation is sent upstream. Your chosen endpoint determines its storage and processing behavior.
-- This bridge requests final text and does not execute tool calls. An agent endpoint must return a completed text response in the Chat Completions format.
+- Only the text selected for translation is sent upstream. Your chosen endpoint or AGY CLI determines its storage and processing behavior.
+- The OpenAI backend requests final text and does not execute tool calls. An agent endpoint must return a completed text response in the Chat Completions format. The AGY backend invokes the installed CLI and validates its structured result.
 
 This version is a local bridge to your endpoint, not a hosted multiuser service. It implements nonstreaming text batches. It does not recreate the browser extension, OCR, PDF layout recovery, video capture or premium services. Client disconnects do not reliably cancel an in-flight synchronous provider call; configured timeouts bound socket waits.
 
@@ -141,6 +167,11 @@ This version is a local bridge to your endpoint, not a hosted multiuser service.
 
 | Error | Action |
 | --- | --- |
+| `agy_auth_required` | Sign into `agy` interactively on this machine. |
+| `agy_timeout` | Reduce batch size or increase both bridge and extension timeouts. |
+| `agy_failed` | Check `agy --version`, account access and the selected model. |
+| `agy_rate_limited` | Check the AGY account quota and reduce request rate. |
+| `agy_tool_use` | Use a translation-only CLI configuration that answers directly. |
 | `unauthorized` | Update the extension's URL with the current bridge token. |
 | `upstream_http_401` / `403` | Check `OPEN_TRANSLATE_API_KEY` and your endpoint's access permissions. |
 | `upstream_http_404` | Check the final Chat Completions URL and model name. |
@@ -158,7 +189,7 @@ python3 -m unittest discover -v
 python3 -m compileall -q open_translate tests
 ```
 
-The test suite exercises a real local HTTP round trip against a deterministic mock agent, including auth, ordering, markup, malformed responses, limits, timeouts and concurrency. It makes no external or paid API calls.
+The test suite exercises a real local HTTP round trip against a deterministic mock agent, including auth, ordering, markup, malformed responses, limits, timeouts and concurrency. AGY tests launch a fake CLI subprocess to verify stdin, structured output, timeout cleanup and the HTTP route. The test suite makes no external or paid API calls.
 
 Optional editable installation provides an `open-translate` command:
 
