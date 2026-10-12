@@ -1,5 +1,5 @@
 const OMIT='script,style,noscript,textarea,input,select,option,button,pre,svg,math,canvas,iframe,object,embed,[contenteditable]:not([contenteditable="false"]),[role="textbox"],[translate="no"],[data-ot-ui],[data-ot-target]';
-export const BLOCKS='p,h1,h2,h3,h4,h5,h6,li,td,th,blockquote,figcaption,dt,dd,summary,div,section,article,label';
+export const BLOCKS='p,h1,h2,h3,h4,h5,h6,li,td,th,blockquote,figcaption,dt,dd,summary,div,section,article,label,body,main,header,footer,nav,address,aside,caption,legend,details,[data-ot-segment]';
 const INLINE=new Set(['A','SPAN','EM','STRONG','B','I','U','S','SMALL','SUP','SUB','MARK','ABBR','CITE','Q','DEL','INS','BDI','BDO','TIME','RUBY','RT','RP']);
 export function own(node) {return node.nodeType===1 && (node.hasAttribute('data-ot-ui') || node.hasAttribute('data-ot-target'));}
 export function ignored(node,exclude='') {
@@ -24,7 +24,7 @@ export function serialize(element) {
   const put=value=>{const token='{'+markers.length+'}';markers.push(value);return token;};
   const walk=node=>{
     if(node.nodeType===3)return node.textContent.replace(/\{\{?\d+\}\}?/g,text=>put({type:'atom',node:document.createTextNode(text)}));
-    if(node.nodeType!==1 || own(node))return '';
+    if(node.nodeType!==1 || own(node) || ignored(node))return '';
     if(node.tagName==='BR')return put({type:'atom',node:document.createElement('br')});
     if(['CODE','KBD','SAMP'].includes(node.tagName)) {const copy=document.createElement(node.localName);copy.textContent=node.textContent;return put({type:'atom',node:copy});}
     if(!INLINE.has(node.tagName))return Array.from(node.childNodes,walk).join('');
@@ -52,17 +52,41 @@ export function serialize(element) {
     return fragment;
   }};
 }
+// A container can contain both bare text/links and nested block paragraphs.
+// Wrap only its direct inline runs, retaining the actual source nodes and their
+// event listeners. Restoring the page unwraps these temporary spans again.
+function segmentMixed(element,selector,exclude) {
+  if(!element.querySelector(selector) || element.hasAttribute('data-ot-segment'))return;
+  let run=[];
+  const flush=()=>{
+    if(run.some(node=>/[\p{L}]/u.test(node.textContent || ''))) {
+      const segment=document.createElement('span');segment.setAttribute('data-ot-segment','');
+      element.insertBefore(segment,run[0]);segment.append(...run);
+    }
+    run=[];
+  };
+  for(const node of Array.from(element.childNodes)) {
+    const boundary=node.nodeType===1 && (own(node) || ignored(node,exclude) || node.matches(selector) || node.querySelector(selector));
+    if(boundary || node.nodeType!==1 && node.nodeType!==3)flush();else run.push(node);
+  }
+  flush();
+}
 export function candidates(root,rule={}) {
-  const selector=rule.include || BLOCKS;
+  const selector=rule.include || BLOCKS+(rule.hints?','+rule.hints:'');
   const elements=[...(root.nodeType===1 && root.matches(selector)?[root]:[]),...root.querySelectorAll(selector)];
-  return elements.filter(element=>{
+  for(const element of elements)if(!ignored(element,rule.exclude))segmentMixed(element,selector,rule.exclude);
+  const segments=Array.from(root.querySelectorAll('[data-ot-segment]'));
+  return [...new Set([...elements,...segments])].filter(element=>{
     if(ignored(element,rule.exclude) || element.closest('[hidden],[aria-hidden="true"]'))return false;
-    if(!rule.include && element.querySelector(BLOCKS))return false;
+    if(!element.hasAttribute('data-ot-segment') && element.querySelector(selector))return false;
     const text=sourceNodes(element).map(n=>n.textContent).join('').trim();
     if(!text || !/[\p{L}]/u.test(text))return false;
     const style=getComputedStyle(element);
     return style.display!=='none' && style.visibility!=='hidden';
   }).slice(0,5000);
+}
+export function unwrapSegments(root) {
+  for(const segment of root.querySelectorAll('[data-ot-segment]'))segment.replaceWith(...Array.from(segment.childNodes));
 }
 export function restoreElement(element) {
   for(const child of Array.from(element.children))if(child.hasAttribute('data-ot-target'))child.remove();

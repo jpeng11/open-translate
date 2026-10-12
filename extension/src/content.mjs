@@ -1,4 +1,6 @@
-import {candidates,serialize,insertTranslation,restoreElement,sourceNodes,own,PAGE_STYLE} from './dom.mjs';
+import {candidates,serialize,insertTranslation,restoreElement,sourceNodes,own,unwrapSegments,PAGE_STYLE} from './dom.mjs';
+import {pageRule} from './site-adapters.mjs';
+import {CaptionReader,CaptionOverlay,installSubtitleSidecar} from './captions.mjs';
 const api=globalThis.browser || chrome;
 let config={},active=false,epoch=0,processing=false,scanTimer,hovered,input,lastSelection='',captionOn=false,captionLast='';
 const states=new Map(),queue=new Set(),roots=new Set();let completed=0,failed=0,lastError='';
@@ -44,7 +46,7 @@ function scan() {
       if(current!==state.text){restoreElement(element);states.delete(element);}
     }
     for(const root of roots) {
-      for(const element of candidates(root,config))if(!states.has(element)) {
+      for(const element of candidates(root,pageRule(config,location.href)))if(!states.has(element)) {
         const box=element.getBoundingClientRect();
         if(box.bottom>-600 && box.top<innerHeight+600)enqueue(element);else visibility.observe(element);
       }
@@ -79,7 +81,7 @@ async function start() {
   if(active || states.size)restore();
   active=true;completed=failed=0;lastError='';epoch++;addRoot(document);scan();return {active:true};
 }
-function restore(){active=false;epoch++;queue.clear();visibility.disconnect();for(const element of states.keys())restoreElement(element);states.clear();completed=failed=0;host?.remove();return {active:false};}
+function restore(){active=false;epoch++;queue.clear();visibility.disconnect();for(const element of states.keys())restoreElement(element);states.clear();for(const root of roots)unwrapSegments(root);completed=failed=0;host?.remove();return {active:false};}
 async function selection(text) {
   const selected=text || window.getSelection()?.toString() || lastSelection;
   if(!selected?.trim())throw new Error('Select some text first.');
@@ -96,20 +98,13 @@ async function translateInput() {
   else {const prototype=element.tagName==='TEXTAREA'?HTMLTextAreaElement.prototype:HTMLInputElement.prototype;Object.getOwnPropertyDescriptor(prototype,'value').set.call(element,result.translations[0].text);}
   element.dispatchEvent(new Event('input',{bubbles:true}));element.dispatchEvent(new Event('change',{bubbles:true}));return {};
 }
-const captionTracks=new WeakSet();
+const captionReader=new CaptionReader({document,emit:text=>{if(text)void caption(text);else {captionLast='';captionOverlay?.hide();}},status:text=>notification(text)});
+let sidecarCleanup,captionOverlay;
 async function caption(text) {
   const value=text.trim();if(!value || value===captionLast || value.length>3000)return;captionLast=value;
-  try {const result=await translate([value]);if(captionOn && captionLast===value)notification(value+'\n'+result.translations[0].text,true);}catch(error){notification(error.message);}
+  try {const result=await translate([value]);if(captionOn && captionLast===value){captionOverlay ||= new CaptionOverlay({onClose:()=>{captionOn=false;captionReader.stop();captionLast='';}});captionOverlay.show(value,result.translations[0].text,{bilingual:config.mode!=='translation'});}}catch(error){notification(error.message);}
 }
-function scanCaptions() {
-  if(!captionOn)return;
-  const selector=config.captionSelector || '.ytp-caption-segment,.player-timedtext-text-container,[data-ot-caption],[role="log"][aria-live]';
-  try {const elements=document.querySelectorAll(selector);if(elements.length)void caption(Array.from(elements).map(e=>e.textContent).join(' '));}catch{notification('The caption selector is invalid.');}
-  for(const video of document.querySelectorAll('video'))for(const track of video.textTracks)if(!captionTracks.has(track)) {
-    captionTracks.add(track);if(track.mode==='disabled')track.mode='hidden';
-    track.addEventListener('cuechange',()=>{if(captionOn)void caption(Array.from(track.activeCues || []).map(c=>c.text).join('\n'));});
-  }
-}
+function scanCaptions() {if(captionOn)captionReader.scan();}
 api.runtime.onMessage.addListener((message,_sender,reply)=>{
   const action=async()=>{
     switch(message.type) {
@@ -119,7 +114,8 @@ api.runtime.onMessage.addListener((message,_sender,reply)=>{
       case 'translate-selection':config=await send({type:'settings.public'});return selection(message.selection);
       case 'translate-input':config=await send({type:'settings.public'});return translateInput();
       case 'page.status':return {active,completed,failed,error:lastError};
-      case 'captions.toggle':config=await send({type:'settings.public'});captionOn=!captionOn;addRoot(document);scanCaptions();notification(captionOn?'Caption translation is on. Enable the video’s subtitles.':'Caption translation is off.');return {captionOn};
+      case 'captions.toggle':config=await send({type:'settings.public'});captionOn=!captionOn;addRoot(document);if(captionOn)captionReader.start(config);else {captionReader.stop();captionLast='';captionOverlay?.hide();}scanCaptions();notification(captionOn?'Caption translation is on. Enable the video’s subtitles.':'Caption translation is off.');return {captionOn};
+      case 'captions.sidecar':{const video=document.querySelector('video');if(!video)throw new Error('Open a page with a video before adding subtitles.');sidecarCleanup?.();sidecarCleanup=installSubtitleSidecar(video,message.text,message.name);if(captionOn)captionReader.scan();return {};}
       case 'page.mode':{config.mode=message.mode;for(const [el,state]of states)if(state.status==='done'){restoreElement(el);states.delete(el);}if(active)scan();return {};}
       default:return {};
     }
@@ -138,3 +134,16 @@ document.addEventListener('mouseup',event=>{
   if(config.selection && selected && !event.target.closest('input,textarea,[contenteditable]'))void selection(selected).catch(e=>notification(e.message));
 });
 send({type:'settings.public'}).then(value=>{config=value;if(config.autoTranslate && !config.disabled)void start();}).catch(()=>{});
+
+// pushState/replaceState run in the page world, so isolated-world monkeypatches
+// do not observe real SPA navigation. URL checks also cover those transitions.
+let currentUrl=location.href,navigationEpoch=0;
+async function navigationChanged() {
+  if(location.href===currentUrl)return;
+  currentUrl=location.href;const version=++navigationEpoch,wasActive=active;
+  if(active || states.size)restore();
+  try {const next=await send({type:'settings.public'});if(version!==navigationEpoch)return;config=next;if(!config.disabled && (wasActive || config.autoTranslate))await start();}catch{}
+}
+addEventListener('popstate',()=>void navigationChanged());
+addEventListener('hashchange',()=>void navigationChanged());
+setInterval(()=>void navigationChanged(),1000);

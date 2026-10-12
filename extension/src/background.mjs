@@ -1,14 +1,21 @@
 import {DEFAULTS,validateSettings,publicSettings,validateJob,TranslationError} from './core.mjs';
 import {createEngine} from './engine.mjs';
+import {createSettingsStore} from './settings-store.mjs';
+import {transcribe} from './speech.mjs';
+import {fetchImage} from './image-source.mjs';
 const api=globalThis.browser || chrome;
 const engine=createEngine();
-let creating;
-// Chromium content scripts must not read stored provider credentials.
-const ready=api.storage.local.setAccessLevel?.({accessLevel:'TRUSTED_CONTEXTS'}) || Promise.resolve();
-async function settings() {await ready;return {...DEFAULTS,...(await api.storage.local.get('settings')).settings};}
+let creating,pendingImage;
+const store=createSettingsStore(api);
+async function settings() {return {...DEFAULTS,...await store.get()};}
 const trusted=sender=>sender.id===api.runtime.id && sender.url?.startsWith(api.runtime.getURL(''));
 async function engineCall(type,job,config) {
-  if(!api.offscreen) return type==='engine.clear'?engine.clear():engine.translate(job,config);
+  if(!api.offscreen) {
+    if(type==='engine.clear')return engine.clear();
+    if(type==='engine.transcribe')return transcribe(job,config);
+    if(type==='engine.image')return fetchImage(job.url);
+    return engine.translate(job,config);
+  }
   const contexts=await api.runtime.getContexts({contextTypes:['OFFSCREEN_DOCUMENT'],documentUrls:[api.runtime.getURL('engine.html')]});
   if(!contexts.length) {
     creating ||= api.offscreen.createDocument({url:'engine.html',reasons:['WORKERS'],justification:'Keep the user-owned translation engine available during long local model requests.'}).finally(()=>creating=null);
@@ -36,10 +43,10 @@ async function handle(message,sender) {
   if(!trusted(sender))throw new Error('This action is available only in Open Translate.');
   switch(message.type) {
     case 'settings.get':return settings();
-    case 'settings.save':{const config=validateSettings(message.settings);await api.storage.local.set({settings:config});await engineCall('engine.clear');return config;}
+    case 'settings.save':{const config=validateSettings(message.settings);await store.set(config);await engineCall('engine.clear');return config;}
     case 'cache.clear':await engineCall('engine.clear');return {};
     case 'page.command':return activeCommand(message.command,message.options);
-    case 'image.pending':{const {pendingImage}=await api.storage.session.get('pendingImage');await api.storage.session.remove('pendingImage');if(!pendingImage || Date.now()-pendingImage.time>600000)return {};return engineCall('engine.image',{url:pendingImage.url},await settings());}
+    case 'image.pending':{const item=api.storage.session?(await api.storage.session.get('pendingImage')).pendingImage:pendingImage;pendingImage=undefined;await api.storage.session?.remove('pendingImage');if(!item || Date.now()-item.time>600000)return {};return engineCall('engine.image',{url:item.url},await settings());}
     case 'capture':{const [tab]=await api.tabs.query({active:true,currentWindow:true});return {image:await api.tabs.captureVisibleTab(tab.windowId,{format:'png'})};}
     case 'transcribe':return engineCall('engine.transcribe',message,await settings());
     default:throw new Error('Unknown Open Translate action.');
@@ -59,7 +66,7 @@ api.runtime.onInstalled.addListener(()=>{
   }).catch(()=>{});
 });
 api.contextMenus.onClicked.addListener((info,tab)=>{
-  if(info.menuItemId==='translate-image')api.storage.session.set({pendingImage:{url:info.srcUrl,time:Date.now()}}).then(()=>api.tabs.create({url:api.runtime.getURL('app.html#images')})).catch(()=>{});
+  if(info.menuItemId==='translate-image'){pendingImage={url:info.srcUrl,time:Date.now()};Promise.resolve(api.storage.session?.set({pendingImage})).then(()=>api.tabs.create({url:api.runtime.getURL('app.html#images')})).catch(()=>{});}
   else api.tabs.sendMessage(tab.id,{type:info.menuItemId,selection:info.selectionText},{frameId:info.frameId || 0}).catch(()=>{});
 });
 api.commands.onCommand.addListener(command=>activeCommand(command).catch(()=>{}));
