@@ -8,18 +8,20 @@ The current public product also advertises document/PDF/EPUB, image/OCR, subtitl
 
 | Area | Replacement acceptance |
 | --- | --- |
-| Browser | Own installable Chrome/Edge build; Firefox deferred; original code under MIT; Rare UI components have separate terms |
+| Browser | Chrome/Edge, Firefox desktop/Android and Safari manifests; actual Chromium/Firefox acceptance; mobile/Safari runtime pending; original code under MIT; Rare UI components have separate terms |
 | Webpages | Bilingual and translated views, dynamic content, viewport scheduling, inline links/formatting, editable/code exclusions, restoration, site rules |
 | Quick translation | Selection popup, hover shortcut, input translation, context menus, keyboard shortcuts, pronunciation |
 | Engines | User-owned OpenAI-compatible endpoint, local AGY bridge, models and credentials configured by user |
 | Reliability | Strict batch ordering, protected markup, concurrency, cancellation/stale-response checks, visible errors, cache controls |
 | Documents | TXT, Markdown, HTML, DOCX, EPUB translation and downloadable bilingual/translated output |
-| PDF | Local parsing, rendered pages, translated layout preview, searchable text extraction, scanned-page OCR, PDF export |
-| Images | Local image/area OCR, text translation, region overlay, downloadable image |
+| PDF | Local parsing, vector originals, searchable Unicode translated text, RTL shaping, continuation pages, scanned-page OCR, accessible HTML and PDF export |
+| Images | Local image/area OCR, text translation, 124 on-demand verified language packs, local background repair, RTL overlay, downloadable image |
 | Subtitles | SRT/VTT/ASS parsing, preserved timing, bilingual/translated export, local-video preview and native text-track translation |
-| Live audio | Explicit tab/microphone capture, user-configured OpenAI-compatible transcription endpoint, translated transcript |
+| Live audio | Explicit tab/microphone capture, 2–5 second PCM/VAD chunks, local whisper.cpp or user speech endpoint, translated transcript |
 | Privacy | User-selected endpoint, no vendor account, local document/OCR processing, no telemetry, credentials kept out of page messages, cache opt-in |
 
 A complete commercial-product parity claim additionally needs device/browser acceptance, layout/translation-quality evaluation, supported-site coverage and reliable live meeting/media integrations. Platform restrictions, inaccessible DRM captions, closed shadow roots and scanned/complex documents must be recorded honestly when they affect an implementation.
 
 References: [official product surface](https://immersivetranslate.com/en/), [advanced configuration](https://immersivetranslate.com/en/docs/advanced/), [Custom API](https://immersivetranslate.com/en/docs/services/custom/).
+
+[REA runtime capture and original/replacement release gate](rev-workflow.md) now tracks paired acceptance separately from implementation tests.

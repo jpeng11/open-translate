@@ -1,57 +1,51 @@
 # Validation
 
-Acceptance date: 2026-10-12. Standalone runtime tested at commit `cedf0d1`; subsequent changes update this report, Mac instructions and live-check configuration validation.
+Acceptance date: 2026-10-12. Functional implementation at `882d384`, following scoped browser/document/media commits. Subsequent changes add REA evidence, release gating, platform packaging cleanup and validation documentation.
 
-## Environments and automated results
-
-| Environment | Runtime | Result |
+| Environment | Actual runtime | Result |
 | --- | --- | --- |
-| Linux development checkout | Python 3.12.3, Chromium 156.0.8078.4 | 17 Node, 15 Chromium, 30 Python checks passed |
-| User's Mac mini | macOS 27.0.1, Homebrew Python 3.12.15, Node 26.10.0, Chromium 156.0.8078.4 | Same 62 checks passed |
+| Linux development checkout | Python 3.12.3, Chromium 156.0.8078.4 | 38 Node, 26 Chromium, 36 Python acceptance cases verified |
+| User's Mac mini | macOS 27.0.1, Python 3.12.15, Node 26.10.0, Chromium 156.0.8078.4 | Complete `npm run check` and Python run: all 100 cases passed |
+| Linux Firefox | Firefox 157, real temporary MV3 extension through Marionette | Workspace/page/input, mixed root text, exact restoration, trusted settings, credential isolation, transcription/image fallback passed |
+| Pinned original vs replacement | Actual Immersive Translate 1.33.3 and actual unpacked Open Translate, separate Chromium profiles | 9 paired semantic webpage checkpoints passed; full product parity remains unverified |
+| User's Mac mini, Safari packaging | Full Xcode, macOS and iOS Simulator host schemes, signing disabled | Both native host/extension builds succeeded; Safari runtime/device acceptance pending |
+| User's Mac mini, local speech | Homebrew whisper.cpp and hash-verified multilingual tiny GGML model | Actual English WAV recognition and authenticated multipart HTTP route passed; unauthenticated access rejected |
 
-Commands: `npm run check` and `python3 -m unittest discover -q`. Chromium acceptance loads the actual unpacked Manifest V3 extension in a fresh profile. Routine tests use a local deterministic mock translation/transcription endpoint; OCR, PDF parsing, browser extension messaging, audio encoding and file exports execute their real implementations.
+Commands: `npm run check`, `python3 -m unittest discover -q`, `python3 scripts/test-firefox.py`, and `npm run parity:reference -- /private/path/to/reference-extension`. A first Linux browser run exposed an ambiguous video locator after adding screen OCR; the test was scoped to its intended subtitle preview, then passed. The complete subsequent Mac run passed all 100 cases.
 
-Covered behavior:
+## Meaningful runtime coverage
 
-- Bilingual and translated webpage rendering; original DOM/event-handler restoration; inline links and formatting; editable/code exclusions; dynamic updates and accessible open shadow roots.
-- Changing display preferences on an already translated page; stale-response rejection; provider errors and input/selection translation.
-- User endpoint configuration, batch ordering, blank items, marker validation, error-body redaction, concurrency, deduplication and credential-isolated cache entries.
-- HTML, Markdown, DOCX and EPUB bilingual exports; PDF text extraction, lazy previews and exported page count; SRT timing and native video preview cues.
-- Real bundled image OCR and PNG export; screenshot capture/cropping; bounded one-time context-menu image handoff.
-- Actual microphone capture APIs, MediaRecorder encoding, transcription request, translated transcript, stop and SRT export. Capture input and provider responses are fixtures; this is not a speech-recognition quality test.
-- Accessible website captions; isolated webpage contexts cannot retrieve credentials or mutate trusted settings.
-- A 32-second HTTP request completes through the offscreen worker, exceeding the usual MV3 service-worker fetch deadline.
-- Rare UI components mount in the built package; keyboard navigation, active-link accessibility, progress counters, reduced-motion preferences, 390-pixel workspace layout and 350-pixel popup layout.
+- Bilingual and translated webpage rendering, exact original node/event restoration, inline links/formatting, exclusions, mixed body/table text, RTL, frames, dynamic content, open shadow roots and SPA navigation.
+- Batch/ID/placeholder validation, malformed responses, redacted errors, concurrency, cache invalidation, cancellation and stale response handling. One bounded AGY recovery keeps a shared deadline and never retries authentication/quota failures.
+- Actual isolated content contexts cannot read API credentials or change trusted settings. Firefox also probes inaccessible extension-origin IndexedDB and legacy credential migration.
+- DOCX formatted runs, links/relationships, tables, paragraph styles, headers/footers; HTML safe styles/links/code; EPUB packaged resources and spine order.
+- PDF vector originals, searchable Chinese/Arabic/Hebrew/English text, bidi ordering and complete overflow continuation. Accessible HTML attachment/export is included; tests extract text from the actual exported PDF.
+- Actual bundled English OCR plus integrity-verified French initialization/download/offline reuse, local masked-region repair and RTL wrapping. 124 model packs are listed; testing two packs does not establish all-language recognition quality.
+- SRT/VTT/ASS timing, native preview cues, dynamic/open-shadow captions, sidecar cues and screen-capture OCR with changed-caption recognition and track release.
+- Actual AudioWorklet PCM capture, 16-kHz mono WAV encoding, automatic 2-second chunk submission, pause/queue/cancellation handling, transcription/translation and SRT export. Browser CI uses deterministic speech/translation responses; local speech acceptance separately invokes real whisper.cpp.
+- Long HTTP inference completes through Chromium's offscreen worker after 32 seconds; Firefox executes its supported background fallback.
+- Rare UI navigation/counters/orbs, keyboard operation, active-link accessibility, reduced motion, 390-pixel workspace layout and compact popup rendering.
 
-The standalone build produces `dist/chrome` and `dist/open-translate-chrome.zip`. npm's dependency audit reported no known vulnerabilities at build time. No claim is made about store review or Firefox/Safari compatibility.
+## Original comparison and REA
 
-## Live AGY acceptance
+The [REA workflow](rev-workflow.md) executed the actual REA 6.4.0 CLI against an isolated browser and captured the original website's runtime scripts/page/screenshot. Original extension files remain private, pinned to official commit `c470f0aca3c75b2785c9009a0ac48e78ead34126` and blob verified.
 
-Backend: the user's installed Google Antigravity CLI 1.3.2, cached login and model `gemini-3.8-flash-low`. The updated bridge is reachable on the Mac at `127.0.0.1:8765`. Private token/configuration files remain outside the repository.
+[Reference results](parity/reference-results.json) compare both extensions with the same English→French Custom API fixture. Nine checks cover output, original source identity, placeholder, target language, source-content restoration, code/`translate=no`/input exclusions and dynamic content. The original leaves discovery attributes; the replacement restores the fixture DOM exactly. Popup screenshots support review but no pixel-equality assertion. Evidence binds to the implementation source digest, so later code changes require a new reference run.
 
-The actual standalone extension in Chromium on the Mac translated this local French fixture through the Python bridge and signed-in AGY CLI:
+`npm run parity` reports outstanding areas. `npm run parity -- --strict` currently exits 1 by design: all product areas still need broader paired original acceptance. Passing independent replacement tests cannot silently turn into a full-parity claim.
 
-| Source | Rendered translation |
-| --- | --- |
-| `Bonjour <b>monde</b> {0}.` | `Hello <b>world</b> {0}.` |
-| `Merci pour votre aide.` | `Thank you for your help.` |
+## Real agents and local speech
 
-The live check asserted both translations, preserved bold markup and numeric placeholder, then restored the original DOM. Screenshot: `dist/acceptance/live-agent-page.png`, generated locally rather than committed. An earlier Linux Chromium check through an SSH tunnel to the Mac also passed.
-
-The earlier bridge/API acceptance additionally verified health, HTTP 401 without authentication, extension-origin private-network preflight, ordered batches, both numeric-placeholder forms and blank-item preservation.
-
-Reproduce on the Mac, using the private connection settings:
+AGY acceptance uses the user's Google Antigravity CLI 1.3.2, cached login and model `gemini-3.8-flash-low`. A prior real standalone Chromium→Python bridge→AGY check translated `Bonjour <b>monde</b> {0}.` to `Hello <b>world</b> {0}.` and `Merci pour votre aide.` to `Thank you for your help.`, then restored source DOM. Repeat against the updated implementation:
 
 ```bash
 node scripts/live-check.mjs "$HOME/Library/Application Support/Open Translate/standalone-connection.json"
 ```
 
-This consumes the selected provider's usage. Never commit or share the connection file.
+This consumes the selected provider's usage. Private token/configuration files remain outside Git. CLI tool events still fail strict validation; recovery is not a tool-execution barrier or long-run reliability guarantee.
 
-During investigation, some AGY runs emitted a `manage_task` tool event and were rejected. The translation profile and explicit direct-answer instructions passed the final CLI and browser checks, but one successful acceptance sample does not establish long-run reliability. All reported tool events still fail validation. The CLI startup envelope continues advertising default tools even when the profile requests only structured completion; profile settings and output rejection are not treated as a tool-execution barrier. Provider behavior, account settings and global hooks remain relevant.
+Local speech acceptance used the actual installed whisper.cpp executable and pinned tiny model described in [local speech](local-speech.md). The official English sample was correctly transcribed through `/v1/audio/transcriptions`. HTTP 401 without authentication and Chromium/Safari extension preflights were verified. The existing loopback bridge was restarted with optional local speech enabled, retaining its private token.
 
-## Acceptance limits
+## Remaining acceptance
 
-These checks establish functioning desktop workflows, not exhaustive commercial-product parity or translation-quality equivalence. No broad evaluation of the original extension's 781 site rules was performed. Automated browser acceptance uses Chromium; branded Chrome and Edge, multiple OS/browser versions, arbitrary production sites, RTL/complex PDF layouts, inaccessible/DRM captions and real meeting audio still need broader device/site evaluation.
-
-PDF export rasterizes pages; translated DOCX runs flatten some formatting. OCR has three bundled language packs and plain overlays. Live audio uses 15-second chunks plus provider latency. See the README's [known limits](../README.md#practical-limits) and [replacement scope](replacement-scope.md).
+Browser manifests/builds do not establish Safari/mobile runtime acceptance, signing or store distribution. Edge branded, Safari runtime, Android/iOS devices and broad production-site evaluation remain pending. PDFs still have raster backgrounds on translated pages and do not rebuild document-level forms/bookmarks/tag trees. Artwork reconstruction, arbitrary OCR languages, private/DRM captions, noisy meetings, latency and model-quality equivalence require paired evaluation. See [browser support](browser-support.md), [document fidelity](document-fidelity.md), [media coverage](media-translation.md), and the [parity baseline](parity/baseline.json).

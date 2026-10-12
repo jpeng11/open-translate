@@ -19,3 +19,5 @@ The original client exposes direct provider adapters as well as authenticated ho
 Static client analysis establishes observable architecture and integration contracts. It does not establish the original server routing, billing, retention, translation quality or complete document/media algorithms. The independently implemented document, image, subtitle and live-audio features are validated separately; their limits are listed in the README and [validation report](validation.md).
 
 References: [pinned official distribution](https://github.com/immersive-translate/immersive-translate/tree/c470f0aca3c75b2785c9009a0ac48e78ead34126/dist/chrome), [public Custom API contract](https://immersivetranslate.com/en/docs/services/custom/), [advanced configuration](https://immersivetranslate.com/en/docs/advanced/), [product surface](https://immersivetranslate.com/en/).
+
+The follow-up [REA workflow](rev-workflow.md) adds actual isolated browser observation, pinned original/replacement fixture execution, UI screenshots and a strict incomplete-parity gate. Nine semantic webpage checkpoints passed against the actual original extension. Raw vendor scripts remain private.

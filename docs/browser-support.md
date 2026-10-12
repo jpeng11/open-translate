@@ -30,7 +30,7 @@ encryption; someone with access to that profile can inspect its contents.
   establish Android device acceptance.
 - Safari: on a Mac with full Xcode run `bash scripts/safari-project.sh`.
   This creates `dist/safari-project` containing the macOS/iOS host applications.
-  Build/run the appropriate Xcode scheme, then enable Open Translate and grant
+  Both macOS and iOS Simulator host schemes compiled successfully on the user's Mac with code signing disabled (2026-10-12). This is compile acceptance, not Safari runtime/device acceptance. Build/run the appropriate Xcode scheme, then enable Open Translate and grant
   website access in Safari Settings. Distribution requires Apple's signing and
   app packaging. An unpacked browser folder cannot be installed directly on iOS.
 

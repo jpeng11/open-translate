@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "implementationSha256": "99d07fb72a81ef0c137be648c8e336d67020a4b94692b886b9681a1db2cf995c",
+  "createdAt": "2026-10-12T21:04:33.864Z",
+  "reference": {
+    "version": "1.33.3",
+    "commit": "c470f0aca3c75b2785c9009a0ac48e78ead34126",
+    "contentSha256": "bfe7e3e640bf90bb6b1103b0fe2e097068a751ca182beadc0bba25a8e38cda4c"
+  },
+  "fixtureSha256": "b6cef320947012bf996fe78f90837b6f5d85e3cc99470e6150964bb1ced9009e",
+  "cases": [
+    "page-bilingual-text",
+    "page-source-preservation",
+    "page-placeholder",
+    "page-target-language",
+    "page-source-content-restoration",
+    "page-code-exclusion",
+    "page-translate-no-exclusion",
+    "page-input-exclusion",
+    "page-dynamic-content"
+  ],
+  "results": {
+    "original": {
+      "semantics": {
+        "codeExcluded": true,
+        "translateNoExcluded": true,
+        "inputExcluded": true,
+        "sourcePreserved": true,
+        "first": "Bonjour monde {0}.",
+        "second": "Merci pour votre aide.",
+        "targetLanguage": "fr",
+        "dynamic": "Bonjour dynamic",
+        "sourceContentRestored": true
+      },
+      "exactDomRestored": false
+    },
+    "replacement": {
+      "semantics": {
+        "codeExcluded": true,
+        "translateNoExcluded": true,
+        "inputExcluded": true,
+        "sourcePreserved": true,
+        "first": "Bonjour monde {0}.",
+        "second": "Merci pour votre aide.",
+        "targetLanguage": "fr",
+        "dynamic": "Bonjour dynamic",
+        "sourceContentRestored": true
+      },
+      "exactDomRestored": true
+    }
+  },
+  "status": "passed",
+  "scope": "Only the listed deterministic desktop page cases. Captured popup screenshots are review evidence, not a claim of pixel equality. No live commercial translation service or complete site/document/media parity was tested."
+}

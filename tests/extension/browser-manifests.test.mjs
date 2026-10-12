@@ -6,7 +6,7 @@ import {siteAdapter,pageRule} from '../../extension/src/site-adapters.mjs';
 import {createSettingsStore} from '../../extension/src/settings-store.mjs';
 const source=JSON.parse(await readFile(new URL('../../extension/manifest.json',import.meta.url)));
 test('Firefox desktop/Android and Safari manifests use event backgrounds without Chromium-only permission',()=>{
- for(const browser of ['firefox','safari']){const value=browserManifest(source,browser);assert.deepEqual(value.background,{scripts:['background.js'],persistent:false});assert.ok(!value.permissions.includes('offscreen'));assert.equal(value.minimum_chrome_version,undefined);assert.equal(value.content_scripts[0].all_frames,true);}
+ for(const browser of ['firefox','safari']){const value=browserManifest(source,browser);assert.deepEqual(value.background,browser==='firefox'?{scripts:['background.js'],persistent:false}:{scripts:['background.js']});assert.ok(!value.permissions.includes('offscreen'));assert.equal(value.minimum_chrome_version,undefined);assert.equal(value.content_scripts[0].all_frames,true);}
  const firefox=browserManifest(source,'firefox');assert.equal(firefox.browser_specific_settings.gecko_android.strict_min_version,'142.0');assert.deepEqual(firefox.browser_specific_settings.gecko.data_collection_permissions.required,['websiteContent']);
  assert.equal(browserManifest(source,'chrome').background.service_worker,'background.js');assert.ok(source.permissions.includes('offscreen'));
 });

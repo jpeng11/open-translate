@@ -1,0 +1,93 @@
+{
+  "schema": 1,
+  "reference": {
+    "product": "Immersive Translate",
+    "version": "1.33.3",
+    "commit": "c470f0aca3c75b2785c9009a0ac48e78ead34126",
+    "url": "https://github.com/immersive-translate/immersive-translate/tree/c470f0aca3c75b2785c9009a0ac48e78ead34126/dist/chrome"
+  },
+  "areas": [
+    {
+      "id": "web-reading",
+      "status": "partial",
+      "originalCases": [
+        "page-bilingual-text",
+        "page-source-preservation",
+        "page-placeholder",
+        "page-target-language",
+        "page-source-content-restoration",
+        "page-code-exclusion",
+        "page-translate-no-exclusion",
+        "page-input-exclusion",
+        "page-dynamic-content"
+      ],
+      "replacementTests": [
+        "tests/browser/extension.spec.mjs",
+        "tests/browser/sites.spec.mjs"
+      ],
+      "remaining": "Reference comparison covers a deterministic desktop fixture including dynamic paragraphs and exclusions. Production sites, mixed layouts, translated-only behavior and all site rules need paired reference acceptance."
+    },
+    {
+      "id": "ui-workflow",
+      "status": "partial",
+      "replacementTests": [
+        "tests/browser/extension.spec.mjs"
+      ],
+      "remaining": "Popup uses reference task order, compact white/pink styling and Rare UI. Branding and own-agent controls differ deliberately. No pixel equality claim; all settings/media/error states require visual comparison."
+    },
+    {
+      "id": "documents-pdf",
+      "status": "partial",
+      "replacementTests": [
+        "tests/browser/document-parity.spec.mjs",
+        "tests/extension/document-layout.test.mjs"
+      ],
+      "remaining": "Preserved styles, searchable Unicode PDF and overflow tested independently. Need paired original exports for representative documents; bookmarks/forms/tag trees and complex typography still differ."
+    },
+    {
+      "id": "image-ocr",
+      "status": "partial",
+      "replacementTests": [
+        "tests/browser/media.spec.mjs",
+        "tests/extension/media.test.mjs"
+      ],
+      "remaining": "124 model packs supported; English and French execution verified. Complex artwork inpainting and all languages are not quality-matched against the original."
+    },
+    {
+      "id": "video-captions",
+      "status": "partial",
+      "replacementTests": [
+        "tests/browser/media.spec.mjs",
+        "tests/browser/extension.spec.mjs"
+      ],
+      "remaining": "Dynamic tracks, open shadow roots, sidecars and screen OCR verified independently. Production site/private subtitle pipelines need paired acceptance. Capture restrictions remain."
+    },
+    {
+      "id": "live-speech",
+      "status": "partial",
+      "replacementTests": [
+        "tests/browser/media.spec.mjs",
+        "tests/test_speech.py"
+      ],
+      "remaining": "2\u20135 second PCM/VAD, local whisper.cpp and hosted speech endpoints implemented. Real-meeting latency/recognition-quality benchmark against the original is pending."
+    },
+    {
+      "id": "browsers-devices",
+      "status": "partial",
+      "replacementTests": [
+        "scripts/test-firefox.py",
+        "tests/extension/browser-manifests.test.mjs"
+      ],
+      "remaining": "Actual Chromium and Firefox acceptance; Both Safari macOS/iOS host schemes compiled with signing disabled. Edge branded, Safari runtime, Android and iOS device acceptance remain pending."
+    },
+    {
+      "id": "agent-reliability",
+      "status": "partial",
+      "replacementTests": [
+        "tests/test_speech.py",
+        "tests/test_agy.py"
+      ],
+      "remaining": "Strict validation and one bounded retry implemented; a live AGY acceptance sample is not a long-run reliability or vendor-model quality evaluation."
+    }
+  ]
+}
