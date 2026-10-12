@@ -1,12 +1,13 @@
 // Independent implementation and the pinned reference run in separate clean
 // profiles against the same local fixture. No reference code is redistributed.
-import {implementationDigest} from './parity-source.mjs';
+import {implementationDigest,verifyBuildEvidence} from './parity-source.mjs';
 import {chromium,expect} from '@playwright/test';
 import {createServer} from 'node:http';
 import {mkdir,readFile,writeFile,rm} from 'node:fs/promises';
 import {resolve,join} from 'node:path';
 import {createHash} from 'node:crypto';
 const implementationSha256=await implementationDigest();
+const buildEvidence=await verifyBuildEvidence('dist/chrome',implementationSha256);
 const reference=process.argv[2];if(!reference)throw new Error('Usage: npm run parity:reference -- /private/path/to/reference-extension');
 const manifest=JSON.parse(await readFile(join(reference,'manifest.json'),'utf8'));
 if(manifest.version!=='1.33.3')throw new Error('Reference must be pinned version 1.33.3. Review/update the baseline before changing versions.');
@@ -37,8 +38,9 @@ try{for(const kind of ['original','replacement']){
   results[kind]={semantics,exactDomRestored};
  }catch(error){await writeFile(join(output,kind+'-failure.json'),JSON.stringify({error:error.message,fixtureRequests:requests},null,2));throw error;}finally{await context?.close();}
 }
+ await verifyBuildEvidence('dist/chrome',implementationSha256);
  if(JSON.stringify(results.original.semantics)!==JSON.stringify(results.replacement.semantics))throw new Error('Semantic behavior differs from pinned reference.');
  if(await implementationDigest()!==implementationSha256)throw new Error('Implementation changed during comparison; rerun against a stable build.');
- const report={schema:1,implementationSha256,createdAt:new Date().toISOString(),reference:{version:manifest.version,commit:'c470f0aca3c75b2785c9009a0ac48e78ead34126',contentSha256:referenceContentSha256},fixtureSha256:createHash('sha256').update(fixture).digest('hex'),cases:['page-bilingual-text','page-source-preservation','page-placeholder','page-target-language','page-source-content-restoration','page-code-exclusion','page-translate-no-exclusion','page-input-exclusion','page-dynamic-content'],results,status:'passed',scope:'Only the listed deterministic desktop page cases. Captured popup screenshots are review evidence, not a claim of pixel equality. No live commercial translation service or complete site/document/media parity was tested.'};
+ const report={schema:1,implementationSha256,buildEvidence,createdAt:new Date().toISOString(),reference:{version:manifest.version,commit:'c470f0aca3c75b2785c9009a0ac48e78ead34126',contentSha256:referenceContentSha256},fixtureSha256:createHash('sha256').update(fixture).digest('hex'),cases:['page-bilingual-text','page-source-preservation','page-placeholder','page-target-language','page-source-content-restoration','page-code-exclusion','page-translate-no-exclusion','page-input-exclusion','page-dynamic-content'],results,status:'passed',scope:'Only the listed deterministic desktop page cases. Captured popup screenshots are review evidence, not a claim of pixel equality. No live commercial translation service or complete site/document/media parity was tested.'};
  await writeFile(join(output,'reference-results.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
 }finally{await new Promise(r=>server.close(r));}
