@@ -11,7 +11,7 @@ function notification(text,result=false) {
   if(!host) {
     host=document.createElement('div');host.setAttribute('data-ot-ui','');host.style.cssText='position:fixed;z-index:2147483647;right:20px;bottom:20px;';
     const shadow=host.attachShadow({mode:'closed'}),style=document.createElement('style');
-    style.textContent=':host{all:initial}section{box-sizing:border-box;font:14px/1.5 system-ui,sans-serif;width:340px;max-height:60vh;overflow:auto;padding:18px;background:#fcfcf8;color:#20332e;border:1px solid #d3ded8;border-radius:14px;box-shadow:0 8px 40px #163a2826}header{display:flex;justify-content:space-between;font-weight:650;margin-bottom:10px}button{font:inherit;cursor:pointer;border:0;background:#e8efea;border-radius:6px;color:inherit;padding:5px 9px;margin:6px 6px 0 0}p{white-space:pre-wrap;overflow-wrap:anywhere;margin:8px 0}';
+    style.textContent=':host{all:initial}section{box-sizing:border-box;font:14px/1.5 system-ui,sans-serif;width:340px;max-height:60vh;overflow:auto;padding:18px;background:#f4f3ed;color:#12232e;border:1px solid #bdcfc9;border-top:4px solid #087f75;border-radius:8px;box-shadow:0 8px 40px #12232e26}header{display:flex;justify-content:space-between;font-weight:650;margin-bottom:10px}button{font:inherit;cursor:pointer;border:0;background:#dceddf;border-radius:6px;color:inherit;padding:5px 9px;margin:6px 6px 0 0}p{white-space:pre-wrap;overflow-wrap:anywhere;margin:8px 0}';
     panel=document.createElement('section');panel.setAttribute('aria-live','polite');shadow.append(style,panel);document.documentElement.append(host);
   }
   panel.replaceChildren();const header=document.createElement('header');header.textContent='Open Translate';const close=document.createElement('button');close.textContent='×';close.setAttribute('aria-label','Close translation');close.onclick=()=>host.remove();header.append(close);panel.append(header);
@@ -25,8 +25,11 @@ function notification(text,result=false) {
 function report(){notification(`Translated ${completed} paragraphs${failed?`; ${failed} failed. Restore and retry after checking your agent.`:''}`);}
 const visibility=new IntersectionObserver(entries=>{for(const entry of entries)if(entry.isIntersecting){visibility.unobserve(entry.target);enqueue(entry.target);}},{rootMargin:'600px 0px'});
 function enqueue(element) {if(!active || !element.isConnected)return;const state=states.get(element);if(state?.status==='pending'||state?.status==='done'||state?.status==='error')return;queue.add(element);void drain();}
+function viewportChanged(){if(active && !viewportTimer)viewportTimer=setTimeout(()=>{viewportTimer=undefined;if(active)scan();},120);}
+addEventListener('resize',viewportChanged,{passive:true});
 function addRoot(root) {
   if(roots.has(root))return;roots.add(root);
+  root.addEventListener('scroll',viewportChanged,{capture:true,passive:true});
   const style=document.createElement('style');style.setAttribute('data-ot-ui','');style.textContent=PAGE_STYLE;(root.head || root).append(style);
   const observer=new MutationObserver(records=>{
     if(!active && !captionOn)return;
@@ -147,6 +150,3 @@ async function navigationChanged() {
 addEventListener('popstate',()=>void navigationChanged());
 addEventListener('hashchange',()=>void navigationChanged());
 setInterval(()=>void navigationChanged(),1000);
-function viewportChanged(){if(active && !viewportTimer)viewportTimer=setTimeout(()=>{viewportTimer=undefined;if(active)scan();},120);}
-addEventListener('resize',viewportChanged,{passive:true});
-  root.addEventListener('scroll',viewportChanged,{capture:true,passive:true});

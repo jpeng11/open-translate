@@ -13,7 +13,9 @@
     "parity": "node scripts/parity-report.mjs",
     "parity:reference": "node scripts/reference-parity.mjs",
     "parity:web": "node scripts/reference-web.mjs",
-    "parity:media": "node scripts/reference-media.mjs"
+    "parity:media": "node scripts/reference-media.mjs",
+    "acceptance": "node scripts/acceptance.mjs",
+    "acceptance:verify": "node scripts/acceptance.mjs --verify"
   },
   "dependencies": {
     "@pdf-lib/fontkit": "1.1.1",

@@ -1,4 +1,4 @@
-# Standalone replacement scope
+# Independent product scope
 
 Open Translate now targets a standalone browser extension: Immersive Translate is not a runtime dependency. The original Python bridge remains an optional backend for AGY or OpenAI-compatible agents.
 
@@ -20,8 +20,8 @@ The current public product also advertises document/PDF/EPUB, image/OCR, subtitl
 | Live audio | Explicit tab/microphone capture, 2–5 second PCM/VAD chunks, local whisper.cpp or user speech endpoint, translated transcript |
 | Privacy | User-selected endpoint, no vendor account, local document/OCR processing, no telemetry, credentials kept out of page messages, cache opt-in |
 
-A complete commercial-product parity claim additionally needs device/browser acceptance, layout/translation-quality evaluation, supported-site coverage and reliable live meeting/media integrations. Platform restrictions, inaccessible DRM captions, closed shadow roots and scanned/complex documents must be recorded honestly when they affect an implementation.
+A complete desktop acceptance claim additionally needs device/browser acceptance, layout/translation-quality evaluation, supported-site coverage and reliable live meeting/media integrations. Platform restrictions, inaccessible DRM captions, closed shadow roots and scanned/complex documents must be recorded honestly when they affect an implementation.
 
 References: [official product surface](https://immersivetranslate.com/en/), [advanced configuration](https://immersivetranslate.com/en/docs/advanced/), [Custom API](https://immersivetranslate.com/en/docs/services/custom/).
 
-[REA runtime capture and original/replacement release gate](rev-workflow.md) now tracks paired acceptance separately from implementation tests.
+The [accepted behavior contract](accepted-behavior.md) governs current acceptance. [Historical REA comparisons](rev-workflow.md) retain their original hashes and uncertainties; visual copying and defect-for-defect parity are not release requirements.
