@@ -21,7 +21,7 @@ try{for(const kind of ['original','replacement']){
  try{
   context=await chromium.launchPersistentContext('',{channel:'chromium',headless:true,viewport:{width:900,height:600},ignoreDefaultArgs:['--disable-extensions'],args:['--no-sandbox',`--disable-extensions-except=${directory}`,`--load-extension=${directory}`]});const worker=context.serviceWorkers()[0] || await context.waitForEvent('serviceworker');const id=worker.url().split('/')[2];
   await worker.evaluate(async({kind,url})=>{if(kind==='original'){const settings={translationService:'custom',targetLanguage:'fr',sourceLanguage:'en',translationServices:{custom:{name:'Local parity fixture',url,langs:'en,fr',requestTimeout:10000,placeholderDelimiters:['{','}'],maxTextGroupLengthPerRequest:8,maxTextLengthPerRequest:3000,concurrencyLimit:1}}};await chrome.storage.local.set({fullLocalUserConfig:settings,localConfig:settings});}else await chrome.storage.local.set({settings:{provider:'bridge',bridgeUrl:url,source:'en',target:'fr',style:'plain',mode:'bilingual',timeout:10,batchSize:1}});},{kind,url:origin+'/translate'});
-  const page=await context.newPage();await page.goto(origin+'/page');await page.waitForTimeout(800);const before=await page.locator('main').innerHTML();const beforeContents=await page.locator('main>p').evaluateAll(nodes=>nodes.map(n=>n.innerHTML));await page.evaluate(()=>{window.sourceBold=document.querySelector('#first b');});
+  const page=await context.newPage();await page.goto(origin+'/page');await page.waitForTimeout(1500);const before=await page.locator('main').innerHTML();const beforeContents=await page.locator('main>p').evaluateAll(nodes=>nodes.map(n=>n.innerHTML));await page.evaluate(()=>{window.sourceBold=document.querySelector('#first b');});
   const tabId=await worker.evaluate(async url=>(await chrome.tabs.query({})).find(tab=>tab.url===url).id,page.url());
   const toggle=()=>worker.evaluate(({tabId,kind})=>chrome.tabs.sendMessage(tabId,kind==='original'?{to:'content:main',from:'popup:main',payload:{method:'toggleTranslatePage',data:{trigger:'popup'}}}:{type:'page.start'}),{tabId,kind});
   const target=kind==='original'?'.immersive-translate-target-inner':'[data-ot-target]';
@@ -35,7 +35,7 @@ try{for(const kind of ['original','replacement']){
   if(!semantics.sourcePreserved || !semantics.sourceContentRestored)throw new Error(kind+' failed exact source/restoration acceptance.');
   const popup=await context.newPage();await popup.setViewportSize({width:316,height:700});await popup.goto(`chrome-extension://${id}/popup.html`);await popup.waitForTimeout(600);await popup.screenshot({path:join(output,kind+'-popup.png'),fullPage:true});
   results[kind]={semantics,exactDomRestored};
- }finally{await context?.close();}
+ }catch(error){await writeFile(join(output,kind+'-failure.json'),JSON.stringify({error:error.message,fixtureRequests:requests},null,2));throw error;}finally{await context?.close();}
 }
  if(JSON.stringify(results.original.semantics)!==JSON.stringify(results.replacement.semantics))throw new Error('Semantic behavior differs from pinned reference.');
  if(await implementationDigest()!==implementationSha256)throw new Error('Implementation changed during comparison; rerun against a stable build.');
