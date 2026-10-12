@@ -89,7 +89,7 @@ async function selection(text) {
 }
 async function translateInput() {
   const element=document.activeElement?.matches('input,textarea,[contenteditable="true"]')?document.activeElement:input;
-  if(!element || element.tagName==='INPUT' && !['text','search','url','email','tel'].includes(element.type) || element.readOnly || element.disabled)throw new Error('Focus a text input first. Password fields are excluded.');
+  if(!element || element.tagName==='INPUT' && !['text','search','url','tel'].includes(element.type) || element.readOnly || element.disabled)throw new Error('Focus a text input first. Password and email fields are excluded.');
   const original=element.isContentEditable?element.textContent:element.value;
   if(!original?.trim())throw new Error('The input is empty.');
   const result=await send({type:'translate',job:{source_lang:config.source || 'auto',target_lang:config.inputTarget || 'en',text_list:[original]}});

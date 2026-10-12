@@ -9,6 +9,12 @@ outside the repository.
 The original is Immersive Translate 1.33.3, release commit
 `c470f0aca3c75b2785c9009a0ac48e78ead34126`; `content_main.js` must match SHA-256
 `bfe7e3e640bf90bb6b1103b0fe2e097068a751ca182beadc0bba25a8e38cda4c`.
+Both browser profiles disable proxies and block external hostname resolution,
+while permitting localhost/127.0.0.1. This prevents live vendor configuration
+from replacing the pinned packaged defaults; literal-IP traffic is not a
+separate firewall boundary. The same declared policy is recorded in both the
+base and extended reports.
+
 The harness rejects another reference version/hash, stale implementation build,
 changed bundle, or source edits during a run. Its report includes the full build
 stamp, implementation/bundle/fixture hashes and the harness hash.
@@ -37,7 +43,7 @@ The extended fixture covers these independent cases:
 | Translation-only source DOM | Whether the source link remains in the live DOM |
 | Restoration and events | Original text and original link listener survive restore |
 | Focused input | Exact replacement value and requested target language |
-| Password exclusion | Password stays unchanged and its value is never submitted |
+| Password/email exclusion | Sensitive values stay unchanged and are never submitted |
 | SPA route replacement | A new route paragraph translates exactly once |
 
 ## Findings and limits
@@ -68,3 +74,7 @@ comparisons. They cover deterministic desktop fixture behavior, not arbitrary
 websites, layout equality, other browsers or a full replacement claim. Public
 site adapters and platform constraints are separately documented in
 [browser-support.md](browser-support.md).
+
+Actual reference email-field probing established that its raw value is masked.
+Open Translate now excludes focused email inputs as well as password inputs;
+a dedicated browser test verifies no raw email value reaches the endpoint.

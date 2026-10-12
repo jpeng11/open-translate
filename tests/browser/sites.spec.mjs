@@ -20,3 +20,8 @@ test('mixed root/table text, RTL, frames and source events survive translation a
 test('SPA route changes and reused translated containers do not duplicate translations',async()=>{
  const page=await context.newPage();await page.goto(origin+'/page');await command(page,'page.start');await expect(page.locator('#nested > [data-ot-target]')).toBeVisible();await page.evaluate(()=>{history.pushState({},'', '/reader/next');document.querySelector('#article').innerHTML='Route introduction<p id="next">New route paragraph</p>Route conclusion';});await expect(page.locator('#next > [data-ot-target]')).toHaveText('Translated New route paragraph');await expect(page.locator('#article > [data-ot-segment] > [data-ot-target]')).toHaveCount(2);await page.waitForTimeout(1500);await expect(page.locator('#next > [data-ot-target]')).toHaveCount(1);await command(page,'page.restore');await expect(page.locator('#article')).toHaveText('Route introductionNew route paragraphRoute conclusion');await page.close();
 });
+
+test('focused email fields never submit their value to the translation endpoint',async()=>{
+ const page=await context.newPage();await page.goto(origin+'/page');await page.evaluate(()=>{const email=document.createElement('input');email.id='private-email';email.type='email';email.value='private.person@example.invalid';document.body.append(email);email.focus();});
+ const response=await command(page,'translate-input');expect(response.ok).toBe(false);await expect(page.locator('#private-email')).toHaveValue('private.person@example.invalid');expect(requests.some(job=>job.items.some(item=>item.text.includes('private.person@example.invalid')))).toBe(false);await page.close();
+});
