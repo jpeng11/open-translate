@@ -200,6 +200,6 @@ python3 -m pip install -e .
 open-translate --help
 ```
 
-The implementation and connection checks are tested against mocks. An actual user endpoint and an installed browser extension still need a live acceptance run using the steps above.
+Automated tests use mocks. A live macOS run with AGY 1.3.2 also passed the connection check and the authenticated HTTP translation route, preserving markup and placeholders. See [validation results](docs/validation.md) and [the Mac setup guide](docs/mac-setup.md). Browser-extension rendering has not yet been exercised.
 
 See [architecture and protocol notes](docs/architecture.md). Licensed under [MIT](LICENSE).
