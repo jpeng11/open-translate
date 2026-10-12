@@ -70,3 +70,19 @@ support. Verify each target device before promising those capture workflows.
 - [Apple Safari extensions on macOS/iOS](https://developer.apple.com/safari/extensions/)
 
 Safari's worker declaration follows [Apple's MV3 guidance](https://developer.apple.com/documentation/safariservices/optimizing-your-web-extension-for-safari) and [WebKit support since 15.4](https://webkit.org/blog/12445/new-webkit-features-in-safari-15-4/). The Xcode converter confirms the worker manifest without a persistent-background warning.
+
+## Safari runtime automation
+
+On Safari 26 or later, `python3 scripts/test-safari.py` uses the browser's native
+[WebDriver WebExtension installation command](https://webkit.org/blog/17333/webkit-features-in-safari-26-0/)
+to load a temporary copy of `dist/safari`. It exercises the real MV3 service
+worker, trusted settings, workspace translation through an isolated local endpoint,
+and private settings storage. It removes its temporary extension and owned driver
+session, and never changes Safari preferences or quits existing Safari processes.
+This limited smoke test does not establish page/capture/device feature parity.
+
+The owner's Safari must already allow remote automation in Settings → Developer.
+The user's Mac rejected session creation on 2026-10-12 because that setting was
+disabled. This is recorded as blocked runtime acceptance, not a passing Safari
+result. Host application compilation remains separately verified. Installation
+parameters follow the [WebExtensions WebDriver draft](https://w3c.github.io/webextensions/specification/webdriver-classic.html).

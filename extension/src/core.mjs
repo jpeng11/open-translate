@@ -1,9 +1,10 @@
+import {normalizeScreenRegion} from './screen-region.mjs';
 export const DEFAULTS = Object.freeze({
   provider: 'bridge', bridgeUrl: 'http://127.0.0.1:8765/translate', apiUrl: 'http://127.0.0.1:1234/v1',
   apiKey: '', model: '', source: 'auto', target: 'en', inputTarget: 'en', mode: 'bilingual',
   style: 'underline', batchSize: 4, concurrency: 1, timeout: 210, jsonMode: true,
   autoTranslate: false, selection: false, hover: true, cache: false, glossary: [], rules: [],
-  speechUrl: '', speechKey: '', speechModel: '', liveSegmentSeconds:3, liveVad:true, ocrLanguage: 'eng', captionSelector: ''
+  speechUrl: '', speechKey: '', speechModel: '', liveSegmentSeconds:3, liveVad:true, ocrLanguage: 'eng', captionSelector: '', screenCaptionRegion: Object.freeze({left:0,top:.7,width:1,height:.3})
 });
 export const LANGUAGES = [
  ['auto','Detect language'],['en','English'],['zh-CN','简体中文'],['zh-TW','繁體中文'],['ja','日本語'],['ko','한국어'],
@@ -48,6 +49,7 @@ export function validateSettings(input) {
     if(rule.mode && !['bilingual','translation'].includes(rule.mode) || rule.style && !['underline','muted','box','plain'].includes(rule.style) || rule.batchSize!==undefined && (!Number.isInteger(rule.batchSize) || rule.batchSize<1 || rule.batchSize>16))fail('configuration','Invalid site rule display or batch size.');
     if (rule.include && typeof rule.include!=='string' || rule.exclude && typeof rule.exclude!=='string') fail('configuration','Rule selectors must be text.');
   }
+  try{value.screenCaptionRegion=normalizeScreenRegion(value.screenCaptionRegion);}catch(error){fail('configuration',error.message);}
   if (value.speechUrl) endpoint(value.speechUrl,'audio/transcriptions');
   if (typeof value.apiKey!=='string' || typeof value.speechKey!=='string') fail('configuration','Invalid API key.');
   return value;
