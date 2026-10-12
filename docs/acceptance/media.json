@@ -1,0 +1,355 @@
+{
+  "schema": 1,
+  "suite": "media",
+  "testedAt": "2026-10-12T22:45:47.862Z",
+  "implementationSha256": "8dd07427a2d438c2750dd79859ef9fd338bc3a472f47fbdebdf43dcf010bc77a",
+  "buildEvidence": {
+    "schema": 1,
+    "browser": "chrome",
+    "implementationSha256": "8dd07427a2d438c2750dd79859ef9fd338bc3a472f47fbdebdf43dcf010bc77a",
+    "bundleSha256": "fad02e923d7dd3eaed7e61ae57fdc2b839b071cd86351944fd081fa458912933"
+  },
+  "testInputsSha256": "a285661b985873128793c1fb12f9f246b4282e1f6c6f95b406d21dcd84fff600",
+  "status": "passed",
+  "evidenceSource": {
+    "node": {
+      "path": "dist/acceptance/regression/node.log",
+      "sha256": "0f8b2a278528954275a9d524d154e161a0333eb528234b19719968d6a9d48aa8"
+    },
+    "browser": {
+      "path": "dist/acceptance/regression/playwright.json",
+      "sha256": "5f2c6fd2587fb2657dcf740df837020889476d5bc890b8f5617a578a541bc1ab"
+    },
+    "method": "Media observations selected from the completed shared regression, without rerunning acceptance."
+  },
+  "environment": {
+    "node": "v24.21.0",
+    "platform": "linux",
+    "browser": "Chromium",
+    "fixtures": "Original synthetic canvas/video/audio and pinned official French OCR model"
+  },
+  "cases": [
+    {
+      "id": "media-every-pcm-segment-is-independently-decodable-wav-with-sample-based-times",
+      "status": "passed",
+      "evidence": {
+        "runner": "node:test",
+        "name": "every PCM segment is independently decodable WAV with sample-based times",
+        "file": "tests/extension/media.test.mjs"
+      }
+    },
+    {
+      "id": "media-vad-skips-idle-silence-retains-preroll-and-closes-speech-at-a-pause",
+      "status": "passed",
+      "evidence": {
+        "runner": "node:test",
+        "name": "VAD skips idle silence, retains preroll and closes speech at a pause",
+        "file": "tests/extension/media.test.mjs"
+      }
+    },
+    {
+      "id": "media-pcm-fractional-resampling-keeps-accurate-durations-over-many-blocks",
+      "status": "passed",
+      "evidence": {
+        "runner": "node:test",
+        "name": "PCM fractional resampling keeps accurate durations over many blocks",
+        "file": "tests/extension/media.test.mjs"
+      }
+    },
+    {
+      "id": "media-local-inpainting-removes-glyph-pixels-and-preserves-colored-background-outside-pixels",
+      "status": "passed",
+      "evidence": {
+        "runner": "node:test",
+        "name": "local inpainting removes glyph pixels and preserves colored background/outside pixels",
+        "file": "tests/extension/media.test.mjs"
+      }
+    },
+    {
+      "id": "media-rtl-text-and-grapheme-wrapping-preserve-combining-marks-newlines",
+      "status": "passed",
+      "evidence": {
+        "runner": "node:test",
+        "name": "RTL text and grapheme wrapping preserve combining marks/newlines",
+        "file": "tests/extension/media.test.mjs"
+      }
+    },
+    {
+      "id": "media-124-pinned-ocr-models-reject-invalid-ids-and-corrupt-data-before-worker-loading",
+      "status": "passed",
+      "evidence": {
+        "runner": "node:test",
+        "name": "124 pinned OCR models reject invalid IDs and corrupt data before worker loading",
+        "file": "tests/extension/media.test.mjs"
+      }
+    },
+    {
+      "id": "media-tesseract-object-language-initialization-uses-code-and-build-rejects-upstream-drift",
+      "status": "passed",
+      "evidence": {
+        "runner": "node:test",
+        "name": "Tesseract object-language initialization uses code and build rejects upstream drift",
+        "file": "tests/extension/media.test.mjs"
+      }
+    },
+    {
+      "id": "media-bridge-speech-auto-derives-authenticated-route-and-hosted-override-stays-separate",
+      "status": "passed",
+      "evidence": {
+        "runner": "node:test",
+        "name": "bridge speech auto derives authenticated route and hosted override stays separate",
+        "file": "tests/extension/media.test.mjs"
+      }
+    },
+    {
+      "id": "media-native-caption-reader-restores-disabled-tracks-and-sidecar-cue-timing",
+      "status": "passed",
+      "evidence": {
+        "runner": "node:test",
+        "name": "native caption reader restores disabled tracks and sidecar cue timing",
+        "file": "tests/extension/media.test.mjs"
+      }
+    },
+    {
+      "id": "media-segment-flush-clears-state-before-a-queue-overload-callback-can-stop-capture",
+      "status": "passed",
+      "evidence": {
+        "runner": "node:test",
+        "name": "segment flush clears state before a queue-overload callback can stop capture",
+        "file": "tests/extension/media.test.mjs"
+      }
+    },
+    {
+      "id": "media-live-cancellation-drops-pending-results-and-overload-does-not-flush-into-a-full-queue",
+      "status": "passed",
+      "evidence": {
+        "runner": "node:test",
+        "name": "live cancellation drops pending results and overload does not flush into a full queue",
+        "file": "tests/extension/media.test.mjs"
+      }
+    },
+    {
+      "id": "media-screen-ocr-normalized-presets-and-reversed-drag-stay-inside-the-captured-video",
+      "status": "passed",
+      "evidence": {
+        "runner": "node:test",
+        "name": "screen OCR normalized presets and reversed drag stay inside the captured video",
+        "file": "tests/extension/media.test.mjs"
+      }
+    },
+    {
+      "id": "media-caption-reader-hides-duplicate-native-captions-switches-selected-tracks-and-restores-mode",
+      "status": "passed",
+      "evidence": {
+        "runner": "node:test",
+        "name": "caption reader hides duplicate native captions, switches selected tracks and restores mode",
+        "file": "tests/extension/media.test.mjs"
+      }
+    },
+    {
+      "id": "media-declined-microphone-and-late-permission-grants-leave-no-capture-resources",
+      "status": "passed",
+      "evidence": {
+        "runner": "node:test",
+        "name": "declined microphone and late permission grants leave no capture resources",
+        "file": "tests/extension/media-lifecycle.test.mjs"
+      }
+    },
+    {
+      "id": "media-silence-uploads-nothing-and-stop-flushes-speech-once-then-closes-every-resource",
+      "status": "passed",
+      "evidence": {
+        "runner": "node:test",
+        "name": "silence uploads nothing and stop flushes speech once then closes every resource",
+        "file": "tests/extension/media-lifecycle.test.mjs"
+      }
+    },
+    {
+      "id": "media-browser-ended-live-tracks-release-audio-nodes-and-repeated-starts-leave-no-listeners",
+      "status": "passed",
+      "evidence": {
+        "runner": "node:test",
+        "name": "browser-ended live tracks release audio nodes and repeated starts leave no listeners",
+        "file": "tests/extension/media-lifecycle.test.mjs"
+      }
+    },
+    {
+      "id": "media-full-live-queue-stops-capture-drains-at-most-four-items-and-requires-pending-work-to-finish",
+      "status": "passed",
+      "evidence": {
+        "runner": "node:test",
+        "name": "full live queue stops capture, drains at most four items and requires pending work to finish",
+        "file": "tests/extension/media-lifecycle.test.mjs"
+      }
+    },
+    {
+      "id": "media-capture-setup-failure-and-streams-without-shared-audio-release-all-granted-tracks",
+      "status": "passed",
+      "evidence": {
+        "runner": "node:test",
+        "name": "capture setup failure and streams without shared audio release all granted tracks",
+        "file": "tests/extension/media-lifecycle.test.mjs"
+      }
+    },
+    {
+      "id": "media-screen-permission-decline-late-grant-ended-sharing-and-missing-video-clean-up",
+      "status": "passed",
+      "evidence": {
+        "runner": "node:test",
+        "name": "screen permission decline, late grant, ended sharing and missing video clean up",
+        "file": "tests/extension/media-lifecycle.test.mjs"
+      }
+    },
+    {
+      "id": "media-preview-coordinates-follow-letterboxing-object-positions-cover-cropping-and-resize",
+      "status": "passed",
+      "evidence": {
+        "runner": "node:test",
+        "name": "preview coordinates follow letterboxing, object positions, cover cropping and resize",
+        "file": "tests/extension/media-lifecycle.test.mjs"
+      }
+    },
+    {
+      "id": "media-caption-overlap-preserves-multiline-rtl-reselecting-native-captions-hides-duplicates",
+      "status": "passed",
+      "evidence": {
+        "runner": "node:test",
+        "name": "caption overlap preserves multiline RTL, reselecting native captions hides duplicates",
+        "file": "tests/extension/media-lifecycle.test.mjs"
+      }
+    },
+    {
+      "id": "media-cjk-ocr-removes-segmentation-separators-without-changing-latin-korean-or-line-breaks",
+      "status": "passed",
+      "evidence": {
+        "runner": "node:test",
+        "name": "CJK OCR removes segmentation separators without changing Latin, Korean or line breaks",
+        "file": "tests/extension/media-lifecycle.test.mjs"
+      }
+    },
+    {
+      "id": "media-inpainting-includes-antialiasing-strokes-just-outside-tight-ocr-bounds",
+      "status": "passed",
+      "evidence": {
+        "runner": "node:test",
+        "name": "inpainting includes antialiasing strokes just outside tight OCR bounds",
+        "file": "tests/extension/media-lifecycle.test.mjs"
+      }
+    },
+    {
+      "id": "media-ocr-and-pdf-callers-can-choose-different-mask-fringes-without-altering-outer-pixels",
+      "status": "passed",
+      "evidence": {
+        "runner": "node:test",
+        "name": "OCR and PDF callers can choose different mask fringes without altering outer pixels",
+        "file": "tests/extension/media-lifecycle.test.mjs"
+      }
+    },
+    {
+      "id": "media-live-audioworklet-automatically-emits-complete-low-latency-wav-chunks",
+      "status": "passed",
+      "evidence": {
+        "runner": "playwright",
+        "name": "live AudioWorklet automatically emits complete low-latency WAV chunks",
+        "durationMs": 3617
+      }
+    },
+    {
+      "id": "media-downloaded-french-ocr-initializes-safely-and-repeats-from-offline-model-cache",
+      "status": "passed",
+      "evidence": {
+        "runner": "playwright",
+        "name": "downloaded French OCR initializes safely and repeats from offline model cache",
+        "durationMs": 1648
+      }
+    },
+    {
+      "id": "media-dynamic-open-shadow-captions-translate-and-supplied-sidecar-timing-survives",
+      "status": "passed",
+      "evidence": {
+        "runner": "playwright",
+        "name": "dynamic open-shadow captions translate and supplied sidecar timing survives",
+        "durationMs": 2078
+      }
+    },
+    {
+      "id": "media-screen-subtitle-fallback-captures-visible-text-locally-and-releases-sharing-tracks",
+      "status": "passed",
+      "evidence": {
+        "runner": "playwright",
+        "name": "screen subtitle fallback captures visible text locally and releases sharing tracks",
+        "durationMs": 3228
+      }
+    },
+    {
+      "id": "media-screen-ocr-preset-and-preview-drag-select-the-intended-region-and-persist",
+      "status": "passed",
+      "evidence": {
+        "runner": "playwright",
+        "name": "screen OCR preset and preview drag select the intended region and persist",
+        "durationMs": 4097
+      }
+    },
+    {
+      "id": "media-cjk-and-mixed-language-ocr-translate-colored-images-and-preserve-detailed-backgrounds-on-export",
+      "status": "passed",
+      "evidence": {
+        "runner": "playwright",
+        "name": "CJK and mixed-language OCR translate colored images and preserve detailed backgrounds on export",
+        "durationMs": 3835
+      }
+    },
+    {
+      "id": "media-live-permission-decline-silent-audioworklet-input-and-browser-ended-sharing-recover-cleanly",
+      "status": "passed",
+      "evidence": {
+        "runner": "playwright",
+        "name": "live permission decline, silent AudioWorklet input and browser-ended sharing recover cleanly",
+        "durationMs": 5951
+      }
+    },
+    {
+      "id": "media-native-overlapping-multiline-rtl-captions-toggle-reselect-tracks-and-follow-fullscreen",
+      "status": "passed",
+      "evidence": {
+        "runner": "playwright",
+        "name": "native overlapping multiline RTL captions toggle, reselect tracks and follow fullscreen",
+        "durationMs": 2311
+      }
+    },
+    {
+      "id": "media-screen-ocr-retries-failed-translation-maps-letterboxed-preview-drag-and-stops-on-capture-end",
+      "status": "passed",
+      "evidence": {
+        "runner": "playwright",
+        "name": "screen OCR retries failed translation, maps letterboxed preview drag and stops on capture end",
+        "durationMs": 5833
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "dist/acceptance/regression/browser/media-CJK-and-mixed-langua-2d858-ailed-backgrounds-on-export/chi_sim.translated.png",
+      "sha256": "9526bbfdf48edffe542128e44c7e59075ba695bd2b4207b5f5f413eced671ed6",
+      "visualReview": "matches visually reviewed CJK export"
+    },
+    {
+      "path": "dist/acceptance/regression/browser/media-CJK-and-mixed-langua-2d858-ailed-backgrounds-on-export/eng-chi_sim.translated.png",
+      "sha256": "4acb986beaf05e4db8a0a6a251b62ae2a89a0414d5cbcf7eda81e71e9e502f81",
+      "visualReview": "matches visually reviewed CJK export"
+    },
+    {
+      "path": "dist/acceptance/regression/browser/media-CJK-and-mixed-langua-2d858-ailed-backgrounds-on-export/jpn.translated.png",
+      "sha256": "4f54a0b082deeda2e6358bb12f36b28707cb3a0d084e7319ea31a64b010b5131",
+      "visualReview": "matches visually reviewed CJK export"
+    }
+  ],
+  "limitations": [
+    "Capture permission grants/declines and browser-ended events are controlled test doubles; the suite does not automate an operating-system permission picker or physical devices.",
+    "Chinese, Japanese, mixed English/Chinese and French OCR fixtures exercise selected real models; they do not measure all 124 models or accuracy on arbitrary images.",
+    "Export assertions preserve colored backgrounds and detailed pixels outside text regions. Local harmonic inpainting does not guarantee texture, art, typography or perfect glyph reconstruction.",
+    "Native captions use standard text tracks and a controlled local VP8 video; commercial player APIs, encrypted streams and protected-video capture are outside this evidence.",
+    "Speech transport uses real AudioWorklet PCM capture with a deterministic transcription endpoint; recognition quality and hosted/AGY model quality are separate acceptance areas.",
+    "Fullscreen checks exercise a player container. Native browser-only fullscreen video controls and closed player internals are not established."
+  ]
+}

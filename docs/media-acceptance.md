@@ -24,3 +24,5 @@ Image reconstruction is local harmonic interpolation, with glyph masks derived f
 Native captions use a local original VP8 video and standard text tracks. Fullscreen acceptance covers a player container; browser-only fullscreen video controls, closed player internals, commercial player APIs, encrypted streams and DRM capture remain outside this evidence. Browser capture restrictions are respected.
 
 API behavior follows [Media Capture and Streams](https://www.w3.org/TR/mediacapture-streams/) and [CSS object fitting](https://www.w3.org/TR/css-images-3/#the-object-fit). Track `.stop()` does not itself emit `ended`; tests distinguish an explicit stop from a simulated browser-ended event.
+
+The final 2026-10-12 regression records 33 passed media cases: 24 focused Node cases and nine Chromium extension cases. The three final CJK/mixed exported PNG hashes match the visually reviewed outputs. Those observations are bound to the stamped implementation in `docs/acceptance/media.json`; the limitations above remain applicable.
