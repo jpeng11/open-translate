@@ -1,6 +1,7 @@
 import {createWorker} from 'tesseract.js';
 import {languageData,modelInfo} from './ocr-data.mjs';
 import {inpaintRegions,textDirection,wrapText} from './image-inpaint.mjs';
+import {normalizeOcrText} from './ocr-text.mjs';
 export {OCR_LANGUAGES,OCR_LANGUAGE_COMBINATIONS,OCR_MODEL_REVISION} from './ocr-data.mjs';
 const api=globalThis.browser || chrome;
 let worker,language,currentProgress=()=>{},queue=Promise.resolve();
@@ -18,11 +19,12 @@ async function recognizeJob(image,lang,progress) {
   const {data}=await worker.recognize(image,{}, {text:true,blocks:true});
   const paragraphs=[];
   for(const block of data.blocks || [])for(const paragraph of block.paragraphs || []) {
-    const text=(paragraph.text || paragraph.lines?.map(l=>l.text).join('\n') || '').trim();
+    const text=normalizeOcrText(paragraph.text || paragraph.lines?.map(l=>l.text).join('\n') || '',lang).trim();
     if(text)paragraphs.push({text,bbox:paragraph.bbox,confidence:paragraph.confidence,wordBoxes:paragraph.lines?.flatMap(line=>(line.words || []).map(word=>word.bbox).filter(Boolean)) || []});
   }
-  if(!paragraphs.length && data.text.trim())paragraphs.push({text:data.text.trim(),bbox:null,confidence:data.confidence});
-  return {text:data.text,paragraphs,confidence:data.confidence};
+  const text=normalizeOcrText(data.text,lang);
+  if(!paragraphs.length && text.trim())paragraphs.push({text:text.trim(),bbox:null,confidence:data.confidence});
+  return {text,paragraphs,confidence:data.confidence};
 }
 export function canvasImage(source) {
   const canvas=document.createElement('canvas');canvas.width=source.width;canvas.height=source.height;

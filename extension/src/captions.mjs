@@ -24,7 +24,7 @@ export class CaptionReader {
       for(const [track,value]of this.tracks)if(value.video===video && track!==selected){track.removeEventListener('cuechange',value.listener);if(track.mode==='hidden')track.mode=value.mode==='showing'?'disabled':value.mode;this.tracks.delete(track);}
       if(selected && !this.tracks.has(selected)){
         const mode=selected.mode,listener=()=>this.scan();selected.mode='hidden';selected.addEventListener('cuechange',listener);this.tracks.set(selected,{mode,listener,video});
-      }
+      }else if(selected?.mode==='showing')selected.mode='hidden';
     }
     for(const [track,value]of this.tracks)if(!value.video.isConnected){track.removeEventListener('cuechange',value.listener);track.mode=value.mode;this.tracks.delete(track);}
     this.scan();
@@ -32,8 +32,9 @@ export class CaptionReader {
   scan() {
     if(!this.running)return;
     const values=[];for(const root of this.roots || [])for(const node of root.querySelectorAll(this.config.captionSelector || CAPTION_SELECTORS)){
-      if(node.closest?.('[data-ot-ui]') || node.getAttribute('aria-hidden')==='true')continue;
+      if(node.closest?.('[data-ot-ui],[aria-hidden="true"]'))continue;
       const style=node.ownerDocument.defaultView?.getComputedStyle(node);if(style?.display==='none' || style?.visibility==='hidden')continue;
+      if(node.getClientRects && !node.getClientRects().length)continue;
       const text=node.textContent.trim();if(text)values.push(text);
     }
     if(!values.length)for(const [track]of this.tracks)for(const cue of track.activeCues || [])values.push(cueText(cue));
