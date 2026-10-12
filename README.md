@@ -1,6 +1,6 @@
 # Open Translate
 
-An independent, open-source translation extension for Chrome and Edge. Read bilingual webpages, translate documents, images and subtitles, and connect your own AI agent. Immersive Translate is not required.
+An independent translation extension for Chrome and Edge with an open-source translation engine. Read bilingual webpages, translate documents, images and subtitles, and connect your own AI agent. Immersive Translate is not required.
 
 Use any local or hosted **OpenAI-compatible Chat Completions endpoint**, or the optional Python bridge for your signed-in **Google Antigravity CLI**. No Open Translate account, subscription or telemetry.
 
@@ -82,4 +82,4 @@ python3 -m unittest discover -v
 
 Node tests exercise engine contracts and subtitle formats. Chromium tests load the real Manifest V3 package and exercise page rendering/restoration, input translation, dynamic content, documents, PDF, timed subtitles and bundled OCR against a local mock provider. They make no external AI calls. Live AGY acceptance is separate and consumes the configured provider’s usage.
 
-The build pins npm dependencies and includes bundled OCR/PDF workers, models and third-party notices. No proprietary Immersive Translate bundle is distributed. Reverse-engineering observations informed an independent implementation. Licensed under [MIT](LICENSE).
+The build pins npm dependencies and includes bundled OCR/PDF workers, models and third-party notices. No proprietary Immersive Translate bundle is distributed. Reverse-engineering observations informed an independent implementation. Original code is [MIT](LICENSE). The interface uses [Rare UI](https://rareui.com) React components under its separate [MIT + Commons Clause + Attribution license](extension/ui/rare/LICENSE); those components are not covered by our MIT grant. See [UI provenance](extension/ui/rare/provenance.json).

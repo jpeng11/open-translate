@@ -1,0 +1,10 @@
+@import 'tailwindcss' source(none);
+@source './rare';
+@source './mount.tsx';
+@theme inline {
+  --color-background: #f8f9f5;
+  --color-foreground: #213b32;
+  --color-muted-foreground: #6a7e74;
+  --color-primary: #1b654e;
+  --color-border: #dae2d7;
+}

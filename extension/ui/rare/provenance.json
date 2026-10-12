@@ -1,0 +1,18 @@
+{
+  "upstream": "https://github.com/swamimalode07/rare-ui",
+  "commit": "cb455b2d071dc9d0d90397294824578c6678561d",
+  "components": {
+    "bounce-sidebar.tsx": {
+      "upstream_sha256": "400b6a99bd14ace074caee4a0f185242a160f3233d766df560d8110bf8c07973",
+      "local_sha256": "87a6bc09ed09413bbde33cf6ccbd48585847f7aa953a04e9dca06da7cd8f36ce"
+    },
+    "animated-counter.tsx": {
+      "upstream_sha256": "7913a4e43d8ad16ebac5fe4ea2413890866f14b9a0e01f7feec2b912e399906c",
+      "local_sha256": "80552d70b72c0aee35c52d408c9cda4bb27c54b5802101e50da33c87e91c6bcc"
+    },
+    "fluid-orb.tsx": {
+      "upstream_sha256": "f5b13769f5e4e64b74bfc7ed7815b8b38e670fef5985b1a991a8ee6186b2be8a",
+      "local_sha256": "8ce5f933774686ce9a4c179f78eb057d6c0ff27cbfd737a70994c5acd6155597"
+    }
+  }
+}

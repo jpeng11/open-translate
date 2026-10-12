@@ -1,3 +1,4 @@
+import {mountRareUI} from '../ui/mount.tsx';
 import {$,api,send,status,languages} from './ui.mjs';
 languages();let settings;
 send({type:'settings.get'}).then(config=>{settings=config;$('target').value=config.target;$('mode').value=config.mode;}).catch(error=>status('status',error.message,true));
@@ -11,3 +12,5 @@ for(const id of ['translate-page','page.restore','translate-selection','translat
   }catch(error){status('status',error.message,true);}
 };
 $('workspace').onclick=()=>api.runtime.openOptionsPage();
+
+mountRareUI();

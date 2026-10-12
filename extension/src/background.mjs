@@ -39,6 +39,7 @@ async function handle(message,sender) {
     case 'settings.save':{const config=validateSettings(message.settings);await api.storage.local.set({settings:config});await engineCall('engine.clear');return config;}
     case 'cache.clear':await engineCall('engine.clear');return {};
     case 'page.command':return activeCommand(message.command,message.options);
+    case 'image.pending':{const {pendingImage}=await api.storage.session.get('pendingImage');await api.storage.session.remove('pendingImage');if(!pendingImage || Date.now()-pendingImage.time>600000)return {};return engineCall('engine.image',{url:pendingImage.url},await settings());}
     case 'capture':{const [tab]=await api.tabs.query({active:true,currentWindow:true});return {image:await api.tabs.captureVisibleTab(tab.windowId,{format:'png'})};}
     case 'transcribe':return engineCall('engine.transcribe',message,await settings());
     default:throw new Error('Unknown Open Translate action.');
@@ -58,7 +59,7 @@ api.runtime.onInstalled.addListener(()=>{
   }).catch(()=>{});
 });
 api.contextMenus.onClicked.addListener((info,tab)=>{
-  if(info.menuItemId==='translate-image')api.tabs.create({url:api.runtime.getURL('app.html#images')});
+  if(info.menuItemId==='translate-image')api.storage.session.set({pendingImage:{url:info.srcUrl,time:Date.now()}}).then(()=>api.tabs.create({url:api.runtime.getURL('app.html#images')})).catch(()=>{});
   else api.tabs.sendMessage(tab.id,{type:info.menuItemId,selection:info.selectionText},{frameId:info.frameId || 0}).catch(()=>{});
 });
 api.commands.onCommand.addListener(command=>activeCommand(command).catch(()=>{}));

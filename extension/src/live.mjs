@@ -7,7 +7,7 @@ export class LiveSession {
     this.stream=source==='microphone'?await navigator.mediaDevices.getUserMedia({audio:true}):await navigator.mediaDevices.getDisplayMedia({video:true,audio:true});
     if(!this.stream.getAudioTracks().length){this.stream.getTracks().forEach(t=>t.stop());throw new Error('No audio was shared. Choose a browser tab and enable Share tab audio.');}
     this.running=true;this.started=performance.now();this.audio=new MediaStream(this.stream.getAudioTracks());
-    this.stream.getTracks().forEach(track=>track.addEventListener('ended',()=>this.stop()));this.record();
+    this.stream.getTracks().forEach(track=>track.addEventListener('ended',()=>this.stop()));try{this.record();}catch(error){this.stop();throw error;}
     this.status('Listening. Processing 15-second audio segments…');
   }
   record() {
@@ -31,7 +31,7 @@ export class LiveSession {
     };
     recorder.start();this.timer=setTimeout(()=>{if(recorder.state!=='inactive')recorder.stop();},15000);
   }
-  stop(){this.running=false;clearTimeout(this.timer);if(this.recorder?.state!=='inactive')this.recorder?.stop();this.stream?.getTracks().forEach(t=>t.stop());this.status('Capture stopped. Finishing any pending segments…');}
+  stop(){if(!this.running && !this.stream)return;this.running=false;clearTimeout(this.timer);if(this.recorder?.state!=='inactive')this.recorder?.stop();this.stream?.getTracks().forEach(t=>t.stop());this.stream=null;this.status('Capture stopped. Finishing any pending segments…');}
 }
 export function transcriptSrt(items) {
   const stamp=seconds=>{const ms=Math.round(seconds*1000);return [Math.floor(ms/3600000),Math.floor(ms/60000)%60,Math.floor(ms/1000)%60].map(v=>String(v).padStart(2,'0')).join(':')+','+String(ms%1000).padStart(3,'0');};
