@@ -8,6 +8,7 @@ from urllib.parse import quote
 from .agent import Agent, BridgeError, validate_job
 from .agy import AgyAgent
 from .server import BridgeServer
+from .speech import WhisperSpeech
 
 
 def extension_config(url, concurrency=2, timeout=120000):
@@ -21,12 +22,15 @@ def extension_config(url, concurrency=2, timeout=120000):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Connect Immersive Translate to your own AI endpoint or AGY CLI")
+    parser = argparse.ArgumentParser(description="Open Translate agent bridge with optional local speech recognition")
     parser.add_argument("--backend", choices=["openai", "agy"], default=os.getenv("OPEN_TRANSLATE_BACKEND", "openai"))
     parser.add_argument("--agy-command", default=os.getenv("OPEN_TRANSLATE_AGY_COMMAND", "agy"), help="AGY executable path (backend=agy)")
     parser.add_argument("--base-url", default=os.getenv("OPEN_TRANSLATE_BASE_URL"),
                         help="Agent API base URL or full /chat/completions URL")
     parser.add_argument("--model", default=os.getenv("OPEN_TRANSLATE_MODEL"), help="Endpoint model identifier; optional AGY model slug")
+    parser.add_argument("--speech-command", default=os.getenv("OPEN_TRANSLATE_SPEECH_COMMAND"), help="Optional local whisper.cpp executable")
+    parser.add_argument("--speech-model", default=os.getenv("OPEN_TRANSLATE_SPEECH_MODEL"), help="Local whisper.cpp GGML model path")
+    parser.add_argument("--speech-timeout", type=float, default=60, help="Local transcription deadline in seconds")
     parser.add_argument("--port", type=int, default=8765)
     parser.add_argument("--timeout", type=float, default=90, help="Agent timeout in seconds (default: 90)")
     parser.add_argument("--concurrency", type=int, help="Maximum simultaneous agent calls (default: 2 for openai, 1 for agy)")
@@ -61,13 +65,16 @@ def main():
                 parser.error("Set OPEN_TRANSLATE_TOKEN so the printed configuration matches the server")
             print(json.dumps(config, indent=2))
             return
+        if bool(args.speech_command) != bool(args.speech_model):
+            raise ValueError("Set both --speech-command and --speech-model to enable local speech")
+        speech = WhisperSpeech(args.speech_command, args.speech_model, args.speech_timeout) if args.speech_command else None
         server = BridgeServer(("127.0.0.1", args.port), agent, token,
-                              allowed_origins=args.allow_origin, concurrency=args.concurrency)
+                              allowed_origins=args.allow_origin, concurrency=args.concurrency, speech=speech)
     except (ValueError, OSError) as error:
         parser.error(str(error))
     print(f"Open Translate is listening on 127.0.0.1:{args.port}", flush=True)
     print(f"Custom API URL: {url}", flush=True)
-    print("Copy this URL into Immersive Translate's Custom API settings.", flush=True)
+    print("Copy this URL into Open Translate's Local bridge connection.", flush=True)
     print("The URL grants access to this bridge. Keep it private. Ctrl+C stops the server.", flush=True)
     try:
         server.serve_forever()

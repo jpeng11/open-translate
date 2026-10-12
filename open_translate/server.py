@@ -1,5 +1,7 @@
 """Loopback HTTP adapter for Immersive Translate's Custom API."""
 
+from email.parser import BytesParser
+from email.policy import default as email_policy
 import hmac
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
@@ -9,17 +11,18 @@ import threading
 from urllib.parse import parse_qs, urlsplit
 
 from .agent import BridgeError, MAX_BODY, validate_job
+from .speech import MAX_AUDIO_BODY
 
 
 class BridgeServer(ThreadingHTTPServer):
     daemon_threads = True
 
-    def __init__(self, address, agent, token, *, allowed_origins=(), concurrency=2):
+    def __init__(self, address, agent, token, *, allowed_origins=(), concurrency=2, speech=None):
         if not token:
             raise ValueError("A bridge access token is required")
         if concurrency < 1:
             raise ValueError("Concurrency must be positive")
-        self.agent, self.token = agent, token
+        self.agent, self.token, self.speech = agent, token, speech
         self.allowed_origins = frozenset(allowed_origins)
         self.slots = threading.BoundedSemaphore(concurrency)
         super().__init__(address, BridgeHandler)
@@ -44,7 +47,7 @@ class BridgeHandler(BaseHTTPRequestHandler):
         except ValueError:
             return False
         return (origin in self.server.allowed_origins or
-                (parsed.scheme in ("chrome-extension", "moz-extension") and
+                (parsed.scheme in ("chrome-extension", "moz-extension", "safari-web-extension") and
                  bool(parsed.netloc) and not parsed.path and not parsed.query and not parsed.fragment))
 
     def reply(self, status, value):
@@ -82,7 +85,7 @@ class BridgeHandler(BaseHTTPRequestHandler):
             self.error(404, "not_found", "Use POST /translate or GET /health")
 
     def do_OPTIONS(self):
-        if urlsplit(self.path).path != "/translate":
+        if urlsplit(self.path).path not in ("/translate", "/v1/audio/transcriptions", "/audio/transcriptions"):
             self.error(404, "not_found", "Unknown route")
         elif not self.origin_allowed():
             self.error(403, "origin_denied", "Browser origin is not allowed")
@@ -91,7 +94,7 @@ class BridgeHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         parsed = urlsplit(self.path)
-        if parsed.path != "/translate":
+        if parsed.path not in ("/translate", "/v1/audio/transcriptions", "/audio/transcriptions"):
             self.error(404, "not_found", "Unknown route")
             return
         if not self.origin_allowed():
@@ -101,6 +104,9 @@ class BridgeHandler(BaseHTTPRequestHandler):
         supplied = bearer[7:] if bearer.startswith("Bearer ") else parse_qs(parsed.query).get("token", [""])[0]
         if not hmac.compare_digest(supplied.encode(), self.server.token.encode()):
             self.error(401, "unauthorized", "A valid bridge token is required")
+            return
+        if parsed.path != "/translate":
+            self.transcription()
             return
         if self.headers.get_content_type() != "application/json":
             self.error(415, "unsupported_media_type", "Use Content-Type: application/json")
@@ -131,3 +137,52 @@ class BridgeHandler(BaseHTTPRequestHandler):
         except Exception:
             logging.error("Unexpected translation failure; request and response contents omitted")
             self.error(500, "internal_error", "Unexpected bridge error")
+
+    def transcription(self):
+        try:
+            if self.server.speech is None:
+                raise BridgeError(503, 'speech_unavailable', 'Enable local speech with --speech-command and --speech-model')
+            if self.headers.get_content_type() != 'multipart/form-data':
+                raise BridgeError(415, 'unsupported_media_type', 'Use multipart/form-data')
+            if self.headers.get('Transfer-Encoding'):
+                raise BridgeError(400, 'invalid_request', 'Chunked requests are not supported')
+            length = int(self.headers.get('Content-Length', '0'))
+            if not 0 < length <= MAX_AUDIO_BODY:
+                raise BridgeError(413, 'body_too_large', 'Audio upload exceeds 8 MiB')
+            raw = self.rfile.read(length)
+            if len(raw) != length:
+                raise BridgeError(400, 'invalid_request', 'Incomplete audio upload')
+            header = self.headers.get('Content-Type', '')
+            if len(header) > 256:
+                raise BridgeError(400, 'invalid_request', 'Invalid multipart boundary')
+            message = BytesParser(policy=email_policy).parsebytes(('Content-Type: '+header+'\r\nMIME-Version: 1.0\r\n\r\n').encode()+raw)
+            if not message.is_multipart() or message.defects:
+                raise BridgeError(400, 'invalid_request', 'Malformed multipart audio upload')
+            fields, audio, mime = {}, None, None
+            for part in message.iter_parts():
+                name = part.get_param('name', header='content-disposition')
+                data = part.get_payload(decode=True)
+                if name == 'file' and audio is None and isinstance(data, bytes) and len(data) <= 8*1024*1024:
+                    audio, mime = data, part.get_content_type()
+                elif name in ('model', 'language', 'response_format') and name not in fields and isinstance(data, bytes) and len(data) <= 128:
+                    fields[name] = data.decode('utf-8')
+                else:
+                    raise BridgeError(400, 'invalid_request', 'Invalid or repeated speech upload field')
+            if audio is None or fields.get('response_format', 'json') != 'json':
+                raise BridgeError(400, 'invalid_request', 'Supply one audio file and request JSON output')
+            if not self.server.slots.acquire(blocking=False):
+                raise BridgeError(503, 'busy', 'Bridge is busy; retry shortly')
+            try:
+                result = self.server.speech.transcribe(audio, mime, fields.get('model', 'local-whisper'), fields.get('language', 'auto'))
+            finally:
+                self.server.slots.release()
+            self.reply(200, result)
+        except BridgeError as error:
+            self.error(error.status, error.code, str(error))
+        except (ValueError, UnicodeError, TypeError):
+            self.error(400, 'invalid_request', 'Invalid audio upload')
+        except (socket.timeout, TimeoutError):
+            self.error(408, 'request_timeout', 'Audio upload timed out')
+        except Exception:
+            logging.error('Unexpected speech failure; audio and diagnostics omitted')
+            self.error(500, 'internal_error', 'Unexpected speech error')

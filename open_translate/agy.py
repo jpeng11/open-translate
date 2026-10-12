@@ -1,6 +1,6 @@
 """Google Antigravity CLI backend, using its official headless stdin protocol."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 import json
 import math
 import os
@@ -9,6 +9,7 @@ import shutil
 import signal
 import subprocess
 import tempfile
+import time
 
 from .agent import BatchTranslator, BridgeError, MAX_RESPONSE, INSTRUCTIONS
 
@@ -50,6 +51,21 @@ class AgyAgent(BatchTranslator):
         self.executable = path
         if not math.isfinite(self.timeout) or self.timeout <= 0:
             raise ValueError("Agent timeout must be positive")
+
+    def translate(self, job):
+        # One bounded fresh-session recovery for malformed text or accidental tools.
+        # Never retry authentication/quota failures, and never accept a tool result.
+        deadline = time.monotonic() + self.timeout
+        for attempt in range(2):
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                raise BridgeError(504, "agy_timeout", "AGY translation timed out")
+            try:
+                agent = replace(self, timeout=remaining)
+                return BatchTranslator.translate(agent, job)
+            except BridgeError as error:
+                if attempt or error.code not in {"agy_tool_use", "placeholder_mismatch", "invalid_agy_response", "invalid_translation_batch", "invalid_agent_response"}:
+                    raise
 
     def complete(self, payload):
         # Text travels over stdin, rather than appearing in a process command line.
