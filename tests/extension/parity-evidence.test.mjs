@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {validateComparison} from '../../scripts/parity-evidence.mjs';
 const reference={version:'1.33.3',commit:'pinned',contentSha256:'original-hash'};
-const sample=()=>({schema:1,reference,implementationSha256:'current',status:'differences-or-unknowns',cases:[
+const sample=()=>({schema:1,reference,implementationSha256:'current',buildEvidence:{schema:1,implementationSha256:'current',bundleSha256:'a'.repeat(64)},status:'differences-or-unknowns',cases:[
  {name:'visible-text',status:'matched',original:{status:'observed',value:'Bonjour'},replacement:{status:'observed',value:'Bonjour'}},
  {name:'links',status:'different',original:{status:'observed',value:false},replacement:{status:'observed',value:true}},
  {name:'input',status:'reference-unresolved',original:{status:'unobserved'},replacement:{status:'observed',value:'Bonjour'}}]});
