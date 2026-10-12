@@ -1,7 +1,7 @@
 import {createWorker} from 'tesseract.js';
 import {languageData,modelInfo} from './ocr-data.mjs';
 import {inpaintRegions,textDirection,wrapText} from './image-inpaint.mjs';
-export {OCR_LANGUAGES,OCR_MODEL_REVISION} from './ocr-data.mjs';
+export {OCR_LANGUAGES,OCR_LANGUAGE_COMBINATIONS,OCR_MODEL_REVISION} from './ocr-data.mjs';
 const api=globalThis.browser || chrome;
 let worker,language,currentProgress=()=>{},queue=Promise.resolve();
 export function recognize(image,lang='eng',progress=()=>{}) {

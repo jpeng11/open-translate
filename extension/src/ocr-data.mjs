@@ -2,7 +2,15 @@ import {OCR_MODELS,OCR_MODEL_REVISION} from './ocr-models.mjs';
 export {OCR_MODEL_REVISION};
 const bundled=new Set(['eng','chi_sim','jpn']);
 const names={eng:'English',chi_sim:'简体中文',chi_tra:'繁體中文',jpn:'日本語',kor:'한국어',fra:'Français',deu:'Deutsch',spa:'Español',por:'Português',ita:'Italiano',rus:'Русский',ara:'العربية',heb:'עברית',hin:'हिन्दी',tha:'ไทย',vie:'Tiếng Việt',tur:'Türkçe',ukr:'Українська',nld:'Nederlands',pol:'Polski',fas:'فارسی',ind:'Bahasa Indonesia',swe:'Svenska',dan:'Dansk',fin:'Suomi',ell:'Ελληνικά',ces:'Čeština',ron:'Română',hun:'Magyar',bul:'Български'};
-export const OCR_LANGUAGES=Object.keys(OCR_MODELS).map(code=>[code,names[code] || code.replaceAll('_',' ')]);
+const display=typeof Intl.DisplayNames==='function'?new Intl.DisplayNames(['en'],{type:'language'}):null;
+function languageName(code){
+  if(names[code])return names[code];
+  if(code.endsWith('_vert'))return languageName(code.slice(0,-5))+' (vertical)';
+  if(code==='deu_latf')return 'German (Fraktur)';
+  try{return display?.of(code.replaceAll('_','-')) || code.replaceAll('_',' ');}catch{return code.replaceAll('_',' ');}
+}
+export const OCR_LANGUAGES=Object.keys(OCR_MODELS).map(code=>[code,languageName(code)]);
+export const OCR_LANGUAGE_COMBINATIONS=[['eng+chi_sim','English + 简体中文'],['eng+chi_tra','English + 繁體中文'],['eng+jpn','English + 日本語'],['eng+kor','English + 한국어']];
 export function modelInfo(code) {
   const info=Object.hasOwn(OCR_MODELS,code)?OCR_MODELS[code]:null;if(!info)throw new Error('Unsupported OCR language. Choose an available language model.');
   return {...info,url:`https://raw.githubusercontent.com/tesseract-ocr/tessdata_fast/${OCR_MODEL_REVISION}/${code}.traineddata`};
@@ -25,7 +33,7 @@ export async function languageData(code,api,progress=()=>{},signal) {
   if(bundled.has(code))return {code,data:new Uint8Array(await (await fetch(api.runtime.getURL(`vendor/ocr-data/${code}.traineddata.gz`),{signal})).arrayBuffer())};
   const key=`${OCR_MODEL_REVISION}/${code}`;let data=await cached(key).catch(()=>null);
   if(data){try{await verifyModel(code,data);return {code,data:new Uint8Array(data)};}catch{data=null;}}
-  progress(`Downloading ${names[code] || code} OCR model (${(info.bytes/1048576).toFixed(1)} MB). Future use works offline…`);
+  progress(`Downloading ${languageName(code)} OCR model (${(info.bytes/1048576).toFixed(1)} MB). Future use works offline…`);
   const response=await fetch(info.url,{signal:signal || AbortSignal.timeout(120000),credentials:'omit',redirect:'error'});
   if(!response.ok)throw new Error('OCR language download failed. Check your connection and try again.');
   const reader=response.body.getReader(),chunks=[];let size=0;
