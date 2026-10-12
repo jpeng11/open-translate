@@ -1,93 +1,112 @@
 # Open Translate
 
-An independent translation extension for Chrome, Edge and Firefox with an open-source translation engine. Read bilingual webpages, translate documents, images and subtitles, and connect your own AI agent. It has its own visual identity and needs no vendor extension.
+别让语言挡住你看世界。
 
-Use any local or hosted **OpenAI-compatible Chat Completions endpoint**, or the optional Python bridge for your signed-in **Google Antigravity CLI**. No Open Translate account, subscription or telemetry.
+[中文](README.md) · [English](README.en.md) · [Français](README.fr.md) · [Español](README.es.md) · [日本語](README.ja.md) · [한국어](README.ko.md)
 
-## Install in Chrome or Edge
+用自己的 AI 阅读外语网页，也能翻译 PDF、电子书、图片和字幕。Open Translate 是独立的浏览器扩展，支持本地或云端的 OpenAI-compatible Chat Completions 接口；你也可以通过 Python 桥接服务，使用已经登录的 Google Antigravity CLI（AGY）。
 
-Node.js 22+ and npm are required to build; they are not required after installing the extension.
+不需要 Open Translate 账号。项目没有订阅服务，也不采集遥测数据；模型服务商的费用仍由你的账号承担。界面支持中文、英文、法语、西班牙语、日语和韩语，可在弹窗或工作台的“界面语言”中切换。
+
+![Open Translate 工作台](docs/assets/workspace-zh.png)
+
+## 安装到 Chrome 或 Edge
+
+构建需要 Node.js 22+ 和 npm。安装完成后，运行扩展不需要 Node.js。
 
 ```bash
+git clone https://github.com/jpeng11/open-translate.git
+cd open-translate
 npm ci
 npm run build
 ```
 
-1. Open `chrome://extensions` or `edge://extensions` and enable **Developer mode**.
-2. Choose **Load unpacked** and select this repository’s `dist/chrome` directory.
-3. Open the extension popup and click the engine name under **Your engine**.
-4. Choose **OpenAI-compatible endpoint**, enter your API base URL, model and optional API key, then **Save & test**.
-5. Choose your target language in **Preferences** or the extension popup. Open a webpage and click **Translate this page**.
+1. 打开 `chrome://extensions` 或 `edge://extensions`，开启开发者模式。
+2. 点击“加载已解压的扩展程序”，Chrome 选择 `dist/chrome`，Edge 选择 `dist/edge`。
+3. 打开扩展弹窗，点击 “翻译引擎” 下的引擎名称。
+4. 选择 “OpenAI 兼容接口 · 本地或云端”，填入 API 地址、模型名和可选的 API key，点击 “保存并测试”。
+5. 在弹窗或 “偏好设置” 中设置目标语言，打开网页后点击 “翻译此页”。
 
-The build creates Chrome, Edge, Firefox and Safari manifests/archives in `dist/`. Actual desktop Chromium and Firefox acceptance passed; see [browser support](docs/browser-support.md) for Firefox temporary loading, Safari Xcode packaging, and mobile device limits. The Chrome archive is `dist/open-translate-chrome.zip`. Unzip it before using Load unpacked. This is a developer installation; the extension has not been submitted to a browser store.
+这是开发者安装方式，项目尚未上架浏览器扩展商店。构建也会生成 ZIP 包，例如 `dist/open-translate-chrome.zip`；使用“加载已解压的扩展程序”前需要先解压。
 
-Examples of API base URLs: `http://127.0.0.1:1234/v1` and `https://your-agent.example/v1`. Supply the model actually served by your endpoint. The complete `/chat/completions` URL is also accepted. If your endpoint rejects `response_format`, turn off **Request JSON mode**. It must still return completed JSON translations in its Chat Completions response; tool calls are rejected.
+API 地址可以是 `http://127.0.0.1:1234/v1` 或 `https://your-agent.example/v1`，也接受包含 `/chat/completions` 的完整地址。模型名应与接口实际提供的模型一致。如果服务不支持 `response_format`，关闭 “请求 JSON 模式”；返回内容仍须符合翻译 JSON 协议，不能以工具调用代替翻译结果。详见[架构说明](docs/architecture.md)。
 
-## Use your Google AGY CLI
+## 使用自己的 AGY
 
-On the Mac running your browser and authenticated `agy` CLI (Python 3.10+):
+在已登录 `agy` 的电脑上，从仓库目录启动桥接服务。需要 Python 3.10+。
 
 ```bash
 python3 -m open_translate --backend agy --timeout 180 --check
 python3 -m open_translate --backend agy --timeout 180
 ```
 
-In the workspace’s **Your engine** page, choose **Local bridge** and paste the full printed translation URL, including its private token. Set request timeout to at least 210 seconds. Choose batch size one for slow CLI agents. You can import an existing `extension-config.json` instead.
+在工作台的 “翻译引擎” 页面选择 “本地桥接 · AGY 或自己的 agent”，粘贴终端打印的完整翻译 URL，包括私有 token。将请求超时设为至少 210 秒；较慢的 CLI 模型可以从每批一段开始。已有桥接配置可通过 `extension-config.json` 导入。
 
-The bridge must run on the same computer as the browser, or be reachable through an explicitly configured tunnel. CLI authentication and usage charges belong to your account. The CLI’s existing tool permissions remain active; use an agent profile intended for translation. See the [Mac setup](docs/mac-setup.md) and [bridge reference](docs/bridge.md).
+桥接服务需要在浏览器所在电脑上运行，或通过你配置的私有隧道访问。CLI 继续使用原有的登录状态和工具权限，建议使用专门处理翻译的 agent 配置。部署细节见 [Mac 设置](docs/mac-setup.md)和[桥接服务说明](docs/bridge.md)。
 
-## What you can do
+## 可以翻译什么
 
-| Workflow | Included |
+| 内容 | 功能 |
 | --- | --- |
-| Web reading | Bilingual or translation-only view; inline links/formatting; dynamic paragraphs; viewport scheduling; open shadow roots; restore originals; site include/exclude rules |
-| Quick translation | Selection popup; hover shortcut; editable input translation; context menus; copy and browser text-to-speech |
-| Documents | TXT, Markdown, HTML, DOCX and EPUB import; bilingual or translated downloads |
-| PDF | Text extraction, scanned-page OCR, page preview and PDF export; original/translated page pairs in bilingual mode |
-| Images | 124 OCR language packs; screenshot area selection; local background repair; RTL text overlay; PNG download |
-| Video | SRT, VTT and ASS translation with timing; bilingual subtitle downloads; local-video preview; native text tracks and common website caption containers |
-| Live audio | Explicit tab/microphone capture; local whisper.cpp or your speech endpoint; 2–5 second PCM/VAD segments; translated transcript and SRT download |
-| Controls | Glossary, language codes, per-host rules, styles, concurrency, timeouts, optional seven-day device cache |
+| 网页 | 双语或仅译文视图，保留链接和行内格式，处理动态段落，恢复原文，按网站设置规则 |
+| 选中文字与输入框 | 选词翻译、段落悬停快捷键、输入框翻译、右键菜单、复制和浏览器朗读 |
+| 文档 | TXT、Markdown、HTML、DOCX、EPUB 的导入、翻译和下载 |
+| PDF | 提取文字、扫描页 OCR、页面预览；双语导出交替保留原文页和译文页 |
+| 图片 | 图片或网页区域 OCR、局部背景修复、译文覆盖和 PNG 下载 |
+| 字幕 | SRT、VTT、ASS 保留时间轴，支持双语下载、本地视频预览和可访问的网页字幕 |
+| 实时音频 | 经授权采集麦克风或共享标签页音频，通过自己的语音接口转写，再翻译并导出记录 |
 
-Keyboard shortcuts: **Alt Shift T** page, **Alt Shift S** selection, **Alt Shift I** input, **Alt Shift H** hovered paragraph. Change browser commands at `chrome://extensions/shortcuts`.
+快捷键：`Alt Shift T` 翻译网页，`Alt Shift S` 翻译选区，`Alt Shift I` 翻译当前输入框，`Alt Shift H` 翻译鼠标所在段落。可在 `chrome://extensions/shortcuts` 调整。
 
-OCR runs locally with three bundled models and 121 additional pinned, integrity-verified language packs downloaded on demand and cached offline. Speech recognition can use a hosted `/audio/transcriptions` endpoint or local whisper.cpp on the Python bridge; see [local speech setup](docs/local-speech.md). Recording starts only after an explicit click and browser permission.
+OCR 在本机运行，内置英语、中文和日语模型，另有 121 个按需下载、校验并缓存的语言包。语音转写可以连接自己的 `/audio/transcriptions` 接口，也可以在桥接服务中启用本地 whisper.cpp，见[本地语音设置](docs/local-speech.md)。录音只会在点击开始并授予浏览器权限后进行。
 
-## Privacy and permissions
+## 浏览器与手机
 
-Only requested text is sent to your configured translation engine. Documents and OCR are processed locally; live audio goes to your configured speech engine. Your provider may retain requests. API credentials stay in trusted extension storage (Chromium access controls or a private extension-origin IndexedDB vault); they are absent from content-script settings. Stored credentials are not encrypted against someone with access to your browser profile.
+| 平台 | 当前状态 |
+| --- | --- |
+| 桌面 Chrome / Chromium | 已通过实际 MV3 扩展验收 |
+| 桌面 Edge | 已生成兼容包，Edge 实机验收尚未完成 |
+| 桌面 Firefox | 已通过临时扩展验收；正式分发需要签名 |
+| macOS / iOS Safari | 已有扩展包和 Xcode 工程流程，宿主工程编译通过；扩展运行验收仍待完成 |
+| Android Firefox | 已有兼容配置，签名分发和手机实测尚未完成 |
 
-The `<all_urls>` host permission enables page translation, arbitrary user-selected HTTP(S) API endpoints, and screenshot capture when you choose it. File permission is requested for local pages; Chrome/Edge require you to enable **Allow access to file URLs** separately. The extension cannot translate browser settings, store pages or protected browser viewers. The offscreen worker supports long local-agent requests. No remotely hosted scripts are loaded.
+手机端目前还不是可直接安装使用的正式版本。手机连接云端 AI 时可以使用可访问的接口地址；连接电脑上的 AGY 则需要私有隧道。手机上的 `127.0.0.1` 指手机自身，不能照搬电脑的本地地址。安装和平台限制见[浏览器支持](docs/browser-support.md)。
 
-Persistent translation caching is off by default. Enabling it stores translated/source batch results locally for up to seven days; **Clear translation cache** removes them. A bounded memory cache also exists while the engine runs. Cache clearing prevents unfinished requests from repopulating it.
+## 数据会发到哪里
 
-## Practical limits
+文档解析和 OCR 在本机完成，提取出的待译文本发送给你选择的翻译服务；实时音频发送给你配置的语音服务。服务商可能保留请求，请按所处理的内容选择服务。
 
-Open Translate follows its own [accepted behavior](docs/accepted-behavior.md) and [visual system](docs/visual-identity.md). The recommended differences from the reference product are intentional, including preserving markup, punctuation and source restoration. Three unresolved reference observations remain documented rather than guessed. Historical REA comparisons are research evidence, not a requirement to copy the original UI or defects.
+API 凭据保存在可信扩展存储中，不会通过页面设置消息发给网页脚本。它们不具备系统钥匙串级别的加密，能访问浏览器个人资料的人仍可能读取凭据。
 
-Run `npm run acceptance` for current-source regression evidence, and `npm run acceptance:verify` to check that the broad suite reports match the current implementation. See [validation](docs/validation.md) for measured coverage and remaining platform limits.
+扩展使用 `<all_urls>` 权限读取待译网页、访问用户配置的接口，并在用户操作时截取网页区域。翻译本地文件还需要在扩展管理页启用 文件网址访问权限。扩展不加载远程脚本。
 
-PDF originals retain vector/searchable content; translated pages use page images with searchable Unicode text, RTL shaping, overflow continuation and accessible HTML. DOCX runs, links, tables, styles, headers and footers are retained; HTML/EPUB retain safe inline formatting and packaged resources. PDF bookmarks, named destinations, page labels, links and editable form values are retained. Complex layouts and accessible tag-tree reconstruction still need work. See [document fidelity](docs/document-fidelity.md).
+持久翻译缓存默认关闭。开启后，原文与译文批次结果会在本机保存最多七天，可通过 “清除翻译缓存” 清除；引擎运行期间另有容量受限的内存缓存。
 
-OCR includes local masked-region background repair; detailed artwork and unusual lettering can still differ from the original. Captions support dynamic tracks, open shadow roots, sidecar subtitles and explicit screen OCR fallback. DRM and inaccessible private pipelines remain platform limits. Live audio uses 2–5 second PCM chunks with pause detection and queue bounds, plus model/network latency. See [media coverage](docs/media-translation.md).
+## 效果与限制
 
-Chromium and Firefox have actual desktop acceptance. Safari host packaging needs macOS/Xcode; Safari runtime, Android/iOS and branded Edge device acceptance remain separate requirements. Native mobile apps are not included. Documents remain capped at 30 MiB, expanded archives at 100 MiB, PDFs at 200 pages, and request batches at 20,000 characters. Cancellation prevents subsequent requests; an in-flight provider call may finish.
+复杂 PDF、特殊字体、漫画背景和手写字仍需要人工检查。PDF 双语文件保留原文页的矢量内容；译文页使用页面图像加可搜索文字，放不下的译文会续页，并附带保留逻辑文本的 HTML。DOCX/EPUB 的结构保留已有测试，尚未完成 Word、LibreOffice 或各电子书阅读器的排版验收。详见[文档效果](docs/document-fidelity.md)。
 
-See [replacement scope and evidence](docs/replacement-scope.md), [architecture](docs/architecture.md), and [validation](docs/validation.md).
+浏览器设置页、扩展商店、受保护的阅读器、DRM 视频和无法访问的播放器内部字幕可能无法翻译。实时音频按 2 到 5 秒分段处理，模型和网络还会增加延迟。[媒体说明](docs/media-acceptance.md)记录了具体范围。
 
-## Development
+单个文档上限为 30 MiB，解压后的归档上限为 100 MiB，PDF 最多 200 页，每批请求最多 20,000 个字符。取消操作会阻止后续请求，已经发给服务商的请求可能仍会完成。
+
+2026-10-12 的完整验收通过了 64 项 Node、39 项 Python、49 项 Chromium 测试，以及实际 Firefox 扩展检查。公共网页覆盖 Wikipedia、MDN、GitHub、W3C 和 WHATWG，另有 Mac 上的真实 AGY 链路检查。测试范围和构建哈希见[验收记录](docs/validation.md)；这些结果不代表所有网站或模型的翻译质量。
+
+## 开发与文档
 
 ```bash
 npm ci
-npx playwright install chromium
-npm run check
-# Optional real Firefox acceptance after npx playwright install firefox
-python3 scripts/test-firefox.py
+npx playwright install chromium firefox
 npm run acceptance
 npm run acceptance:verify
-python3 -m unittest discover -v
 ```
 
-Node tests exercise engine contracts and subtitle formats. Chromium tests load the real Manifest V3 package and exercise page rendering/restoration, input translation, dynamic content, documents, PDF, timed subtitles and bundled OCR against a local mock provider. They make no external AI calls. Live AGY acceptance is separate and consumes the configured provider’s usage.
+`acceptance` 执行单元测试、构建和桌面浏览器验收；`acceptance:verify` 检查已有报告是否匹配当前源码、测试和构建。更换平台或重新构建后，已有报告可能需要重新生成。实际 AI 接口测试另行运行，会使用你的服务额度。
 
-The build pins npm dependencies and includes bundled OCR/PDF workers, models and third-party notices. No proprietary Immersive Translate bundle is distributed. [Reverse-engineering observations](docs/reverse-engineering.md) informed an independent implementation. Original code is [MIT](LICENSE). The interface uses [Rare UI](https://rareui.com) React components under its separate [MIT + Commons Clause + Attribution license](extension/ui/rare/LICENSE); those components are not covered by our MIT grant. See [UI provenance](extension/ui/rare/provenance.json).
+[架构](docs/architecture.md) · [功能范围](docs/replacement-scope.md) · [行为约定](docs/accepted-behavior.md) · [视觉规范](docs/visual-identity.md) · [文档维护](docs/readme-maintenance.md)
+
+## 许可证
+
+项目原创代码使用 [MIT](LICENSE)。界面使用 [Rare UI](https://rareui.com) 组件，这些组件适用单独的 [MIT + Commons Clause + Attribution](extension/ui/rare/LICENSE) 条款，不能将整个发行包视为仅受 MIT 许可。其他依赖保留各自许可证，构建包内包含第三方声明。
+
+Open Translate 是独立实现，不附属于 Immersive Translate，也不分发其专有扩展代码。[研究记录](docs/reverse-engineering.md)保留了实现依据。
