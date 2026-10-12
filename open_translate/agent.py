@@ -69,61 +69,8 @@ class NoRedirect(HTTPRedirectHandler):
         return None
 
 
-@dataclass
-class Agent:
-    base_url: str
-    model: str
-    api_key: str = field(default="", repr=False)
-    timeout: float = 90
-    json_mode: bool = True
-
-    def __post_init__(self):
-        self.url = endpoint_url(self.base_url)
-        if not self.model.strip():
-            raise ValueError("An agent model name is required")
-        if not math.isfinite(self.timeout) or self.timeout <= 0:
-            raise ValueError("Agent timeout must be positive")
-        self.opener = build_opener(NoRedirect())
-
-    def complete(self, payload):
-        headers = {"Content-Type": "application/json", "Accept": "application/json"}
-        if self.api_key:
-            headers["Authorization"] = "Bearer " + self.api_key
-        request = Request(self.url, data=json.dumps(payload, ensure_ascii=False).encode(), headers=headers, method="POST")
-        try:
-            with self.opener.open(request, timeout=self.timeout) as response:
-                data = response.read(MAX_RESPONSE + 1)
-        except HTTPError as error:
-            status = error.code
-            error.close()
-            # Provider bodies may contain request text or credentials: do not echo them.
-            raise BridgeError(503 if status == 429 else 502, f"upstream_http_{status}",
-                              f"Agent returned HTTP {status}; check its URL, model, credentials and limits") from None
-        except (TimeoutError, socket.timeout):
-            raise BridgeError(504, "upstream_timeout", "Agent request timed out") from None
-        except URLError as error:
-            if isinstance(error.reason, (TimeoutError, socket.timeout)):
-                raise BridgeError(504, "upstream_timeout", "Agent request timed out") from None
-            raise BridgeError(502, "upstream_unavailable", "Cannot reach the agent endpoint") from None
-        except (OSError, HTTPException):
-            raise BridgeError(502, "upstream_unavailable", "Cannot reach the agent endpoint") from None
-        if len(data) > MAX_RESPONSE:
-            raise BridgeError(502, "upstream_response_too_large", "Agent response exceeds 2 MiB")
-        try:
-            envelope = json.loads(data)
-            choice = envelope["choices"][0]
-            message = choice["message"]
-            if choice.get("finish_reason") in ("length", "content_filter") or message.get("refusal"):
-                raise ValueError("Incomplete or refused response")
-            content = message["content"]
-            if not isinstance(content, str):
-                raise ValueError("Expected text")
-            fenced = re.fullmatch(r"\s*```(?:json)?\s*\n(.*?)\n```\s*", content, re.DOTALL)
-            return json.loads(fenced.group(1) if fenced else content)
-        except (ValueError, KeyError, IndexError, TypeError):
-            raise BridgeError(502, "invalid_agent_response",
-                              "Agent must return complete JSON translations in choices[0].message.content") from None
-
+class BatchTranslator:
+    """Shared item IDs, markup protection and output validation for all backends."""
     def translate(self, job):
         texts = job["text_list"]
         pending, protected = [], {}
@@ -181,3 +128,59 @@ class Agent:
             ordered[index] = {"text": text, "detected_source_lang": detected}
         return {"translations": [ordered[i] if i in ordered else
                 {"text": text, "detected_source_lang": job["source_lang"]} for i, text in enumerate(texts)]}
+
+
+@dataclass
+class Agent(BatchTranslator):
+    base_url: str
+    model: str
+    api_key: str = field(default="", repr=False)
+    timeout: float = 90
+    json_mode: bool = True
+
+    def __post_init__(self):
+        self.url = endpoint_url(self.base_url)
+        if not self.model.strip():
+            raise ValueError("An agent model name is required")
+        if not math.isfinite(self.timeout) or self.timeout <= 0:
+            raise ValueError("Agent timeout must be positive")
+        self.opener = build_opener(NoRedirect())
+
+    def complete(self, payload):
+        headers = {"Content-Type": "application/json", "Accept": "application/json"}
+        if self.api_key:
+            headers["Authorization"] = "Bearer " + self.api_key
+        request = Request(self.url, data=json.dumps(payload, ensure_ascii=False).encode(), headers=headers, method="POST")
+        try:
+            with self.opener.open(request, timeout=self.timeout) as response:
+                data = response.read(MAX_RESPONSE + 1)
+        except HTTPError as error:
+            status = error.code
+            error.close()
+            # Provider bodies may contain request text or credentials: do not echo them.
+            raise BridgeError(503 if status == 429 else 502, f"upstream_http_{status}",
+                              f"Agent returned HTTP {status}; check its URL, model, credentials and limits") from None
+        except (TimeoutError, socket.timeout):
+            raise BridgeError(504, "upstream_timeout", "Agent request timed out") from None
+        except URLError as error:
+            if isinstance(error.reason, (TimeoutError, socket.timeout)):
+                raise BridgeError(504, "upstream_timeout", "Agent request timed out") from None
+            raise BridgeError(502, "upstream_unavailable", "Cannot reach the agent endpoint") from None
+        except (OSError, HTTPException):
+            raise BridgeError(502, "upstream_unavailable", "Cannot reach the agent endpoint") from None
+        if len(data) > MAX_RESPONSE:
+            raise BridgeError(502, "upstream_response_too_large", "Agent response exceeds 2 MiB")
+        try:
+            envelope = json.loads(data)
+            choice = envelope["choices"][0]
+            message = choice["message"]
+            if choice.get("finish_reason") in ("length", "content_filter") or message.get("refusal"):
+                raise ValueError("Incomplete or refused response")
+            content = message["content"]
+            if not isinstance(content, str):
+                raise ValueError("Expected text")
+            fenced = re.fullmatch(r"\s*```(?:json)?\s*\n(.*?)\n```\s*", content, re.DOTALL)
+            return json.loads(fenced.group(1) if fenced else content)
+        except (ValueError, KeyError, IndexError, TypeError):
+            raise BridgeError(502, "invalid_agent_response",
+                              "Agent must return complete JSON translations in choices[0].message.content") from None
