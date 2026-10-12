@@ -42,7 +42,9 @@ The extended fixture covers these independent cases:
 | Translation-only view | Exact target text remains visible without the source |
 | Translation-only source DOM | Whether the source link remains in the live DOM |
 | Restoration and events | Original text and original link listener survive restore |
-| Focused input | Exact replacement value and requested target language |
+| Complete-sentence focused input | Exact replacement value and requested target language |
+| Short focused input | Short-source detection/request remains separately observed |
+| Input terminal punctuation | Exact replacement value, including a terminal period |
 | Password/email exclusion | Sensitive values stay unchanged and are never submitted |
 | SPA route replacement | A new route paragraph translates exactly once |
 
@@ -62,12 +64,19 @@ original temporarily detaches source elements from the live DOM and restores the
 same link/event afterward; Open Translate keeps source elements hidden in the
 live DOM. These differences must not be silently counted as exact DOM parity.
 
-The original's focused-input command selected the textarea but did not submit a
-translation request to the fixture endpoint, even after a fresh page load and
-an explicit language-prefix probe. Open Translate submitted the expected request
-and replaced the value. The original input invocation/service-context boundary
-therefore remains unresolved; it is not evidence that the original lacks input
-translation or that the replacement matches it.
+The original's short focused-input command selected the textarea but did not
+submit a translation request to the fixture endpoint during a 45-second probe,
+even after a fresh page load and an explicit language prefix. A longer complete
+English sentence did submit the expected request and translate. Its input path
+performs source-language detection before reaching the custom service; a
+length/detection boundary is an inference, not a verified universal rule. The
+short case remains unresolved rather than being silently removed.
+
+Another observed difference concerns input punctuation. The original removes a
+terminal period before translating/writing the input, while Open Translate
+preserves it. A bounded inspection of the shipped input-tail helper corroborated
+that removal, and the complete-sentence runtime probe reproduced it. The harness
+records no-terminal-period input separately from this punctuation difference.
 
 No concrete replacement webpage regression was found by these particular
 comparisons. They cover deterministic desktop fixture behavior, not arbitrary
