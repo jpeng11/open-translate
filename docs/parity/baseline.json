@@ -23,9 +23,10 @@
       ],
       "replacementTests": [
         "tests/browser/extension.spec.mjs",
-        "tests/browser/sites.spec.mjs"
+        "tests/browser/sites.spec.mjs",
+        "scripts/reference-web.mjs"
       ],
-      "remaining": "Reference comparison covers a deterministic desktop fixture including dynamic paragraphs and exclusions. Production sites, mixed layouts, translated-only behavior and all site rules need paired reference acceptance."
+      "remaining": "Paired deterministic fixtures now cover tables, mixed blocks, frames, shadow roots, SPA updates and input translation. Markup/source-DOM/terminal-punctuation differences and short-text language heuristics remain explicit. Production sites and all site rules need paired acceptance."
     },
     {
       "id": "ui-workflow",
@@ -33,16 +34,18 @@
       "replacementTests": [
         "tests/browser/extension.spec.mjs"
       ],
-      "remaining": "Popup uses reference task order, compact white/pink styling and Rare UI. Branding and own-agent controls differ deliberately. No pixel equality claim; all settings/media/error states require visual comparison."
+      "remaining": "Popup geometry, language labels, task order and compact white/pink controls follow runtime screenshots; Rare UI retained. Branding, own-agent controls and settings differ. Complete visual/state equality has not been established."
     },
     {
       "id": "documents-pdf",
       "status": "partial",
       "replacementTests": [
         "tests/browser/document-parity.spec.mjs",
-        "tests/extension/document-layout.test.mjs"
+        "tests/extension/document-layout.test.mjs",
+        "tests/extension/pdf-navigation.test.mjs",
+        "tests/extension/pdf-background.test.mjs"
       ],
-      "remaining": "Preserved styles, searchable Unicode PDF and overflow tested independently. Need paired original exports for representative documents; bookmarks/forms/tag trees and complex typography still differ."
+      "remaining": "Native bookmarks, named destinations, links, labels and editable form graphs survive independently tested exports; colored backgrounds and crossing diagram strokes preserved. Original fixture parsing observed, successful original translated export not captured. Raster target backgrounds, tag-tree reconstruction and complex typography remain unmatched."
     },
     {
       "id": "image-ocr",
@@ -58,9 +61,10 @@
       "status": "partial",
       "replacementTests": [
         "tests/browser/media.spec.mjs",
-        "tests/browser/extension.spec.mjs"
+        "tests/browser/extension.spec.mjs",
+        "scripts/reference-media.mjs"
       ],
-      "remaining": "Dynamic tracks, open shadow roots, sidecars and screen OCR verified independently. Production site/private subtitle pipelines need paired acceptance. Capture restrictions remain."
+      "remaining": "Paired native/DOM caption observations indexed separately; original uncertainty and differences remain visible. Dynamic tracks, native-track restoration, sidecars and selectable screen OCR tested. Production/private subtitle pipelines and capture restrictions remain."
     },
     {
       "id": "live-speech",
@@ -76,18 +80,33 @@
       "status": "partial",
       "replacementTests": [
         "scripts/test-firefox.py",
-        "tests/extension/browser-manifests.test.mjs"
+        "tests/extension/browser-manifests.test.mjs",
+        "scripts/test-safari.py"
       ],
-      "remaining": "Actual Chromium and Firefox acceptance; Both Safari macOS/iOS host schemes compiled with signing disabled. Edge branded, Safari runtime, Android and iOS device acceptance remain pending."
+      "remaining": "Actual Chromium/Firefox acceptance and Safari macOS/iOS host compilation. SafariDriver runtime test blocked because Allow remote automation is disabled. Edge branded, Android/iOS devices and Safari feature acceptance remain pending."
     },
     {
       "id": "agent-reliability",
       "status": "partial",
       "replacementTests": [
         "tests/test_speech.py",
-        "tests/test_agy.py"
+        "tests/test_agy.py",
+        "tests/test_bridge.py",
+        "tests/extension/core.test.mjs"
       ],
-      "remaining": "Strict validation and one bounded retry implemented; a live AGY acceptance sample is not a long-run reliability or vendor-model quality evaluation."
+      "remaining": "Direct/bridge tool responses, malformed choices and changed formatting order are rejected; bounded AGY recovery shares a deadline. Live samples do not establish long-run agent reliability or vendor-model translation-quality parity."
+    }
+  ],
+  "comparisonSuites": [
+    {
+      "id": "extended-web",
+      "area": "web-reading",
+      "path": "docs/parity/web-results.json"
+    },
+    {
+      "id": "media-captions",
+      "area": "video-captions",
+      "path": "docs/parity/media-results.json"
     }
   ]
 }

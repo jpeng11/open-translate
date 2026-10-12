@@ -1,7 +1,22 @@
 {
   "schema": 1,
-  "implementationSha256": "a2d175a0c19043400ad08ed8d842ca3bc8902e7c36cd52a30b73952910e6f9d3",
-  "createdAt": "2026-10-12T21:15:59.512Z",
+  "networkPolicy": {
+    "externalHostnameResolution": "blocked",
+    "allowedHosts": [
+      "localhost",
+      "127.0.0.1"
+    ],
+    "proxy": "disabled",
+    "literalIpTraffic": "not firewalled"
+  },
+  "implementationSha256": "84723ce80e6495ea9e3e400c07739526c2ec0f56d7689b1d2334c11334f6522d",
+  "buildEvidence": {
+    "schema": 1,
+    "browser": "chrome",
+    "implementationSha256": "84723ce80e6495ea9e3e400c07739526c2ec0f56d7689b1d2334c11334f6522d",
+    "bundleSha256": "4e9a46dbf6266b12386d2d647107333c1ed6cd391c159f0c8183d0345d49664d"
+  },
+  "createdAt": "2026-10-12T21:47:34.529Z",
   "reference": {
     "version": "1.33.3",
     "commit": "c470f0aca3c75b2785c9009a0ac48e78ead34126",
@@ -29,7 +44,7 @@
         "first": "Bonjour monde {0}. Ceci est une phrase complète pour le test de traduction.",
         "second": "Merci pour votre aide.",
         "targetLanguage": "fr",
-        "dynamic": "Bonjour dynamic",
+        "dynamic": "Bonjour newly added paragraph. Ceci est une phrase complète pour le test de traduction.",
         "sourceContentRestored": true
       },
       "exactDomRestored": false
@@ -43,7 +58,7 @@
         "first": "Bonjour monde {0}. Ceci est une phrase complète pour le test de traduction.",
         "second": "Merci pour votre aide.",
         "targetLanguage": "fr",
-        "dynamic": "Bonjour dynamic",
+        "dynamic": "Bonjour newly added paragraph. Ceci est une phrase complète pour le test de traduction.",
         "sourceContentRestored": true
       },
       "exactDomRestored": true

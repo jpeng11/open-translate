@@ -54,7 +54,7 @@ Malformed requests return 400/413/415. Auth failures return 401/403. Upstream pr
 {"error":{"code":"placeholder_mismatch","message":"Agent changed protected markup; retry with a more reliable model"}}
 ```
 
-The bridge performs no automatic provider retries. The extension may retry its own request; provider billing and side effects remain the endpoint's responsibility.
+The OpenAI-compatible backend performs no automatic provider retries. AGY allows one fresh-session recovery for malformed output or operational-tool events, sharing the original deadline; authentication and quota failures are not retried. Provider billing remains the endpoint's responsibility.
 
 ## Agent-facing API
 
@@ -90,7 +90,7 @@ Response order may differ from request order. Each supplied integer ID and each 
 
 A batch launches the configured `agy` executable with stdin/output `stream-json`, a translation JSON schema, default approval mode, terminal sandbox and an explicit timeout. It sends one user event, closes stdin and waits for completion. [Google documents this single-turn stdin lifecycle and result envelope](https://antigravity.google/docs/cli/headless/).
 
-The bridge accepts exactly one successful terminal result, rejects tool events and applies the shared ID/markup validation. Authentication, quota and timeout failures become bridge errors without forwarding CLI diagnostics. A timeout kills the process group on macOS/Linux. The bridge reads at most 2 MiB of captured stdout after the run; temporary output files may grow until the process exits or times out.
+The bridge accepts exactly one successful terminal result, permits only its built-in final-output `finish` tool event, rejects other/unknown tool events, and applies the shared ID/markup validation. Authentication, quota and timeout failures become bridge errors without forwarding CLI diagnostics. A timeout kills the process group on macOS/Linux. The bridge reads at most 2 MiB of captured stdout after the run; temporary output files may grow until the process exits or times out.
 
 Each process runs in a fresh temporary directory containing only our declarative translation profile. The profile selects `finish` for structured completion, opts out of inherited customizations and disables subagent invocation and automatic command execution. It is selected explicitly with `--agent`; slash command expansion is disabled. In AGY 1.3.2, the startup envelope still advertises the default tool list, so these settings are not treated as an execution barrier. It does not resume a conversation. User-level AGY settings, credentials, permissions, MCP tools and hooks remain applicable. Rejecting a reported tool event is output validation, not a tool-execution barrier. The bridge does not change global CLI configuration or persist a translation cache; the CLI and provider may keep their own history.
 
