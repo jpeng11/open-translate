@@ -1,4 +1,6 @@
 import {PDFDocument} from 'pdf-lib';
+import {preparePdfNavigation,normalizeTranslatedPage} from './pdf-navigation.mjs';
+import {repairPdfBackground,pdfBackgroundColor,pdfHasArtwork} from './pdf-background.mjs';
 import {createPdfFonts} from './pdf-fonts.mjs';
 import {fitPdfText,textDirection,accessiblePdfHtml} from './pdf-layout.mjs';
 export function pdfTextRegions(page,translated,fonts) {
@@ -17,20 +19,24 @@ export function pdfTextRegions(page,translated,fonts) {
 }
 export async function exportSearchablePdf({sourceBytes,pages,translated,bilingual=true,fontLoader,name='Translated document',target=''}) {
   if(translated.length!==pages.reduce((count,page)=>count+page.lines.length,0))throw new Error('Translation count does not match the PDF.');
-  const source=await PDFDocument.load(sourceBytes),output=await PDFDocument.create();
+  const output=await PDFDocument.load(sourceBytes),navigation=preparePdfNavigation(output,{bilingual}),translatedPages=[];
+  if(navigation.originalPages.length!==pages.length)throw new Error('PDF page count changed during translation.');
   const fonts=await createPdfFonts(output,translated,fontLoader);output.setTitle(name);output.setCreator('Open Translate');if(target)output.setLanguage(target);
   const overflow=[];
   for(let pageIndex=0;pageIndex<pages.length;pageIndex++) {
-    const page=pages[pageIndex];if(bilingual){const [original]=await output.copyPages(source,[pageIndex]);output.addPage(original);}
-    const regions=pdfTextRegions(page,translated,fonts),canvas=await page.render();
+    const page=pages[pageIndex];
+    const regions=pdfTextRegions(page,translated,fonts),canvas=await page.render({annotations:false});
     const context=canvas.getContext('2d'),scale=page.scale || 1.5;
-    for(const region of regions){context.fillStyle='white';context.fillRect(region.x*scale-1,region.y*scale-1,region.width*scale+2,Math.min(region.height,Math.max(region.originalHeight,region.lines.length*region.lineHeight))*scale+2);}
+    const pixels=context.getImageData(0,0,canvas.width,canvas.height);
+    for(const region of regions){const background=pdfBackgroundColor(pixels,{x0:region.x*scale,y0:region.y*scale,x1:(region.x+region.width)*scale,y1:(region.y+region.originalHeight)*scale});region.color=background[0]*.2126+background[1]*.7152+background[2]*.0722<128?[1,1,1]:[0,0,0];if(region.lines.length*region.lineHeight>region.originalHeight && pdfHasArtwork(pixels,{x0:region.x*scale,y0:(region.y+region.originalHeight)*scale,x1:(region.x+region.width)*scale,y1:(region.y+region.height)*scale},background)){region.height=region.originalHeight;Object.assign(region,fitPdfText(region.text,region.width,region.height,fonts.measure,region.size,6));}}
+    repairPdfBackground(pixels,page.lines.flatMap(line=>line.wordBoxes?.length?line.wordBoxes:line.bbox?[line.bbox]:[]));context.putImageData(pixels,0,0);
     const image=await output.embedPng(canvas.toDataURL('image/png'));
-    const next=output.addPage([page.width,page.height]);next.drawImage(image,{x:0,y:0,width:page.width,height:page.height});
+    const next=bilingual?output.insertPage(pageIndex*2+1,[page.width,page.height]):navigation.originalPages[pageIndex];if(!bilingual)normalizeTranslatedPage(next,page);translatedPages.push(next);next.drawImage(image,{x:0,y:0,width:page.width,height:page.height});
     for(const region of regions) {
       if(!region.fits){overflow.push({page:pageIndex+1,text:region.text});fonts.draw(next,`[${overflow.length}]`,{x:region.x,y:page.height-region.y-9,size:8});continue;}
-      region.lines.forEach((line,lineIndex)=>fonts.draw(next,line,{x:textDirection(line)==='rtl'?region.x+region.width-fonts.measure(line,region.size):region.x,y:page.height-region.y-region.size-lineIndex*region.lineHeight,size:region.size}));
+      region.lines.forEach((line,lineIndex)=>fonts.draw(next,line,{x:textDirection(line)==='rtl'?region.x+region.width-fonts.measure(line,region.size):region.x,y:page.height-region.y-region.size-lineIndex*region.lineHeight,size:region.size,color:region.color}));
     }
+    if(navigation.signatures.affected.has(pageIndex)){const warning='Source digital signature invalidated by translation.';fonts.draw(next,warning,{x:10,y:10,size:7});if(bilingual){const original=navigation.originalPages[pageIndex],box=original.getCropBox();fonts.draw(original,warning,{x:box.x+10,y:box.y+10,size:7});}}
     canvas.width=canvas.height=0;
   }
   // Never silently clip a longer translation. Complete text continues on an
@@ -40,6 +46,7 @@ export async function exportSearchablePdf({sourceBytes,pages,translated,bilingua
     const entry=overflow[index],layout=fitPdfText(`[${index+1}] Page ${entry.page}\n${entry.text}`,500,1e9,fonts.measure,11,11);
     for(const line of layout.lines){if(!continuation || y<45){continuation=output.addPage([595,842]);y=790;}fonts.draw(continuation,line,{x:textDirection(line)==='rtl'?550-fonts.measure(line,11):45,y,size:11});y-=15;}y-=15;
   }
+  navigation.finish(translatedPages,pages);
   await output.attach(new TextEncoder().encode(accessiblePdfHtml(name,pages,translated,bilingual,target).data),'translation-accessible.html',{mimeType:'text/html',description:'Reflowable translation with logical Unicode text and page reading order.'});
-  return {data:await output.save(),mime:'application/pdf',extension:'pdf',overflowCount:overflow.length};
+  return {data:await output.save({updateFieldAppearances:false}),mime:'application/pdf',extension:'pdf',overflowCount:overflow.length,removedSignatureFields:navigation.signatures.removed};
 }

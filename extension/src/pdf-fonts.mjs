@@ -14,10 +14,10 @@ export async function createPdfFonts(output,texts,loader=async name=>new Uint8Ar
   function runs(text){return visualPdfRuns(text.replace(/\t/g,'    '),chooseFont);}
   function layout(run){return run.font.face.layout(run.text,undefined,undefined,undefined,run.direction);}
   function measure(text,size){return runs(text).reduce((sum,run)=>sum+layout(run).advanceWidth/run.font.face.unitsPerEm*size,0);}
-  function draw(page,text,{x,y,size}) {
+  function draw(page,text,{x,y,size,color=[0,0,0]}) {
     let cursor=x;const parts=runs(text);
     // ActualText records logical Unicode independently of shaped visual glyph order.
-    page.pushOperators(setFillingRgbColor(0,0,0),PDFOperator.of(PDFOperatorNames.BeginMarkedContentSequence,[PDFName.of('Span'),output.context.obj({ActualText:PDFHexString.fromText(text)})]));
+    page.pushOperators(setFillingRgbColor(...color),PDFOperator.of(PDFOperatorNames.BeginMarkedContentSequence,[PDFName.of('Span'),output.context.obj({ActualText:PDFHexString.fromText(text)})]));
     for(const run of parts) {
       const {face,font}=run.font,shaped=layout(run),automatic=face.layout(run.text),encoded=font.encodeText(run.text).asString(),scale=size/face.unitsPerEm;
       // PDF-lib allocates subset glyph IDs while encoding with Fontkit's inferred

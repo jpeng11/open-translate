@@ -15,7 +15,7 @@ export async function importPdf(file,progress=()=>{},ocrLanguage='eng') {
     progress(`Reading PDF page ${index}/${document.numPages}`);
     const page=await document.getPage(index),viewport=page.getViewport({scale:1.5});
     if(viewport.width*viewport.height>32e6){await document.destroy();throw new Error(`PDF page ${index} exceeds 32 megapixels. Reduce its page dimensions before translating.`);}
-    const render=async()=>{const canvas=documentElement('canvas');canvas.width=Math.ceil(viewport.width);canvas.height=Math.ceil(viewport.height);await page.render({canvasContext:canvas.getContext('2d'),viewport}).promise;return canvas;};
+    const render=async({annotations=true}={})=>{const canvas=documentElement('canvas');canvas.width=Math.ceil(viewport.width);canvas.height=Math.ceil(viewport.height);await page.render({canvasContext:canvas.getContext('2d'),viewport,annotationMode:annotations?pdfjs.AnnotationMode.ENABLE:pdfjs.AnnotationMode.DISABLE}).promise;return canvas;};
     const content=await page.getTextContent();const lines=[];
     for(const item of content.items) {
       if(!item.str?.trim())continue;
@@ -31,7 +31,7 @@ export async function importPdf(file,progress=()=>{},ocrLanguage='eng') {
       const canvas=await render();const ocr=await recognize(canvas,ocrLanguage,progress);canvas.width=canvas.height=0;lines.push(...ocr.paragraphs);
     }
     const ordered=readingOrder(lines),offset=items.length;items.push(...ordered.map(line=>line.text));
-    pages.push({render,lines:ordered,offset,scale:1.5,width:page.getViewport({scale:1}).width,height:page.getViewport({scale:1}).height});
+    pages.push({render,lines:ordered,offset,scale:1.5,transform:page.getViewport({scale:1}).transform,width:page.getViewport({scale:1}).width,height:page.getViewport({scale:1}).height});
     page.cleanup();
   }
   if(!items.length){await document.destroy();throw new Error('No readable text found in the PDF.');}

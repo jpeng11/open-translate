@@ -1,0 +1,81 @@
+{
+  "evidenceType": "ordinary Playwright runtime observation, not a REA tool result",
+  "capturedAt": "2026-10-12T21:43:47.205Z",
+  "referenceUrl": "https://app.immersivetranslate.com/pdf?file=emptyfile",
+  "fixture": "tests/fixtures/pdf-navigation.mjs navigationPdfFixture()",
+  "fixtureSha256": "7d73802d2017390c2bf49694a589a75045df312b50ba052a8b6b02ae5ef19b51",
+  "packagedExtension": {
+    "version": "1.33.3",
+    "modules": [
+      {
+        "path": "pdf/index.html",
+        "sha256": "036f11327ebf5340a5290cc1189c1607508ca429d0b530033e99523978177824"
+      },
+      {
+        "path": "pdf/extension-entry.js",
+        "sha256": "d14a82b0de72b991b82f364b59e173516da6a48b8992b75e82643ece8b6b4f4c"
+      }
+    ]
+  },
+  "packagedObservation": "The PDF entry page embeds the hosted official PDF viewer. The bridge fetches a selected PDF and posts its Blob after the viewer sends pdf-ready.",
+  "hostedObservation": {
+    "pages": 2,
+    "outlineTitles": [
+      "Chapter one",
+      "Chapter two"
+    ],
+    "pageLabels": [
+      "i",
+      "Chapter 2"
+    ],
+    "fields": {
+      "person.name": [
+        {
+          "type": "text",
+          "value": "Alice",
+          "sourcePageIndex": 0,
+          "editable": true
+        }
+      ],
+      "approved": [
+        {
+          "type": "checkbox",
+          "value": "Yes",
+          "sourcePageIndex": 1,
+          "editable": true
+        }
+      ],
+      "language": [
+        {
+          "type": "combobox",
+          "value": "French",
+          "sourcePageIndex": 1,
+          "editable": true
+        }
+      ]
+    },
+    "exportChoices": [
+      "Bilingual or translation only",
+      "Text-based PDF via browser print",
+      "Image-based PDF"
+    ],
+    "translatedPagesObserved": 0
+  },
+  "evidenceBoundary": {
+    "sourceParsed": true,
+    "sourceTranslatedExportCaptured": false,
+    "sameFixtureOwnExportTested": true,
+    "exportEquivalenceEstablished": false,
+    "reason": "Hosted translation attempt displayed zero translated pages and a PDF Pro/scanned-document notice. No authenticated source translation engine or successful translated source export was observed."
+  },
+  "rawCapture": "dist/rev/pdf-reference/runtime.json (local, ignored)",
+  "screenshots": [
+    "dist/rev/pdf-reference/original-loaded.png",
+    "dist/rev/pdf-reference/original-outline.png"
+  ],
+  "independentExportTests": [
+    "tests/browser/document-parity.spec.mjs",
+    "tests/extension/pdf-navigation.test.mjs",
+    "tests/extension/pdf-background.test.mjs"
+  ]
+}
