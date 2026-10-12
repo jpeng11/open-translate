@@ -1,0 +1,216 @@
+{
+  "schema": 1,
+  "kind": "web-acceptance",
+  "createdAt": "2026-10-12T22:44:00.510Z",
+  "implementationSha256": "8dd07427a2d438c2750dd79859ef9fd338bc3a472f47fbdebdf43dcf010bc77a",
+  "buildEvidence": {
+    "schema": 1,
+    "browser": "chrome",
+    "implementationSha256": "8dd07427a2d438c2750dd79859ef9fd338bc3a472f47fbdebdf43dcf010bc77a",
+    "bundleSha256": "fad02e923d7dd3eaed7e61ae57fdc2b839b071cd86351944fd081fa458912933"
+  },
+  "binding": "verified",
+  "harnessSha256": "225036dc4decd956daf923d5029784ab08ceed00db74d13b61fcc5905c8eb926",
+  "browser": {
+    "name": "Chromium",
+    "version": "156.0.8078.4"
+  },
+  "environment": {
+    "profile": "clean temporary",
+    "provider": "deterministic local OpenAI-compatible fixture",
+    "providerQuality": "not evaluated",
+    "publicSampling": "up to eight reading paragraphs per site; real document remains intact",
+    "tls": "ignoreHTTPSErrors for this credential-free browser test"
+  },
+  "sites": [
+    {
+      "id": "wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Machine_translation",
+      "observedAt": "2026-10-12T22:44:00.510Z",
+      "status": "passed",
+      "httpStatus": 200,
+      "finalUrl": "https://en.wikipedia.org/wiki/Machine_translation",
+      "responseSha256": "a1cf9aa27286387afdc650be2fc2f6665d8a12cca1c1e35375b7ae21584302e3",
+      "responseBytes": 519501,
+      "sample": {
+        "paragraphCount": 8,
+        "eligibleParagraphs": 60,
+        "sourceCharacters": 3396,
+        "sourceSha256": "2ddbe8faaaa72d19fb608a15c7086f6e4c582f8695915d77895448e0295c7594",
+        "sourceLinkCount": 39,
+        "formattingCount": 2,
+        "codeBlocks": 0
+      },
+      "checks": {
+        "singleTargets": true,
+        "sourceNodesPreserved": true,
+        "linksPreserved": true,
+        "formattingPreserved": true,
+        "codeExcluded": true,
+        "targetLanguage": true,
+        "exactRestore": true,
+        "sourceEvent": true,
+        "dynamicUpdates": 40,
+        "dynamicSingleTarget": true
+      }
+    },
+    {
+      "id": "mdn",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API",
+      "observedAt": "2026-10-12T22:44:05.874Z",
+      "status": "passed",
+      "httpStatus": 200,
+      "finalUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API",
+      "responseSha256": "0d4976d3878193bc7a78c45d4ac28ded3a44aa5ce2217b9bf5e8491bddf130d4",
+      "responseBytes": 202445,
+      "sample": {
+        "paragraphCount": 8,
+        "eligibleParagraphs": 76,
+        "sourceCharacters": 1894,
+        "sourceSha256": "c7302155341af61202826dfb66c3e2240a6c0c1f421fa0630f20a638c3b20dea",
+        "sourceLinkCount": 3,
+        "formattingCount": 0,
+        "codeBlocks": 0
+      },
+      "checks": {
+        "singleTargets": true,
+        "sourceNodesPreserved": true,
+        "linksPreserved": true,
+        "formattingPreserved": true,
+        "codeExcluded": true,
+        "targetLanguage": true,
+        "exactRestore": true,
+        "sourceEvent": true,
+        "dynamicUpdates": 40,
+        "dynamicSingleTarget": true
+      }
+    },
+    {
+      "id": "github",
+      "url": "https://github.com/microsoft/TypeScript",
+      "observedAt": "2026-10-12T22:44:12.693Z",
+      "status": "passed",
+      "httpStatus": 200,
+      "finalUrl": "https://github.com/microsoft/TypeScript",
+      "responseSha256": "08b4ad2acee5321635c874aa4eed2de7c6744958ca7bba2ba67b28a7be84d673",
+      "responseBytes": 321521,
+      "sample": {
+        "paragraphCount": 3,
+        "eligibleParagraphs": 3,
+        "sourceCharacters": 628,
+        "sourceSha256": "f41ac2d0c381011c023621fa0cef23e2459a736f11ea960d13032f2315016c58",
+        "sourceLinkCount": 8,
+        "formattingCount": 0,
+        "codeBlocks": 2
+      },
+      "checks": {
+        "singleTargets": true,
+        "sourceNodesPreserved": true,
+        "linksPreserved": true,
+        "formattingPreserved": true,
+        "codeExcluded": true,
+        "targetLanguage": true,
+        "exactRestore": true,
+        "sourceEvent": true,
+        "dynamicUpdates": 40,
+        "dynamicSingleTarget": true
+      }
+    },
+    {
+      "id": "w3c",
+      "url": "https://www.w3.org/TR/WCAG22/",
+      "observedAt": "2026-10-12T22:44:17.179Z",
+      "status": "passed",
+      "httpStatus": 200,
+      "finalUrl": "https://www.w3.org/TR/WCAG22/",
+      "responseSha256": "6e3c5fe397257cae509a2fb4752b73062cf8cbeb92c2cec618989b17e4cf7057",
+      "responseBytes": 512457,
+      "sample": {
+        "paragraphCount": 8,
+        "eligibleParagraphs": 423,
+        "sourceCharacters": 2614,
+        "sourceSha256": "97f8c682610fad5666b984e94ca9e95e02808acff2021f7404054ca2e5d55807",
+        "sourceLinkCount": 8,
+        "formattingCount": 1,
+        "codeBlocks": 0
+      },
+      "checks": {
+        "singleTargets": true,
+        "sourceNodesPreserved": true,
+        "linksPreserved": true,
+        "formattingPreserved": true,
+        "codeExcluded": true,
+        "targetLanguage": true,
+        "exactRestore": true,
+        "sourceEvent": true,
+        "dynamicUpdates": 40,
+        "dynamicSingleTarget": true
+      }
+    },
+    {
+      "id": "whatwg",
+      "url": "https://html.spec.whatwg.org/multipage/introduction.html",
+      "observedAt": "2026-10-12T22:44:22.664Z",
+      "status": "passed",
+      "httpStatus": 200,
+      "finalUrl": "https://html.spec.whatwg.org/multipage/introduction.html",
+      "responseSha256": "3d3aef0bd2b3834315755bf34cc3d96d3da4161d606a0277e2537c08e2fa9866",
+      "responseBytes": 98181,
+      "sample": {
+        "paragraphCount": 8,
+        "eligibleParagraphs": 151,
+        "sourceCharacters": 2402,
+        "sourceSha256": "e67535e232264ac9948f1284a36e691988f7c1d87be9e0732d0707e2e0871553",
+        "sourceLinkCount": 7,
+        "formattingCount": 0,
+        "codeBlocks": 4
+      },
+      "checks": {
+        "singleTargets": true,
+        "sourceNodesPreserved": true,
+        "linksPreserved": true,
+        "formattingPreserved": true,
+        "codeExcluded": true,
+        "targetLanguage": true,
+        "exactRestore": true,
+        "sourceEvent": true,
+        "dynamicUpdates": 40,
+        "dynamicSingleTarget": true
+      }
+    }
+  ],
+  "stress": [
+    {
+      "name": "long-page-beyond-5000",
+      "status": "passed",
+      "observedAt": "2026-10-12T22:44:26.069Z",
+      "details": {
+        "paragraphs": 5105,
+        "lastParagraph": 5104,
+        "restore": true,
+        "codeExcluded": true
+      }
+    },
+    {
+      "name": "large-dynamic-batch-and-frames",
+      "status": "passed",
+      "observedAt": "2026-10-12T22:44:27.336Z",
+      "details": {
+        "insertedParagraphs": 300,
+        "sampled": [
+          0,
+          150,
+          299
+        ],
+        "sameOriginFrame": true,
+        "crossOriginFrame": true,
+        "restore": true
+      }
+    }
+  ],
+  "provider": {
+    "requests": 439,
+    "characters": 285766
+  },
+  "status": "passed"
+}
