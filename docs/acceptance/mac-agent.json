@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "suite": "mac-live-agent",
+  "status": "passed",
+  "testedAt": "2026-10-12T22:44:11.612377+00:00",
+  "implementationSha256": "8dd07427a2d438c2750dd79859ef9fd338bc3a472f47fbdebdf43dcf010bc77a",
+  "buildEvidence": {
+    "schema": 1,
+    "browser": "chrome",
+    "implementationSha256": "8dd07427a2d438c2750dd79859ef9fd338bc3a472f47fbdebdf43dcf010bc77a",
+    "bundleSha256": "e8fc83d3a27dd318e8efb23e89bf3ef6ff4c3063bee50b566b6a1c8d790fd9ef"
+  },
+  "sourceCommit": "c270772",
+  "browser": "Chromium 156.0.8078.4",
+  "provider": "local Python bridge → signed-in Google AGY CLI",
+  "cases": [
+    {
+      "id": "two-french-sentences-to-english",
+      "status": "passed",
+      "source": [
+        "Bonjour monde {0}.",
+        "Merci pour votre aide."
+      ],
+      "output": [
+        "Hello world {0}.",
+        "Thank you for your help."
+      ]
+    },
+    {
+      "id": "inline-bold-and-placeholder",
+      "status": "passed"
+    },
+    {
+      "id": "restore-source-dom",
+      "status": "passed"
+    }
+  ],
+  "logSha256": "3e9f6d2494c0f6c0b3228013b47206159ea817df066fa2fbdb750890ef70b1d4",
+  "limitations": [
+    "Two synthetic sentences test the live integration, not general model translation quality.",
+    "Private connection files and authentication remain outside the repository.",
+    "Mac and Linux bundle hashes differ; each tested bundle is recorded with the same implementation digest."
+  ]
+}

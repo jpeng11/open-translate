@@ -1,85 +1,55 @@
-# Validation
+# Acceptance record
 
-Acceptance date: 2026-10-12. Latest product changes include PDF navigation/form retention (`8089c49`), caption lifecycle fixes (`7698f05`), reference-based email exclusion (`ef03122`), popup/region controls, and AGY final-output compatibility (`99009f9`). Earlier checks remain separately identified below.
+Acceptance date: 2026-10-12. The current product follows the [accepted behavior contract](accepted-behavior.md), with an independent [visual identity](visual-identity.md). Recommended differences and unresolved reference observations are retained explicitly. Matching the commercial product's UI or defects is not the release requirement.
 
-| Environment | Actual runtime | Result |
+The final implementation SHA-256 is `8dd07427a2d438c2750dd79859ef9fd338bc3a472f47fbdebdf43dcf010bc77a`. The Linux Chromium bundle is `fad02e923d7dd3eaed7e61ae57fdc2b839b071cd86351944fd081fa458912933`; the Mac bundle is `e8fc83d3a27dd318e8efb23e89bf3ef6ff4c3063bee50b566b6a1c8d790fd9ef`. They contain the same implementation inputs; platform-produced bundle bytes differ and are separately recorded.
+
+## Current results
+
+| Acceptance | Result | Evidence |
 | --- | --- | --- |
-| Linux development checkout | Python 3.12.3, Chromium 156.0.8078.4 | 53 Node + 39 Python passed; 31 Chromium passed in the complete run, final drag-selection case passed after correcting test scrolling (32 cases covered) |
-| User's Mac mini | macOS 27.0.1, Python 3.12.15, Node 26.10.0, Chromium 156.0.8078.4 | Earlier 100-case full run passed; current browser build and actual Chrome→AGY/whisper.cpp routes passed |
-| Linux Firefox | Firefox 157, real temporary MV3 extension through Marionette | Workspace/page/input, mixed root text, exact restoration, trusted settings, credential isolation, transcription/image fallback passed |
-| Pinned original vs replacement | Actual Immersive Translate 1.33.3 and actual unpacked Open Translate, separate Chromium profiles | 9 base webpage checks passed; extended 17 cases: 12 matched, 3 differences, 2 original unresolved. media 10 cases: 7 matched, 2 differences, 1 original unresolved. Total 28 matches; full parity unverified |
-| User's Mac mini, Safari packaging | Full Xcode, macOS and iOS Simulator host schemes, signing disabled | Both host builds previously succeeded. SafariDriver session blocked by disabled Allow remote automation; current runtime testing handed to user-designated Codex session |
-| User's Mac mini, local speech | Homebrew whisper.cpp and hash-verified multilingual tiny GGML model | Actual English WAV recognition and authenticated multipart HTTP route passed; unauthenticated access rejected |
+| Node tests | 64 passed, zero failures | [Full regression](acceptance/regression.json) |
+| Python bridge tests | 39 passed, zero failures | Full regression |
+| Chromium browser tests | 49 passed in one complete final run | Full regression; real unpacked MV3 workflows and browser module corpora |
+| Firefox desktop | Actual temporary extension passed | Trusted settings, workspace/page/input translation, restoration, credential isolation, transcription and image fallback |
+| Public websites | Five sites plus two stress fixtures passed | [Web report](acceptance/web.json), [scope](web-acceptance.md) |
+| Documents | 19 passing browser cases, included in the 49 above | [Document report](acceptance/documents.json), [scope and limits](document-acceptance.md) |
+| Media/OCR/live | 24 Node + 9 browser cases, included above | [Media report](acceptance/media.json), [scope and limits](media-acceptance.md) |
+| Independent UI | All eight routes in light/dark, desktop/narrow widths, keyboard navigation, labels, contrast and overflow | [UI report and screenshot hashes](acceptance/ui.json) |
+| Mac live AGY integration | Final build passed actual extension → bridge → AGY translation | [Provider report](acceptance/mac-agent.json) |
+| Chrome/Edge/Firefox/Safari packaging | Four final archives built, about 29 MiB each | Build stamps in `dist/<browser>/build-evidence.json` |
 
-The user-designated Codex session independently pulled and tested an isolated clean snapshot at `663381b`: all 100 cases, actual Firefox, nine paired original cases, and stale-evidence rejection passed. The final OCR preference change at `498cd3d` additionally passed targeted PDF/OCR browser acceptance and an actual browser save/reload check synchronizing image and scanned-PDF languages.
+`npm run acceptance` completed successfully after the final source freeze. `npm run acceptance:verify` validated all four regression/web/documents/media report bindings against the current implementation and complete Chrome bundle. The regression additionally binds tests, scripts and Python backend inputs. Focused reports are subsets of the full run, not additional test counts.
 
-Commands: `npm run check`, `python3 -m unittest discover -q`, `python3 scripts/test-firefox.py`, and `npm run parity:reference -- /private/path/to/reference-extension`. A first Linux browser run exposed an ambiguous video locator after adding screen OCR; the test was scoped to its intended subtitle preview, then passed. The complete subsequent Mac run passed all 100 cases.
+The public site run used actual Wikipedia, MDN, GitHub, W3C and WHATWG pages with default reader rules. It checked 35 sampled paragraphs, 65 safe links, code exclusions, dynamic changes, preserved events and exact restoration. Stress fixtures covered the tail of a 5,105-paragraph page, 300 inserted nodes, and frames. A local deterministic provider isolates extension mechanics; it does not establish linguistic translation quality or unrestricted website compatibility.
 
-## Meaningful runtime coverage
+## Defects found and corrected during this expansion
 
-- Bilingual and translated webpage rendering, exact original node/event restoration, inline links/formatting, exclusions, mixed body/table text, RTL, frames, dynamic content, open shadow roots and SPA navigation.
-- Batch/ID/placeholder validation, malformed responses, redacted errors, concurrency, cache invalidation, cancellation and stale response handling. One bounded AGY recovery keeps a shared deadline and never retries authentication/quota failures.
-- Actual isolated content contexts cannot read API credentials or change trusted settings. Firefox also probes inaccessible extension-origin IndexedDB and legacy credential migration.
-- DOCX formatted runs, links/relationships, tables, paragraph styles, headers/footers; HTML safe styles/links/code; EPUB packaged resources and spine order.
-- PDF vector originals, searchable Chinese/Arabic/Hebrew/English text, bidi ordering and complete overflow continuation. Accessible HTML attachment/export is included; tests extract text from the actual exported PDF.
-- Actual bundled English OCR plus integrity-verified French initialization/download/offline reuse, local masked-region repair and RTL wrapping. 124 model packs are listed; testing two packs does not establish all-language recognition quality.
-- SRT/VTT/ASS timing, native preview cues, dynamic/open-shadow captions, sidecar cues and screen-capture OCR with changed-caption recognition and track release.
-- Actual AudioWorklet PCM capture, 16-kHz mono WAV encoding, automatic 2-second chunk submission, pause/queue/cancellation handling, transcription/translation and SRT export. Browser CI uses deterministic speech/translation responses; local speech acceptance separately invokes real whisper.cpp.
-- Long HTTP inference completes through Chromium's offscreen worker after 32 seconds; Firefox executes its supported background fallback.
-- Rare UI navigation/counters/orbs, keyboard operation, active-link accessibility, reduced motion, 390-pixel workspace layout and compact popup rendering.
+- Paragraphs beyond the first candidate window were unreachable after scrolling; viewport priority and scroll rescanning now reach them.
+- Cancelled or browser-ended capture could retain streams; capture cleanup now covers pending permission, stop and ended events.
+- Screen OCR did not retry a failed translation, and region dragging ignored letterboxing; retry and video-content coordinates are corrected.
+- Native caption reselection could duplicate visible originals; track visibility and restoration are corrected.
+- CJK OCR inserted artificial spaces and left source strokes behind; script-aware text normalization and line-based masking address the tested cases.
+- The broader OCR mask initially changed PDF pixels outside the intended region. Full regression caught this cross-feature failure; PDF and OCR now use separate padding, with the original PDF preservation assertion retained.
+- PDF disposal used a removed PDF.js API, rotated/cropped text placement was wrong, and Japanese CFF subsets could expose searchable characters without rendering their glyphs. Loading-task cleanup, transformed geometry and a provenance-recorded padded TrueType font fix these cases.
+- Document upload lacked an accessible label. The new route-level UI checks found it and a label was added.
 
-## Original comparison and REA
+Final multilingual PDF, rotated PDF and Chinese/Japanese/mixed OCR image exports were visually inspected in addition to parser/pixel assertions. The new workbench and popup screenshots were also reviewed in rendered light/dark and narrow layouts.
 
-The [REA workflow](rev-workflow.md) executed the actual REA 6.4.0 CLI against an isolated browser and captured the original website's runtime scripts/page/screenshot. Original extension files remain private, pinned to official commit `c470f0aca3c75b2785c9009a0ac48e78ead34126` and blob verified.
+## Actual user endpoint
 
-[Reference results](parity/reference-results.json) compare both extensions with the same English→French Custom API fixture. The final corpus uses complete sentences because a short inline fragment was intermittently skipped by the original before API submission. That heuristic is not considered resolved. Nine checks cover output, original source identity, placeholder, target language, source-content restoration, code/`translate=no`/input exclusions and dynamic content. The original leaves discovery attributes; the replacement restores the fixture DOM exactly. Popup screenshots support review but no pixel-equality assertion. Evidence binds to the implementation source digest, so later code changes require a new reference run.
+On the user's Mac mini, Chromium 156.0.8078.4 loaded the final extension and reached the existing authenticated AGY bridge. It translated `Bonjour <b>monde</b> {0}.` and `Merci pour votre aide.` into English, retained bold markup and `{0}`, then restored the original DOM. Private token/configuration files remain outside Git. Reproduce with:
 
-`npm run parity` reports outstanding areas. `npm run parity -- --strict` currently exits 1 by design: all product areas still need broader paired original acceptance. Passing independent replacement tests cannot silently turn into a full-parity claim.
-
-## Real agents and local speech
-
-AGY acceptance uses the user's Google Antigravity CLI 1.3.2, cached login and model `gemini-3.8-flash-low`. The updated implementation also passed a real standalone Chromium→Python bridge→AGY check translated `Bonjour <b>monde</b> {0}.` to `Hello <b>world</b> {0}.` and `Merci pour votre aide.` to `Thank you for your help.`, then restored source DOM. The latest live check passed at `99009f9` after fixing an observed AGY final-output compatibility error, with inline formatting, placeholders and restoration intact. Reproduce:
-
-```bash
+```sh
 node scripts/live-check.mjs "$HOME/Library/Application Support/Open Translate/standalone-connection.json"
 ```
 
-This consumes the selected provider's usage. Private token/configuration files remain outside Git. AGY uses its built-in `finish` tool to submit final structured output; that exact operation is accepted. Other or unknown tool events still fail validation. Recovery is not a tool-execution barrier or long-run reliability guarantee.
+This consumes the user's provider allowance. It is a small live integration check, not a broad translation-quality score. The Python bridge did not change in this expansion. Its previously verified local whisper.cpp route, authentication rejection and extension preflights remain historical speech evidence; the current live-media suite uses deterministic transcription responses.
 
-Local speech acceptance used the actual installed whisper.cpp executable and pinned tiny model described in [local speech](local-speech.md). The official English sample was correctly transcribed through `/v1/audio/transcriptions`. HTTP 401 without authentication and Chromium/Safari extension preflights were verified. The existing loopback bridge was restarted with optional local speech enabled, retaining its private token.
+## Remaining boundaries
 
-## Remaining acceptance
+Safari runtime testing remains assigned to the user-designated Codex session. Its last completed runtime attempt was blocked at SafariDriver session creation because **Allow remote automation** was disabled; no Safari extension-runtime pass is claimed. macOS/iOS host compilation was previously successful. Final source/build details were handed off for that session to continue. Branded Edge runtime and Android/iOS devices remain unqualified.
 
-Browser manifests/builds do not establish Safari/mobile runtime acceptance, signing or store distribution. Edge branded, Safari runtime, Android/iOS devices and broad production-site evaluation remain pending. PDFs retain native form/bookmark/navigation graphs, but translated-page backgrounds remain rasterized and accessible tag trees are not rebuilt. Artwork reconstruction, arbitrary OCR languages, private/DRM captions, noisy meetings, latency and model-quality equivalence require paired evaluation. See [browser support](browser-support.md), [document fidelity](document-fidelity.md), [media coverage](media-translation.md), and the [parity baseline](parity/baseline.json).
+Complex PDF typography, RTL/Indic copy order in particular viewers, Office/EPUB reader layout, detailed background reconstruction, physical capture devices, noisy meetings, DRM/private player APIs and arbitrary model translation quality retain the specific limits in the document/media reports. Focused UI accessibility checks are not a complete WCAG audit.
 
-
-## Current reconstruction increment
-
-The first combined 32-case Chromium run passed 31 cases; the screen-region drag
-fixture attempted mouse coordinates outside the visible viewport. Adding
-`scrollIntoViewIfNeeded()` fixed the test without product changes; the targeted
-preset/drag/OCR/persistence case passed. The 53 Node and 39 Python tests passed,
-as did actual Firefox acceptance. The named Codex session is independently testing
-Safari; delivery and acknowledgement were received, with no runtime pass inferred.
-
-The replacement build now carries a source/bundle hash stamp. Paired reports
-reject stale builds and verify them again after testing. Original configuration
-is constrained to the pinned packaged defaults plus explicit local fixtures,
-blocking external hostname resolution. The old short dynamic probe stopped
-translating under this configuration; its failure is retained privately and the
-base dynamic test now uses a complete English paragraph. Extended reports retain
-short-input detection and intermittent original mixed-text uncertainty.
-
-AGY live validation initially failed; diagnostic stream inspection found that its
-legitimate built-in `finish` submission was rejected as an operational tool. The
-narrow fix permits only that exact name, with regression cases rejecting file,
-command, subagent and unnamed tools even before a later valid finish. The bridge
-was restarted preserving its token and local speech configuration; real inline
-translation and authenticated whisper.cpp checks passed afterward.
-
-The final paired ledger contains 36 checkpoints: 28 matched, five observed
-differences, and three unresolved original-reference cases. Native VTT comparisons
-use an original VP8 timeline fixture and configured localhost adapters. Passing
-base/extended/media cases does not establish production-site or document-export
-equivalence. `npm run parity` validates this ledger; strict mode exits 1 because
-required whole-product acceptance remains outstanding.
+The historical original comparison remains **28 matched, 5 deliberately different, 3 reference-unresolved** across 36 checkpoints. It is retained with its original build hashes under `docs/parity/`; it is not relabeled as evidence for the new UI or current source. See [accepted behavior](accepted-behavior.md) for the chosen behavior of those eight cases.

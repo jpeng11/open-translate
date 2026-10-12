@@ -1,0 +1,311 @@
+{
+  "schema": 1,
+  "suite": "regression",
+  "status": "passed",
+  "testedAt": "2026-10-12T22:45:34.242Z",
+  "implementationSha256": "8dd07427a2d438c2750dd79859ef9fd338bc3a472f47fbdebdf43dcf010bc77a",
+  "verificationSha256": "9968b1d35b3f6d1dc76116fd00d65b5ab485174a138968d03df5082b247ad57f",
+  "buildEvidence": {
+    "schema": 1,
+    "browser": "chrome",
+    "implementationSha256": "8dd07427a2d438c2750dd79859ef9fd338bc3a472f47fbdebdf43dcf010bc77a",
+    "bundleSha256": "fad02e923d7dd3eaed7e61ae57fdc2b839b071cd86351944fd081fa458912933"
+  },
+  "results": [
+    {
+      "id": "node",
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 794,
+      "logSha256": "0f8b2a278528954275a9d524d154e161a0333eb528234b19719968d6a9d48aa8"
+    },
+    {
+      "id": "python",
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 2145,
+      "logSha256": "7e54df5c75466e2f2aadcfa63cc77809d7259f1f11ae193405be41ab6b9f26d4"
+    },
+    {
+      "id": "build",
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 10977,
+      "logSha256": "dd84cd49d40a77809c050b6183b1b51613ba0e3106b535bf20abdec64aafb70c"
+    },
+    {
+      "id": "chromium",
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 103448,
+      "logSha256": "eb7a1705ebb1851311b2682ad6492c38da92cd4c2549875e3196fd167e4d563c"
+    },
+    {
+      "id": "firefox",
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 3146,
+      "logSha256": "924f41693f955e6f50bdbb54b8b9f51359d73f7e68128ac828ee5e74350eeb13"
+    }
+  ],
+  "browser": {
+    "startTime": "2026-10-12T22:43:48.044Z",
+    "duration": 102732.715,
+    "expected": 49,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0,
+    "cases": [
+      {
+        "title": "actual import/export embeds CJK, RTL, Indic and Thai; companion retains exact logical Unicode",
+        "file": "document-corpus.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "actual import respects two-column order and rotated cropped page geometry",
+        "file": "document-corpus.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "image-only scanned PDF uses real bundled OCR and exports searchable recognized text",
+        "file": "document-corpus.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "DOCX footnotes/endnotes keep references, styles and embedded assets in bilingual export",
+        "file": "document-corpus.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "malformed and oversized PDF inputs fail before export with actionable limits",
+        "file": "document-corpus.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "valid password-protected and empty-password encrypted PDFs require an unlocked copy",
+        "file": "document-corpus.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "invalid DOCX/EPUB XML and oversized archive metadata fail without partial exports",
+        "file": "document-corpus.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "actual imported narrow region preserves full long translation on continuation pages",
+        "file": "document-corpus.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "packaged EPUB retains valid image bytes, nested spine paths and Unicode links",
+        "file": "document-corpus.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "DOCX preserves run properties, hyperlink relationships, paragraph styles, tables and headers/footers",
+        "file": "document-parity.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "HTML translation retains safe formatting, links and code while removing active/network content",
+        "file": "document-parity.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "EPUB preserves internal stylesheet/resources, inline formatting and relative links",
+        "file": "document-parity.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "export retains vector/searchable originals and searchable Unicode translation, with overflow continuation",
+        "file": "document-parity.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "EPUB translation order follows the package spine rather than ZIP member order",
+        "file": "document-parity.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "PDF bilingual browser navigation and forms remain connected to exported pages",
+        "file": "document-parity.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "PDF translated-only browser navigation and forms remain connected to exported pages",
+        "file": "document-parity.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "translated signed fixture removes digital signature semantics and prints an invalidation notice",
+        "file": "document-parity.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "MV3 worker translates pages, preserves inline markup, restores original nodes, observes changes",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "translation-only view restores exact source and a late response cannot reinsert text",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "input translation uses its own target and reports malformed provider responses visibly",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "workspace direct endpoint configuration and text translation work",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "HTML, Markdown, DOCX and EPUB preserve format through bilingual export",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "PDF text extraction, lazy preview and bilingual PDF export",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "SRT timing, bilingual download and native local-preview cues",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "bundled OCR recognizes a real image and exports translated overlay",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "webpage contexts cannot obtain credentials or change trusted settings",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "area capture switches to a webpage and provides an image for cropping",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "live microphone capture, speech request, translation, stop and transcript export",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "website captions and selection use updated preferences",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "offscreen worker completes an HTTP request longer than the MV3 fetch deadline",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "Rare UI navigation, progress widgets, popup and reduced-motion layout",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "image context-menu handoff loads a bounded user-selected image",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "popup language labels and display/cache controls persist through reopening",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "live AudioWorklet automatically emits complete low-latency WAV chunks",
+        "file": "media.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "downloaded French OCR initializes safely and repeats from offline model cache",
+        "file": "media.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "dynamic open-shadow captions translate and supplied sidecar timing survives",
+        "file": "media.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "screen subtitle fallback captures visible text locally and releases sharing tracks",
+        "file": "media.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "screen OCR preset and preview drag select the intended region and persist",
+        "file": "media.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "CJK and mixed-language OCR translate colored images and preserve detailed backgrounds on export",
+        "file": "media.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "live permission decline, silent AudioWorklet input and browser-ended sharing recover cleanly",
+        "file": "media.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "native overlapping multiline RTL captions toggle, reselect tracks and follow fullscreen",
+        "file": "media.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "screen OCR retries failed translation, maps letterboxed preview drag and stops on capture end",
+        "file": "media.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "mixed root/table text, RTL, frames and source events survive translation and exact restore",
+        "file": "sites.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "SPA route changes and reused translated containers do not duplicate translations",
+        "file": "sites.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "focused email fields never submit their value to the translation endpoint",
+        "file": "sites.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "long-page scrolling reaches paragraphs beyond the candidate window",
+        "file": "sites.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "light workbench: every route, responsive layout, accessible controls and text contrast",
+        "file": "ui.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "dark workbench: every route, responsive layout, accessible controls and text contrast",
+        "file": "ui.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "popup distinct hierarchy, readable labels, keyboard navigation and expanded tools fit",
+        "file": "ui.spec.mjs",
+        "status": "passed"
+      }
+    ]
+  },
+  "limitations": [
+    "Deterministic endpoint responses validate mechanics, not translation quality.",
+    "Firefox temporary acceptance copy includes a test probe; see scripts/test-firefox.py.",
+    "Safari and branded Edge/mobile device acceptance are separate."
+  ]
+}

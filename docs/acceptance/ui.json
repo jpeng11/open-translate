@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "suite": "ui",
+  "status": "passed",
+  "testedAt": "2026-10-12T22:45:34.242Z",
+  "implementationSha256": "8dd07427a2d438c2750dd79859ef9fd338bc3a472f47fbdebdf43dcf010bc77a",
+  "buildEvidence": {
+    "schema": 1,
+    "browser": "chrome",
+    "implementationSha256": "8dd07427a2d438c2750dd79859ef9fd338bc3a472f47fbdebdf43dcf010bc77a",
+    "bundleSha256": "fad02e923d7dd3eaed7e61ae57fdc2b839b071cd86351944fd081fa458912933"
+  },
+  "cases": [
+    {
+      "title": "light workbench: every route, responsive layout, accessible controls and text contrast",
+      "file": "ui.spec.mjs",
+      "status": "passed"
+    },
+    {
+      "title": "dark workbench: every route, responsive layout, accessible controls and text contrast",
+      "file": "ui.spec.mjs",
+      "status": "passed"
+    },
+    {
+      "title": "popup distinct hierarchy, readable labels, keyboard navigation and expanded tools fit",
+      "file": "ui.spec.mjs",
+      "status": "passed"
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "dist/acceptance/ui/dark-connection-390.png",
+      "sha256": "ddfed39826be977cb055a5fb36879b94e519276324fd5c7bb26f39ec59382edd"
+    },
+    {
+      "path": "dist/acceptance/ui/dark-home-1280.png",
+      "sha256": "ea3ec763504d0acf058389f325bb8b040fc46be42bfbff59c35284ffca39f5df"
+    },
+    {
+      "path": "dist/acceptance/ui/light-connection-390.png",
+      "sha256": "5bec1f5880928dc88a0a0c67d63047db3b65dd8e10e3b2c7a807a57a0d8d8462"
+    },
+    {
+      "path": "dist/acceptance/ui/light-home-1280.png",
+      "sha256": "ce6e7a0cebfd7d0fff98376220d3655b0d7ed79442f8a11a09cf3cee234acbde"
+    },
+    {
+      "path": "dist/acceptance/ui/popup-dark.png",
+      "sha256": "27456fe6a1a23caffabcde1f01da16f7913309cbf4680a24d949e105d05c53e7"
+    },
+    {
+      "path": "dist/acceptance/ui/popup-light.png",
+      "sha256": "411eceab672f4b5e741ed328eb3efc45139e54540c1dbb23375e36017117815e"
+    }
+  ],
+  "visualReview": "Rendered light desktop workspace, dark narrow connection workspace and light/dark popup reviewed; original geometric branding and coherent ink/teal/paper identity.",
+  "limitations": [
+    "Focused labels, keyboard, contrast and overflow checks are not full WCAG certification.",
+    "Original interface assets were not copied; this visual review is not a legal similarity clearance."
+  ]
+}
