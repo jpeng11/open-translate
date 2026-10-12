@@ -3,7 +3,7 @@ export const DEFAULTS = Object.freeze({
   apiKey: '', model: '', source: 'auto', target: 'en', inputTarget: 'en', mode: 'bilingual',
   style: 'underline', batchSize: 4, concurrency: 1, timeout: 210, jsonMode: true,
   autoTranslate: false, selection: false, hover: true, cache: false, glossary: [], rules: [],
-  speechUrl: '', speechKey: '', speechModel: '', ocrLanguage: 'eng', captionSelector: ''
+  speechUrl: '', speechKey: '', speechModel: '', liveSegmentSeconds:3, liveVad:true, ocrLanguage: 'eng', captionSelector: ''
 });
 export const LANGUAGES = [
  ['auto','Detect language'],['en','English'],['zh-CN','简体中文'],['zh-TW','繁體中文'],['ja','日本語'],['ko','한국어'],
@@ -27,7 +27,7 @@ export function endpoint(base, suffix='chat/completions') {
 export function validateSettings(input) {
   const value=Object.fromEntries(Object.entries(DEFAULTS).map(([key,fallback])=>[key,input?.[key] ?? fallback]));
   for(const key of ['apiUrl','bridgeUrl','model','apiKey','speechUrl','speechKey','speechModel','ocrLanguage','captionSelector'])if(typeof value[key]!=='string' || value[key].length>16384)fail('configuration',`Invalid ${key}.`);
-  for(const key of ['jsonMode','autoTranslate','selection','hover','cache'])if(typeof value[key]!=='boolean')fail('configuration',`Invalid ${key}.`);
+  for(const key of ['jsonMode','autoTranslate','selection','hover','cache','liveVad'])if(typeof value[key]!=='boolean')fail('configuration',`Invalid ${key}.`);
   if (!['bridge','openai'].includes(value.provider)) fail('configuration','Choose a supported provider.');
   if (value.provider==='bridge') endpoint(value.bridgeUrl,'translate');
   else { endpoint(value.apiUrl); if (!value.model.trim()) fail('configuration','Enter your endpoint model name.'); }
@@ -35,7 +35,7 @@ export function validateSettings(input) {
     if (!/^[a-z][a-z0-9-]{0,34}$/i.test(value[name]) || (name!=='source' && value[name]==='auto')) fail('configuration','Enter valid language codes.');
   }
   if (!['bilingual','translation'].includes(value.mode) || !['underline','muted','box','plain'].includes(value.style)) fail('configuration','Invalid display style.');
-  for (const [name,min,max] of [['batchSize',1,16],['concurrency',1,4],['timeout',5,600]]) {
+  for (const [name,min,max] of [['batchSize',1,16],['concurrency',1,4],['timeout',5,600],['liveSegmentSeconds',2,5]]) {
     value[name]=Number(value[name]);
     if (!Number.isInteger(value[name]) || value[name]<min || value[name]>max) fail('configuration',`${name} must be between ${min} and ${max}.`);
   }

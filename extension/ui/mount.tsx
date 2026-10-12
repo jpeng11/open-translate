@@ -9,7 +9,7 @@ function Navigation({items}:{items:{label:string;href:string}[]}){
   const [hash,setHash]=useState(location.hash || '#home');
   useEffect(()=>{const change=()=>setHash(location.hash || '#home');window.addEventListener('hashchange',change);return ()=>window.removeEventListener('hashchange',change);},[]);
   const index=Math.max(0,items.findIndex(item=>item.href===hash));
-  return <BounceSidebar items={items} value={index} dotColor="#1f775b" className="workspace-navigation" />;
+  return <BounceSidebar items={items} value={index} dotColor="#ec4899" className="workspace-navigation" />;
 }
 function Progress({scope}:{scope:string}){
   const [progress,setProgress]=useState<{done:number;total:number}|null>(null);
@@ -19,6 +19,6 @@ function Progress({scope}:{scope:string}){
 }
 export function mountRareUI(){
   const nav=document.getElementById('rare-navigation');if(nav){const items=Array.from(nav.querySelectorAll('a')).map(link=>({label:link.textContent || '',href:link.hash}));createRoot(nav).render(wrap(<Navigation items={items}/>));}
-  for(const [id,size]of [['engine-orb',116],['popup-orb',54]] as const){const node=document.getElementById(id);if(node)createRoot(node).render(wrap(<FluidOrb size={size} color="#26775c"/>));}
+  for(const [id,size]of [['engine-orb',116],['popup-orb',24]] as const){const node=document.getElementById(id);if(node)createRoot(node).render(wrap(<FluidOrb size={size} color="#ec4899"/>));}
   for(const scope of ['document','subtitle','image']){const node=document.getElementById(`${scope}-progress`);if(node)createRoot(node).render(wrap(<Progress scope={scope}/>));}
 }
