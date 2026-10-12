@@ -203,3 +203,11 @@ open-translate --help
 Automated tests use mocks. A live macOS run with AGY 1.3.2 also passed the connection check and the authenticated HTTP translation route, preserving markup and placeholders. See [validation results](validation.md) and [the Mac setup guide](mac-setup.md). See the validation document for standalone extension acceptance.
 
 See [architecture and protocol notes](docs/architecture.md). Licensed under [MIT](LICENSE).
+
+AGY's built-in `finish` operation submits final output. Actual CLI 1.3.2
+acceptance confirmed it can appear as a `step_type: tool` stream event before
+the successful structured result. The bridge permits that exact terminal tool
+name, consistent with the dedicated profile's `tools: [finish]`; unknown or
+other tool events still reject the entire batch, even if a later finish follows.
+See Google's [built-in tools reference](https://antigravity.google/docs/sdk/tools).
+This check validates returned events and is not an execution barrier for the CLI.

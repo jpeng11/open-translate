@@ -36,6 +36,7 @@ job = json.loads(event['message']['content'].rsplit('\\n\\n', 1)[-1])
 Path(RECORD).write_text(json.dumps({'args': args, 'event': event, 'cwd': os.getcwd(), 'files': os.listdir('.'), 'profile': Path('.agents/agents/open-translate-translator/agent.md').read_text()}))
 items = [{'id': i['id'], 'text': i['text'].replace('Bonjour', 'Hello').replace('monde', 'world'), 'detected_source_lang': 'fr'} for i in reversed(job['items'])]
 print(json.dumps({'event': 'init', 'session_id': 'fake'}))
+print(json.dumps({'event': 'step_update', 'step_update': {'step_type': 'tool', 'tool_name': 'finish'}}))
 print(json.dumps({'event': 'result', 'result': {'status': 'SUCCESS', 'structured_output': {'translations': items}}}))
 """.replace('RECORD', repr(str(self.record))))
 
@@ -111,6 +112,17 @@ print(json.dumps({'event': 'result', 'result': {'status': 'SUCCESS', 'structured
                 self.assertEqual(caught.exception.code, code)
         response = {'event': 'result', 'result': {'status': 'SUCCESS', 'response': json.dumps({'translations': []})}}
         self.assertEqual(AgyAgent.parse_result(json.dumps(response).encode(), 0, ''), {'translations': []})
+
+    def test_builtin_finish_submission_is_allowed_but_other_tool_events_are_rejected(self):
+        result = {'event': 'result', 'result': {'status': 'SUCCESS', 'structured_output': {'translations': []}}}
+        finish = {'event': 'step_update', 'step_update': {'step_type': 'tool', 'tool_name': 'finish'}}
+        encode = lambda events: '\n'.join(json.dumps(event) for event in events).encode()
+        self.assertEqual(AgyAgent.parse_result(encode([finish, result]), 0, ''), {'translations': []})
+        for name in ('read_file', 'run_command', 'invoke_subagent', None):
+            tool = {'event': 'step_update', 'step_update': {'step_type': 'tool', 'tool_name': name}}
+            with self.subTest(tool=name), self.assertRaises(BridgeError) as caught:
+                AgyAgent.parse_result(encode([tool, finish, result]), 0, '')
+            self.assertEqual(caught.exception.code, 'agy_tool_use')
 
     def test_excess_output_is_rejected(self):
         path = self.script('print("x" * ' + str(MAX_RESPONSE + 1) + ')')

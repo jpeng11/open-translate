@@ -125,8 +125,12 @@ class AgyAgent(BatchTranslator):
             raise BridgeError(502, "agy_failed", "AGY did not complete a translation; check CLI auth, version and model")
         if len(results) != 1:
             raise BridgeError(502, "invalid_agy_response", "AGY must return exactly one completed result")
+        # AGY reports its built-in final-output submission as a finish tool.
+        # The dedicated profile permits only that terminal operation. All other
+        # (including unknown/unnamed) tool events still invalidate the batch.
         if any(isinstance(event, dict) and isinstance(event.get("step_update"), dict)
-               and event["step_update"].get("step_type") == "tool" for event in events):
+               and event["step_update"].get("step_type") == "tool"
+               and event["step_update"].get("tool_name") != "finish" for event in events):
             raise BridgeError(502, "agy_tool_use", "AGY attempted a tool operation instead of translating directly")
         structured = last.get("structured_output")
         if isinstance(structured, dict):
