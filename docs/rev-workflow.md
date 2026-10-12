@@ -39,3 +39,33 @@ Observed difference: the original leaves discovery attributes on the paragraph a
 For each remaining area: freeze representative inputs; record the original interactions/output/errors/network boundary; run the same fixture through the replacement; compare semantic output and screenshots; document tolerated differences; fix regressions; only then update the baseline. For exports, compare extracted text, links/styles, pagination, language order and overflow, as well as rendering. For media, compare cue timing, stop/cancellation, recognition quality and measured latency. For devices, load and exercise the actual extension on that browser/device.
 
 UI follows the original's compact language → service → translate → quick tools → settings flow and white/pink styling, using the requested Rare UI components. Open Translate retains its own branding and user-agent connection settings. Account/billing screens and private hosted backends are not replacement dependencies. No claim of pixel-identical UI or complete commercial-product parity is made while the gate is incomplete.
+
+## Repeatable reconstruction loop
+
+Build a stable checkout before paired comparisons. Every browser bundle now
+contains `build-evidence.json`, tying its complete file inventory to the source
+inputs. Reference runners reject changed or stale bundles before testing and
+verify the bundle again after observations. This prevents evidence from a previous
+build being presented as acceptance of new source code.
+
+```bash
+npm run build
+npm run rev -- compare /private/path/to/reference-extension --all
+npm run parity
+```
+
+The extended webpage and media suites retain explicit `matched`, `different`
+and `reference-unresolved` cases. A failure to observe the original remains
+unknown; extra functionality in the replacement is recorded as a difference.
+They exit 1 while any mismatch or reference uncertainty remains. Reports go to
+ignored `dist/parity`, with sanitized summaries indexed under `docs/parity`.
+Screenshots, endpoint fixture traffic and the original proprietary bundle stay
+private. The strict product gate remains separate from independent replacement
+regression tests.
+
+After external configuration was excluded, the original skipped the old short
+`Hello dynamic` fragment before any custom-service request. The private failed
+run is retained. The base dynamic case now uses a complete English paragraph;
+this establishes insertion handling for that paragraph and does not resolve the
+original's short-text detection threshold. Extended input probes retain that
+heuristic uncertainty separately.

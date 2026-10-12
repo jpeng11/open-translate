@@ -18,7 +18,10 @@ async function rea(args,destination){
  await writeFile(destination,stdout);const result=JSON.parse(stdout);
  if(result.error || result.ok===false || result.status==='error')throw new Error('REA returned an error envelope; inspect the private evidence file.');return result;
 }
-if(command==='compare' && url){const code=await new Promise((resolve,reject)=>{const child=spawn(process.execPath,['scripts/reference-parity.mjs',url],{stdio:'inherit'});child.on('error',reject);child.on('close',resolve);});process.exit(code??1);}
+if(command==='compare' && url){
+ const suites=extension==='--all'?['reference-parity','reference-web','reference-media']:['reference-parity'];
+ let result=0;for(const suite of suites){const code=await new Promise((resolve,reject)=>{const child=spawn(process.execPath,[`scripts/${suite}.mjs`,url],{stdio:'inherit'});child.on('error',reject);child.on('close',resolve);});if(code!==0)result=1;}process.exit(result);
+}
 if(command!=='capture' || !url)throw new Error('Usage: npm run rev -- capture https://target.example [path/to/reference-extension]');
 const parsed=new URL(url);if(!['http:','https:'].includes(parsed.protocol) || parsed.username || parsed.password || parsed.search)throw new Error('Use an HTTP(S) URL without credentials or query tokens.');
 const profile=await mkdtemp(join(tmpdir(),'open-translate-rev-')),output=resolve('dist/rev/'+new Date().toISOString().replaceAll(':','-'));await mkdir(output,{recursive:true,mode:0o700});let context;
