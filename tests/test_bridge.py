@@ -43,6 +43,8 @@ class FakeAgentHandler(BaseHTTPRequestHandler):
         self.send_response(status)
         self.send_header("Content-Type", "application/json")
         self.send_header("Content-Length", str(len(encoded)))
+        if status == 302 and hasattr(self.server, "redirect_url"):
+            self.send_header("Location", self.server.redirect_url)
         self.end_headers()
         try:
             self.wfile.write(encoded)
@@ -194,6 +196,14 @@ class BridgeIntegrationTests(unittest.TestCase):
         self.upstream.respond = lambda data: (200, envelope({"translations": translations(data)}))
         self.assertEqual(request(self.translate_url, JOB)[0], 200)
 
+    def test_provider_redirect_is_not_followed(self):
+        with fake_agent() as (destination, destination_url):
+            self.upstream.redirect_url = destination_url + "/v1/chat/completions"
+            self.upstream.respond = lambda _: (302, {})
+            status, body, _ = request(self.translate_url, JOB)
+            self.assertEqual((status, body["error"]["code"]), (502, "upstream_http_302"))
+            self.assertEqual(destination.requests, [])
+
     def test_busy_response_does_not_call_provider(self):
         self.bridge.slots.acquire()
         self.bridge.slots.acquire()
@@ -246,6 +256,35 @@ class BridgeIntegrationTests(unittest.TestCase):
             capture_output=True, text=True, timeout=5)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(len(json.loads(result.stdout)["translations"]), 1)
+
+    def test_documented_cli_starts_a_working_bridge(self):
+        with socket.socket() as reservation:
+            reservation.bind(("127.0.0.1", 0))
+            port = reservation.getsockname()[1]
+        env = {k: v for k, v in os.environ.items() if not k.startswith("OPEN_TRANSLATE_")}
+        env["OPEN_TRANSLATE_TOKEN"] = "cli-test-token"
+        process = subprocess.Popen([sys.executable, "-m", "open_translate", "--base-url", self.upstream_url,
+            "--model", "user-agent", "--port", str(port)], cwd=Path(__file__).resolve().parents[1], env=env,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        try:
+            base = f"http://127.0.0.1:{port}"
+            for _ in range(100):
+                if process.poll() is not None:
+                    self.fail(process.communicate(timeout=2))
+                try:
+                    if request(base + "/health")[0] == 200:
+                        break
+                except (URLError, OSError):
+                    time.sleep(0.01)
+            else:
+                self.fail("CLI server did not become ready")
+            status, body, _ = request(base + "/translate?token=cli-test-token", JOB)
+            self.assertEqual(status, 200)
+            self.assertEqual(body["translations"][0]["text"], "Hello {0}")
+        finally:
+            process.terminate()
+            stdout, _ = process.communicate(timeout=3)
+        self.assertIn(f"Custom API URL: {base}/translate?token=cli-test-token", stdout)
 
 
 class ConfigurationTests(unittest.TestCase):
