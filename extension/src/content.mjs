@@ -1,6 +1,6 @@
 import {candidates,serialize,insertTranslation,restoreElement,sourceNodes,own,unwrapSegments,PAGE_STYLE} from './dom.mjs';
 import {pageRule} from './site-adapters.mjs';
-import {CaptionReader,CaptionOverlay,installSubtitleSidecar} from './captions.mjs';
+import {CaptionReader,CaptionOverlay,captionRoots,installSubtitleSidecar} from './captions.mjs';
 const api=globalThis.browser || chrome;
 let config={},active=false,epoch=0,processing=false,scanTimer,hovered,input,lastSelection='',captionOn=false,captionLast='';
 const states=new Map(),queue=new Set(),roots=new Set();let completed=0,failed=0,lastError='';
@@ -115,7 +115,7 @@ api.runtime.onMessage.addListener((message,_sender,reply)=>{
       case 'translate-input':config=await send({type:'settings.public'});return translateInput();
       case 'page.status':return {active,completed,failed,error:lastError};
       case 'captions.toggle':config=await send({type:'settings.public'});captionOn=!captionOn;addRoot(document);if(captionOn)captionReader.start(config);else {captionReader.stop();captionLast='';captionOverlay?.hide();}scanCaptions();notification(captionOn?'Caption translation is on. Enable the video’s subtitles.':'Caption translation is off.');return {captionOn};
-      case 'captions.sidecar':{const video=document.querySelector('video');if(!video)throw new Error('Open a page with a video before adding subtitles.');sidecarCleanup?.();sidecarCleanup=installSubtitleSidecar(video,message.text,message.name);if(captionOn)captionReader.scan();return {};}
+      case 'captions.sidecar':{const video=captionRoots(document).flatMap(root=>Array.from(root.querySelectorAll('video')))[0];if(!video)throw new Error('Open a page with a video before adding subtitles.');sidecarCleanup?.();sidecarCleanup=installSubtitleSidecar(video,message.text,message.name);if(captionOn)captionReader.scan();return {};}
       case 'page.mode':{config.mode=message.mode;for(const [el,state]of states)if(state.status==='done'){restoreElement(el);states.delete(el);}if(active)scan();return {};}
       default:return {};
     }
