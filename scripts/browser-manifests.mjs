@@ -8,7 +8,7 @@ export function browserManifest(source,browser) {
   manifest.background={scripts:['background.js'],persistent:false};
   if(browser==='firefox')manifest.browser_specific_settings={
     gecko:{id:'open-translate@open-translate.local',strict_min_version:'140.0',data_collection_permissions:{required:['websiteContent'],optional:[]}},
-    gecko_android:{strict_min_version:'140.0'}
+    gecko_android:{strict_min_version:'142.0'}
   };
   // Safari grants site access through its native extension controls. Apple
   // packaging creates the macOS/iOS host applications from this directory.

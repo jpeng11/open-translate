@@ -159,7 +159,18 @@ def main():
                 assert audio['result']['text']=='Firefox audio',audio
                 image=client.async_js('const done=arguments[arguments.length-1];window.wrappedJSObject.browser.storage.session.set({pendingImage:{url:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aGYQAAAAASUVORK5CYII=",time:Date.now()}}).then(()=>window.wrappedJSObject.browser.runtime.sendMessage({type:"image.pending"})).then(done);')
                 assert image.get('ok') and image['result'].get('image','').startswith('data:image/png'),image
-                print('Firefox actual MV3 acceptance passed: trusted settings, workspace/page/mixed text, transcription and image fallback.')
+                client.call('WebDriver:SwitchToWindow',handle=handles[-1])
+                client.js('document.querySelector("#input").focus();')
+                client.call('WebDriver:SwitchToWindow',handle=handles[0])
+                translated_input=client.async_js('const done=arguments[arguments.length-1];window.wrappedJSObject.browser.tabs.sendMessage(globalThis.acceptanceTab,{type:"translate-input"}).then(done);')
+                assert translated_input.get('ok'),translated_input
+                restored=client.async_js('const done=arguments[arguments.length-1];window.wrappedJSObject.browser.tabs.sendMessage(globalThis.acceptanceTab,{type:"page.restore"}).then(done);')
+                assert restored.get('ok'),restored
+                client.call('WebDriver:SwitchToWindow',handle=handles[-1])
+                assert client.js('return document.querySelector("#input").value;')=='Translated Firefox input'
+                assert client.js('return document.querySelectorAll("[data-ot-target],[data-ot-segment]").length;')==0
+                assert client.js('return document.querySelector("#paragraph").textContent;')=='Firefox paragraph'
+                print('Firefox actual MV3 acceptance passed: trusted settings, workspace/page/input translation, exact restore, content credential isolation, transcription and image fallback.')
             except Exception:
                 log.flush();log.seek(0);print(log.read()[-6000:]);raise
             finally:

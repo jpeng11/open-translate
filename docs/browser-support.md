@@ -7,7 +7,8 @@ translation engine and Rare UI workspace are used in every build.
 Chrome and Edge use an MV3 service worker with a dedicated offscreen worker for
 long model requests. Firefox and Safari use an event background script and execute
 translation, image loading and transcription there; neither references Chromium's
-unsupported offscreen API. Firefox's declared minimum is 140 on desktop/Android.
+unsupported offscreen API. Firefox's declared minimum is 140 on desktop.
+Android's minimum is 142, matching Mozilla's built-in consent support.
 The Firefox manifest declares website-content transmission because the user's
 chosen endpoint receives the text/images/audio submitted for translation.
 
@@ -35,7 +36,7 @@ encryption; someone with access to that profile can inspect its contents.
 
 `python3 scripts/test-firefox.py` launches a real temporary Firefox extension,
 configures its endpoint, and checks workspace/page translation, mixed root text,
-trusted storage, transcription and image handoff. Install the test browser with
+trusted storage, input translation, exact restore, content credential isolation, transcription and image handoff. Install the test browser with
 `npx playwright install firefox`, or pass `--binary /path/to/firefox`.
 The test never modifies the user's ordinary browser profile.
 
