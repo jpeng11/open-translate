@@ -1,11 +1,12 @@
 // Local glyph masking and harmonic background reconstruction. This keeps image
 // pixels outside recognized word boxes untouched and never uploads image data.
-export function inpaintRegions(image,boxes,{iterations=35}={}) {
+export function inpaintRegions(image,boxes,{iterations=35,padding=3}={}) {
+  if(!Number.isInteger(padding) || padding<1 || padding>8)throw new RangeError('Inpainting padding must be between one and eight pixels.');
   const {width,height,data}=image,original=new Uint8ClampedArray(data),mask=new Uint8Array(width*height),regions=[];
   for(const box of boxes){
     // OCR boxes describe the detected core, sometimes excluding the outer
     // antialiasing pixels. Sample outside that fringe and include it in the mask.
-    const x0=Math.max(1,Math.floor(box.x0)-3),y0=Math.max(1,Math.floor(box.y0)-3),x1=Math.min(width-2,Math.ceil(box.x1)+3),y1=Math.min(height-2,Math.ceil(box.y1)+3);
+    const x0=Math.max(1,Math.floor(box.x0)-padding),y0=Math.max(1,Math.floor(box.y0)-padding),x1=Math.min(width-2,Math.ceil(box.x1)+padding),y1=Math.min(height-2,Math.ceil(box.y1)+padding);
     if(x1<=x0 || y1<=y0)continue;
     const edge=[[],[],[]];for(let x=x0;x<=x1;x++)for(const y of [y0,y1])for(let c=0;c<3;c++)edge[c].push(original[(y*width+x)*4+c]);
     for(let y=y0+1;y<y1;y++)for(const x of [x0,x1])for(let c=0;c<3;c++)edge[c].push(original[(y*width+x)*4+c]);

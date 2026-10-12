@@ -17,7 +17,8 @@ export function repairPdfBackground(image,boxes) {
     for(let x=x0;x<=x1;x++){add(x,y0);add(x,y1);}for(let y=y0;y<=y1;y++){add(x0,y);add(x1,y);}
     for(let index=0;index<queue.length;index++){const [x,y]=queue[index];preserved.add(y*image.width+x);if(x>x0)add(x-1,y);if(x<x1)add(x+1,y);if(y>y0)add(x,y-1);if(y<y1)add(x,y+1);}
   }
-  inpaintRegions(image,boxes);for(const index of preserved)for(let channel=0;channel<4;channel++)image.data[index*4+channel]=original[index*4+channel];return image;
+  // PDF regions also border artwork; retain the narrower one-pixel mask fringe.
+  inpaintRegions(image,boxes,{padding:2});for(const index of preserved)for(let channel=0;channel<4;channel++)image.data[index*4+channel]=original[index*4+channel];return image;
 }
 export function pdfHasArtwork(image,box,background) {
   const x0=Math.max(0,Math.floor(box.x0)),y0=Math.max(0,Math.floor(box.y0)),x1=Math.min(image.width,Math.ceil(box.x1)),y1=Math.min(image.height,Math.ceil(box.y1));let different=0,count=0;

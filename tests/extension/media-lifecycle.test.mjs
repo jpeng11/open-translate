@@ -73,3 +73,7 @@ test('CJK OCR removes segmentation separators without changing Latin, Korean or 
 test('inpainting includes antialiasing strokes just outside tight OCR bounds',async()=>{
  const {inpaintRegions}=await import('../../extension/src/image-inpaint.mjs'),width=32,height=24,data=new Uint8ClampedArray(width*height*4);for(let i=0;i<data.length;i+=4)data.set([205,220,232,255],i);for(let y=7;y<=15;y++)for(let x=9;x<=20;x++)if(x<12 || x>18)data.set([20,30,40,255],(y*width+x)*4);inpaintRegions({width,height,data},[{x0:10,y0:7,x1:19,y1:15}]);for(let y=7;y<=15;y++)for(let x=9;x<=20;x++)assert.ok(data[(y*width+x)*4]>190);assert.deepEqual([...data.slice(0,4)],[205,220,232,255]);
 });
+
+test('OCR and PDF callers can choose different mask fringes without altering outer pixels',async()=>{
+ const {inpaintRegions}=await import('../../extension/src/image-inpaint.mjs'),width=32,height=24,make=()=>{const data=new Uint8ClampedArray(width*height*4);for(let i=0;i<data.length;i+=4)data.set([205,220,232,255],i);data.set([20,30,40,255],(10*width+8)*4);return {width,height,data};},ocr=make(),pdf=make(),box={x0:10,y0:7,x1:19,y1:15};inpaintRegions(ocr,[box]);inpaintRegions(pdf,[box],{padding:2});assert.ok(ocr.data[(10*width+8)*4]>190);assert.equal(pdf.data[(10*width+8)*4],20);assert.throws(()=>inpaintRegions(make(),[box],{padding:0}),RangeError);
+});
