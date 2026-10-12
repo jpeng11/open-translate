@@ -59,3 +59,16 @@ test('Rare UI navigation, progress widgets, popup and reduced-motion layout',asy
  const popup=await context.newPage();await popup.setViewportSize({width:350,height:600});await popup.goto(`chrome-extension://${id}/popup.html`);await expect(popup.locator('#target')).toHaveValue('fr');await expect(popup.locator('#popup-orb [data-slot="fluid-orb"]')).toBeVisible();await expect(popup.getByRole('link',{name:'Rare UI'})).toHaveAttribute('href','https://rareui.com');await popup.screenshot({path:'test-results/rare-ui-popup.png'});await popup.close();
 });
 test('image context-menu handoff loads a bounded user-selected image',async()=>{const page=await app('images');const url=await page.evaluate(()=>{const canvas=document.createElement('canvas');canvas.width=200;canvas.height=100;canvas.getContext('2d').fillRect(0,0,200,100);return canvas.toDataURL('image/png');});await worker.evaluate(async url=>chrome.storage.session.set({pendingImage:{url,time:Date.now()}}),url);await page.reload();await expect(page.locator('#image-translate')).toBeEnabled();expect(await page.locator('#image-preview').evaluate(img=>img.naturalWidth)).toBe(200);expect(await worker.evaluate(async()=>!!(await chrome.storage.session.get('pendingImage')).pendingImage)).toBe(false);await page.close();});
+test('popup language labels and display/cache controls persist through reopening',async()=>{
+ await settings({source:'auto',target:'fr',cache:false,mode:'bilingual'});
+ let popup=await context.newPage();await popup.goto(`chrome-extension://${id}/popup.html`);
+ await expect(popup.locator('#source')).toHaveValue('auto');
+ expect(await popup.locator('#source option:checked').textContent()).toBe('Auto Detect');
+ expect(await popup.locator('#target option:checked').textContent()).toBe('Français');
+ await popup.locator('#mode').selectOption('translation');
+ await expect.poll(()=>worker.evaluate(async()=> (await chrome.storage.local.get('settings')).settings.mode)).toBe('translation');
+ await popup.locator('#cache').check();
+ await expect.poll(()=>worker.evaluate(async()=> (await chrome.storage.local.get('settings')).settings.cache)).toBe(true);
+ await popup.close();popup=await context.newPage();await popup.goto(`chrome-extension://${id}/popup.html`);
+ await expect(popup.locator('#mode')).toHaveValue('translation');await expect(popup.locator('#cache')).toBeChecked();await popup.close();
+});
