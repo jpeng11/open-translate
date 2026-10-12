@@ -65,3 +65,6 @@ test('live cancellation drops pending results and overload does not flush into a
   live.pending=4;live.running=true;live.stream={getTracks:()=>[]};live.segmenter={flush(){throw new Error('Must not flush into a full queue');}};live.enqueue(encodeWav(frame(160,.2)),1,1.01);assert.equal(live.running,false);assert.match(statuses.at(-1),/falling behind/);
  }finally{globalThis.chrome=oldChrome;}
 });
+test('screen OCR normalized presets and reversed drag stay inside the captured video',async()=>{
+ const {normalizeScreenRegion,regionFromDrag}=await import('../../extension/src/screen-region.mjs');assert.deepEqual(normalizeScreenRegion('top'),{left:0,top:0,width:1,height:.3});assert.deepEqual(normalizeScreenRegion(.3),{left:0,top:.7,width:1,height:.3});assert.deepEqual(regionFromDrag({x:.9,y:.8},{x:.2,y:.3}),{left:.2,top:.3,width:.7,height:.5});assert.deepEqual(regionFromDrag({x:-.2,y:-.4},{x:2,y:3}),{left:0,top:0,width:1,height:1});assert.throws(()=>normalizeScreenRegion({left:.8,top:0,width:.5,height:.2}));assert.throws(()=>normalizeScreenRegion({left:0,top:0,width:NaN,height:.2}));assert.throws(()=>regionFromDrag({x:.3,y:.3},{x:.301,y:.301}));
+});
