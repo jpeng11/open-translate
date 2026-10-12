@@ -3,7 +3,7 @@
 import {implementationDigest} from './parity-source.mjs';
 import {chromium,expect} from '@playwright/test';
 import {createServer} from 'node:http';
-import {mkdir,readFile,writeFile} from 'node:fs/promises';
+import {mkdir,readFile,writeFile,rm} from 'node:fs/promises';
 import {resolve,join} from 'node:path';
 import {createHash} from 'node:crypto';
 const implementationSha256=await implementationDigest();
@@ -15,7 +15,7 @@ if(referenceContentSha256!=='bfe7e3e640bf90bb6b1103b0fe2e097068a751ca182beadc0bb
 const fixture='<!doctype html><html lang="en"><head><title>Reference parity fixture</title></head><body><main><p id="first">Hello <b>world</b> {0}.</p><p id="second">Thank you for your help.</p><pre id="code">Hello code</pre><p id="excluded" translate="no">Hello excluded</p><textarea>Hello input</textarea></main></body></html>';
 const translate=text=>text.replaceAll('Hello','Bonjour').replaceAll('world','monde').replaceAll('Thank you for your help','Merci pour votre aide');
 const requests=[];const server=createServer(async(req,res)=>{res.setHeader('Access-Control-Allow-Origin','*');res.setHeader('Access-Control-Allow-Headers','*');if(req.method==='OPTIONS'){res.end();return;}if(req.url==='/page'){res.setHeader('Content-Type','text/html');res.end(fixture);return;}if(req.method!=='POST'){res.statusCode=404;res.end();return;}let raw='';for await(const part of req)raw+=part;const body=JSON.parse(raw);requests.push(body);res.setHeader('Content-Type','application/json');res.end(JSON.stringify({translations:body.text_list.map(text=>({text:translate(text),detected_source_lang:'en'}))}));});await new Promise(r=>server.listen(0,'127.0.0.1',r));const origin=`http://127.0.0.1:${server.address().port}`;
-const output=resolve('dist/parity');await mkdir(output,{recursive:true});const results={};
+const output=resolve('dist/parity');await mkdir(output,{recursive:true});await rm(join(output,'reference-results.json'),{force:true});const results={};
 try{for(const kind of ['original','replacement']){
  const directory=resolve(kind==='original'?reference:'dist/chrome');let context;
  try{

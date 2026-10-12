@@ -36,7 +36,7 @@ The [REA workflow](rev-workflow.md) executed the actual REA 6.4.0 CLI against an
 
 ## Real agents and local speech
 
-AGY acceptance uses the user's Google Antigravity CLI 1.3.2, cached login and model `gemini-3.8-flash-low`. A prior real standalone Chromium→Python bridge→AGY check translated `Bonjour <b>monde</b> {0}.` to `Hello <b>world</b> {0}.` and `Merci pour votre aide.` to `Thank you for your help.`, then restored source DOM. Repeat against the updated implementation:
+AGY acceptance uses the user's Google Antigravity CLI 1.3.2, cached login and model `gemini-3.8-flash-low`. The updated implementation also passed a real standalone Chromium→Python bridge→AGY check translated `Bonjour <b>monde</b> {0}.` to `Hello <b>world</b> {0}.` and `Merci pour votre aide.` to `Thank you for your help.`, then restored source DOM. The latest live check passed at `882d384` with inline formatting, placeholders and restoration intact. Reproduce:
 
 ```bash
 node scripts/live-check.mjs "$HOME/Library/Application Support/Open Translate/standalone-connection.json"

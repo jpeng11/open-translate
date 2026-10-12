@@ -6,7 +6,19 @@ import {resolve,join} from 'node:path';
 import {tmpdir} from 'node:os';
 const [command,url,extension]=process.argv.slice(2);
 const runner=resolve('node_modules/rea-agents/scripts/rea.mjs');
-async function rea(args,destination){await new Promise((resolve,reject)=>{const child=spawn(process.execPath,[runner,...args,'--json'],{stdio:['ignore','pipe','pipe']});let stdout='',stderr='';child.stdout.on('data',d=>{stdout+=d;if(stdout.length>32e6)child.kill();});child.stderr.on('data',d=>stderr+=d);child.on('error',reject);child.on('close',code=>{if(code)return reject(new Error('REA failed; '+stderr.slice(0,500)));writeFile(destination,stdout).then(()=>resolve(JSON.parse(stdout)),reject);});});const result=JSON.parse(await readFile(destination,'utf8'));if(result.error || result.ok===false || result.status==='error')throw new Error('REA returned an error envelope; inspect the private evidence file.');return result;}
+async function rea(args,destination){
+ const stdout=await new Promise((resolve,reject)=>{
+  const child=spawn(process.execPath,[runner,...args,'--json'],{stdio:['ignore','pipe','pipe']});let stdout='',stderr='',oversized=false;
+  const timer=setTimeout(()=>child.kill('SIGKILL'),60000);
+  child.stdout.on('data',data=>{stdout+=data;if(stdout.length>32e6){oversized=true;child.kill('SIGKILL');}});
+  child.stderr.on('data',data=>{if(stderr.length<65536)stderr+=data;});
+  child.on('error',error=>{clearTimeout(timer);reject(error);});
+  child.on('close',code=>{clearTimeout(timer);if(code || oversized)reject(new Error('REA failed or exceeded its runtime/output limit; '+stderr.slice(0,500)));else resolve(stdout);});
+ });
+ await writeFile(destination,stdout);const result=JSON.parse(stdout);
+ if(result.error || result.ok===false || result.status==='error')throw new Error('REA returned an error envelope; inspect the private evidence file.');return result;
+}
+if(command==='compare' && url){const code=await new Promise((resolve,reject)=>{const child=spawn(process.execPath,['scripts/reference-parity.mjs',url],{stdio:'inherit'});child.on('error',reject);child.on('close',resolve);});process.exit(code??1);}
 if(command!=='capture' || !url)throw new Error('Usage: npm run rev -- capture https://target.example [path/to/reference-extension]');
 const parsed=new URL(url);if(!['http:','https:'].includes(parsed.protocol) || parsed.username || parsed.password || parsed.search)throw new Error('Use an HTTP(S) URL without credentials or query tokens.');
 const profile=await mkdtemp(join(tmpdir(),'open-translate-rev-')),output=resolve('dist/rev/'+new Date().toISOString().replaceAll(':','-'));await mkdir(output,{recursive:true,mode:0o700});let context;

@@ -20,12 +20,13 @@ A bulk static REA attempt hit its provider deadline. It is recorded as incomplet
 
 ```bash
 npm run build
-npm run parity:reference -- /private/path/to/reference-extension
+npm run rev -- compare /private/path/to/reference-extension
+# Equivalent: npm run parity:reference -- /private/path/to/reference-extension
 npm run parity
 npm run parity -- --strict
 ```
 
-The reference runner loads the actual original and replacement in separate clean profiles. Both use the same local page, English→French settings, and deterministic Custom API response. It asserts target text, source-node identity, `{0}`, target language and restored source content. It captures both popup/page screenshots in `dist/parity/`. Reference version and content hash are recorded. Only sanitized results are committed in [reference-results.json](parity/reference-results.json).
+The reference runner loads the actual original and replacement in separate clean profiles. Both use the same local page, English→French settings, and deterministic Custom API response. It asserts target text, source-node identity, `{0}`, target language and restored source content. It captures both popup/page screenshots in `dist/parity/`. Reference version and content hash are recorded. The reference result includes a digest of implementation/build inputs and the gate rejects stale evidence after code changes. Only sanitized results are committed in [reference-results.json](parity/reference-results.json).
 
 Observed difference: the original leaves discovery attributes on the paragraph after restoration; Open Translate restores the entire fixture DOM exactly. The paired semantic checks agree. Translation output is deterministic here; this is not an evaluation of either product's commercial model quality.
 
