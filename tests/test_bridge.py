@@ -254,7 +254,8 @@ class BridgeIntegrationTests(unittest.TestCase):
                 self.assertNotIn("translations", body)
 
     def test_malformed_and_truncated_agent_responses(self):
-        malformed = [None, {}, {"choices": []}, {"choices": [{"message": {"content": "not json"}}]},
+        malformed = [None, {}, {"choices": []}, {"choices": [None]}, {"choices": ["text"]},
+                     {"choices": [{"message": []}]}, {"choices": [{"message": None}]}, {"choices": [{"message": {"content": "not json"}}]},
                      envelope({"translations": []}, finish="length"),
                      {"choices": [{"message": {"content": None, "tool_calls": []}}]}]
         for value in malformed:

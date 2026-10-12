@@ -174,7 +174,11 @@ class Agent(BatchTranslator):
         try:
             envelope = json.loads(data)
             choice = envelope["choices"][0]
+            if not isinstance(choice, dict):
+                raise ValueError("Expected a completion choice")
             message = choice["message"]
+            if not isinstance(message, dict):
+                raise ValueError("Expected a completion message")
             if (choice.get("finish_reason") in ("length", "content_filter", "tool_calls", "function_call")
                     or message.get("refusal") or message.get("tool_calls") or message.get("function_call")):
                 raise ValueError("Incomplete or refused response")
