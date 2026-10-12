@@ -5,7 +5,7 @@ import os
 import secrets
 from urllib.parse import quote
 
-from .agent import Agent
+from .agent import Agent, BridgeError, validate_job
 from .server import BridgeServer
 
 
@@ -29,7 +29,9 @@ def main():
     parser.add_argument("--concurrency", type=int, default=2)
     parser.add_argument("--no-json-mode", action="store_true", help="Omit response_format for endpoints without JSON mode")
     parser.add_argument("--allow-origin", action="append", default=[], help="Additional exact browser origin; repeatable")
-    parser.add_argument("--print-extension-config", action="store_true", help="Print extension settings instead of starting")
+    actions = parser.add_mutually_exclusive_group()
+    actions.add_argument("--print-extension-config", action="store_true", help="Print extension settings instead of starting")
+    actions.add_argument("--check", action="store_true", help="Send a small English-to-French translation to verify your endpoint")
     args = parser.parse_args()
     if not args.base_url or not args.model:
         parser.error("Set --base-url and --model, or OPEN_TRANSLATE_BASE_URL and OPEN_TRANSLATE_MODEL")
@@ -38,6 +40,14 @@ def main():
     token = os.getenv("OPEN_TRANSLATE_TOKEN") or secrets.token_urlsafe(32)
     try:
         agent = Agent(args.base_url, args.model, os.getenv("OPEN_TRANSLATE_API_KEY", ""), args.timeout, not args.no_json_mode)
+        if args.check:
+            try:
+                result = agent.translate(validate_job({"source_lang": "en", "target_lang": "fr",
+                                                       "text_list": ["Hello, world."]}))
+            except BridgeError as error:
+                parser.exit(1, f"{error.code}: {error}\n")
+            print(json.dumps(result, indent=2, ensure_ascii=False))
+            return
         url = f"http://127.0.0.1:{args.port}/translate?token={quote(token, safe='')}"
         config = extension_config(url)
         if args.print_extension_config:

@@ -2,7 +2,9 @@
 
 from collections import Counter
 from dataclasses import dataclass, field
+from http.client import HTTPException
 import json
+import math
 import re
 import secrets
 import socket
@@ -79,7 +81,7 @@ class Agent:
         self.url = endpoint_url(self.base_url)
         if not self.model.strip():
             raise ValueError("An agent model name is required")
-        if self.timeout <= 0:
+        if not math.isfinite(self.timeout) or self.timeout <= 0:
             raise ValueError("Agent timeout must be positive")
         self.opener = build_opener(NoRedirect())
 
@@ -99,7 +101,11 @@ class Agent:
                               f"Agent returned HTTP {status}; check its URL, model, credentials and limits") from None
         except (TimeoutError, socket.timeout):
             raise BridgeError(504, "upstream_timeout", "Agent request timed out") from None
-        except (URLError, OSError):
+        except URLError as error:
+            if isinstance(error.reason, (TimeoutError, socket.timeout)):
+                raise BridgeError(504, "upstream_timeout", "Agent request timed out") from None
+            raise BridgeError(502, "upstream_unavailable", "Cannot reach the agent endpoint") from None
+        except (OSError, HTTPException):
             raise BridgeError(502, "upstream_unavailable", "Cannot reach the agent endpoint") from None
         if len(data) > MAX_RESPONSE:
             raise BridgeError(502, "upstream_response_too_large", "Agent response exceeds 2 MiB")

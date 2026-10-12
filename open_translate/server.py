@@ -39,7 +39,10 @@ class BridgeHandler(BaseHTTPRequestHandler):
         origin = self.headers.get("Origin")
         if not origin:
             return True
-        parsed = urlsplit(origin)
+        try:
+            parsed = urlsplit(origin)
+        except ValueError:
+            return False
         return (origin in self.server.allowed_origins or
                 (parsed.scheme in ("chrome-extension", "moz-extension") and
                  bool(parsed.netloc) and not parsed.path and not parsed.query and not parsed.fragment))
