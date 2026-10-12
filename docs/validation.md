@@ -11,6 +11,8 @@ Acceptance date: 2026-10-12. Functional implementation at `882d384`, following s
 | User's Mac mini, Safari packaging | Full Xcode, macOS and iOS Simulator host schemes, signing disabled | Both native host/extension builds succeeded; Safari runtime/device acceptance pending |
 | User's Mac mini, local speech | Homebrew whisper.cpp and hash-verified multilingual tiny GGML model | Actual English WAV recognition and authenticated multipart HTTP route passed; unauthenticated access rejected |
 
+The user-designated Codex session independently pulled and tested an isolated clean snapshot at `663381b`: all 100 cases, actual Firefox, nine paired original cases, and stale-evidence rejection passed. The final OCR preference change at `498cd3d` additionally passed targeted PDF/OCR browser acceptance and an actual browser save/reload check synchronizing image and scanned-PDF languages.
+
 Commands: `npm run check`, `python3 -m unittest discover -q`, `python3 scripts/test-firefox.py`, and `npm run parity:reference -- /private/path/to/reference-extension`. A first Linux browser run exposed an ambiguous video locator after adding screen OCR; the test was scoped to its intended subtitle preview, then passed. The complete subsequent Mac run passed all 100 cases.
 
 ## Meaningful runtime coverage
