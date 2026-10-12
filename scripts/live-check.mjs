@@ -5,7 +5,9 @@ import {createServer} from 'node:http';
 import {resolve} from 'node:path';
 import {DEFAULTS,validateSettings} from '../extension/src/core.mjs';
 const file=process.argv[2];if(!file)throw new Error('Usage: node scripts/live-check.mjs /private/path/connection.json');
-const config=validateSettings({...DEFAULTS,...JSON.parse(await readFile(file,'utf8')),source:'fr',target:'en',batchSize:2,concurrency:1});
+const supplied=JSON.parse(await readFile(file,'utf8'));
+if(!['bridge','openai'].includes(supplied.provider) || !(supplied.provider==='bridge'?supplied.bridgeUrl:supplied.apiUrl))throw new Error('Supply standalone connection settings with an explicit provider and endpoint.');
+const config=validateSettings({...DEFAULTS,...supplied,source:'fr',target:'en',batchSize:2,concurrency:1});
 const server=createServer((_req,res)=>{res.setHeader('Content-Type','text/html');res.end('<!doctype html><html lang="fr"><head><title>Open Translate · live agent acceptance</title><style>body{margin:80px auto;max-width:700px;font:22px/1.7 system-ui;color:#20372e;background:#f8f9f4}p{margin:35px 0}a{color:#21735c}</style></head><body><main><p id="first">Bonjour <b>monde</b> {0}.</p><p id="second">Merci pour votre aide.</p></main></body></html>');});
 let context;
 try {

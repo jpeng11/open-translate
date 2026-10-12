@@ -11,6 +11,7 @@ The current bridge uses Homebrew Python 3.12 and the installed `~/.local/bin/agy
   bridge.log
   extension-config.json
   live-check.json
+  standalone-connection.json
 ```
 
 The directory and token-bearing files are private to your macOS account. The startup log and extension configuration contain the bridge access URL; keep them private. These runtime files are outside the Git repository.
@@ -23,7 +24,7 @@ Open the generated settings on the Mac:
 open -a TextEdit "$HOME/Library/Application Support/Open Translate/extension-config.json"
 ```
 
-For the standalone extension, build with `npm ci && npm run build` and load `dist/chrome` through Chrome/Edge’s extensions page in Developer mode. In **Workspace → Connection**, choose **Local bridge** and import `extension-config.json` using the file picker, or paste its full translation URL. Immersive Translate is not required.
+For the standalone extension, build with `npm ci && npm run build` and load `dist/chrome` through Chrome/Edge’s extensions page in Developer mode. In **Workspace → Connection**, choose **Local bridge** and import `standalone-connection.json` (the older `extension-config.json` is also accepted) using the file picker, or paste its full translation URL. Immersive Translate is not required.
 
 Use concurrency one, a 210-second timeout and batch size one to start, matching the bridge’s 180-second agent timeout. Select your target language and translate a webpage.
 
@@ -56,4 +57,4 @@ bridge_pid=$(cat "$HOME/Library/Application Support/Open Translate/bridge.pid")
 ps -p "$bridge_pid" -o pid=,command=
 ```
 
-If that output shows this bridge's `python ... -m open_translate` command, run `kill "$bridge_pid"`. The saved PID applies only to the original background process, not later manual restarts.
+If that output shows this bridge's `python ... -m open_translate` command, run `kill "$bridge_pid"`. The saved PID applies to the managed background process, not later manual restarts.
