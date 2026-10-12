@@ -1,10 +1,11 @@
+import {initializeUiLanguage,setUiText,t} from './i18n.mjs';
 import {LANGUAGES} from './core.mjs';
 import {mountRareUI} from '../ui/mount.tsx';
 import {$,api,send,status,languages} from './ui.mjs';
-languages();let settings;
-for(const id of ['source','target'])for(const [code,label] of LANGUAGES){if(id==='target' && code==='auto')continue;const option=document.createElement('option');option.value=code;option.textContent=code==='auto'?'Auto Detect':label;$(id).append(option);}
+initializeUiLanguage();languages();let settings;
+for(const id of ['source','target'])for(const [code,label] of LANGUAGES){if(id==='target' && code==='auto')continue;const option=document.createElement('option');option.value=code;option.textContent=code==='auto'?t('Auto Detect'):label;$(id).append(option);}
 function chooseLanguage(id,value){if(!Array.from($(id).options).some(option=>option.value===value)){const option=document.createElement('option');option.value=option.textContent=value;$(id).append(option);}$(id).value=value;}
-send({type:'settings.get'}).then(config=>{settings=config;chooseLanguage('source',config.source);$('service').textContent=config.provider==='bridge'?'Local agent bridge ↗':`${config.model || 'OpenAI-compatible'} ↗`;$('hover-toggle').setAttribute('aria-pressed',String(config.hover));chooseLanguage('target',config.target);$('cache').checked=config.cache;$('mode').value=config.mode;}).catch(error=>status('status',error.message,true));
+send({type:'settings.get'}).then(config=>{settings=config;chooseLanguage('source',config.source);setUiText($('service'),config.provider==='bridge'?'Local agent bridge ↗':`${config.model || 'OpenAI-compatible'} ↗`);$('hover-toggle').setAttribute('aria-pressed',String(config.hover));chooseLanguage('target',config.target);$('cache').checked=config.cache;$('mode').value=config.mode;}).catch(error=>status('status',error.message,true));
 for(const id of ['translate-page','page.restore','translate-selection','translate-input','captions.toggle'])$(id).onclick=async()=>{
   try {
     if(!settings)throw new Error('Settings are still loading.');
@@ -19,3 +20,5 @@ for(const [id,route]of [['workspace','settings'],['service','connection'],['docu
 $('hover-toggle').onclick=async()=>{try{if(!settings)throw new Error('Settings are still loading.');settings=await send({type:'settings.save',settings:{...settings,hover:!settings.hover}});$('hover-toggle').setAttribute('aria-pressed',String(settings.hover));status('status',settings.hover?'Point at a paragraph and press Alt Shift H.':'Mouse hover translation is off.');}catch(error){status('status',error.message,true);}};
 
 mountRareUI();
+
+window.addEventListener('ot-ui-language',()=>{const option=$('source').querySelector('option[value="auto"]');if(option)option.textContent=t('Auto Detect');});

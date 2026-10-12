@@ -1,8 +1,9 @@
+import {setUiText} from './i18n.mjs';
 import {LANGUAGES,batches} from './core.mjs';
 export const api=globalThis.browser || chrome;
 export const $=id=>document.getElementById(id);
 export async function send(message) {const response=await api.runtime.sendMessage(message);if(!response?.ok)throw new Error(response?.error?.message || 'Open Translate is unavailable.');return response.result;}
-export function status(id,text,error=false){const node=$(id);node.textContent=text;node.classList.toggle('error',error);}
+export function status(id,text,error=false){const node=$(id);setUiText(node,text);node.classList.toggle('error',error);}
 export function languages(){for(const [code,label]of LANGUAGES){const option=document.createElement('option');option.value=code;option.label=label;$('languages').append(option);}}
 export function download(data,name,mime='text/plain') {
   const url=URL.createObjectURL(new Blob([data],{type:mime})),link=document.createElement('a');link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),10000);
