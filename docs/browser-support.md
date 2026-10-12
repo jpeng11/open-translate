@@ -5,8 +5,8 @@ Firefox desktop/Android and Safari macOS/iOS. The same independently implemented
 translation engine and Rare UI workspace are used in every build.
 
 Chrome and Edge use an MV3 service worker with a dedicated offscreen worker for
-long model requests. Firefox and Safari use an event background script and execute
-translation, image loading and transcription there; neither references Chromium's
+long model requests. Firefox uses an event background page; Safari uses its supported MV3 service worker. Both execute
+translation, image loading and transcription in the background; neither references Chromium's
 unsupported offscreen API. Firefox's declared minimum is 140 on desktop.
 Android's minimum is 142, matching Mozilla's built-in consent support.
 The Firefox manifest declares website-content transmission because the user's
@@ -68,3 +68,5 @@ support. Verify each target device before promising those capture workflows.
 - [Mozilla content script isolation and API access](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts)
 - [Apple Safari extension packaging](https://developer.apple.com/documentation/safariservices/packaging-a-web-extension-for-safari)
 - [Apple Safari extensions on macOS/iOS](https://developer.apple.com/safari/extensions/)
+
+Safari's worker declaration follows [Apple's MV3 guidance](https://developer.apple.com/documentation/safariservices/optimizing-your-web-extension-for-safari) and [WebKit support since 15.4](https://webkit.org/blog/12445/new-webkit-features-in-safari-15-4/). The Xcode converter confirms the worker manifest without a persistent-background warning.

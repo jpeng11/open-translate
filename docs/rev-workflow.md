@@ -28,6 +28,8 @@ npm run parity -- --strict
 
 The reference runner loads the actual original and replacement in separate clean profiles. Both use the same local page, English→French settings, and deterministic Custom API response. It asserts target text, source-node identity, `{0}`, target language and restored source content. It captures both popup/page screenshots in `dist/parity/`. Reference version and content hash are recorded. The reference result includes a digest of implementation/build inputs and the gate rejects stale evidence after code changes. Only sanitized results are committed in [reference-results.json](parity/reference-results.json).
 
+Observed instability: in some fresh-profile runs the original skipped a very short inline paragraph before issuing any API request. The paired fixture now uses a complete sentence; the short-fragment heuristic remains an outstanding difference to investigate. A failed run writes private failure evidence and never leaves a new success result.
+
 Observed difference: the original leaves discovery attributes on the paragraph after restoration; Open Translate restores the entire fixture DOM exactly. The paired semantic checks agree. Translation output is deterministic here; this is not an evaluation of either product's commercial model quality.
 
 ## Release gate

@@ -10,7 +10,7 @@ export function browserManifest(source,browser) {
     gecko:{id:'open-translate@open-translate.local',strict_min_version:'140.0',data_collection_permissions:{required:['websiteContent'],optional:[]}},
     gecko_android:{strict_min_version:'142.0'}
   };
-  if(browser==='safari'){delete manifest.background.persistent;delete manifest.options_ui.open_in_tab;for(const content of manifest.content_scripts)delete content.match_about_blank;}
+  if(browser==='safari'){manifest.background={service_worker:'background.js'};delete manifest.options_ui.open_in_tab;for(const content of manifest.content_scripts)delete content.match_about_blank;}
   // Safari grants site access through its native extension controls. Apple
   // packaging creates the macOS/iOS host applications from this directory.
   return manifest;
