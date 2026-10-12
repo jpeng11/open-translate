@@ -2,7 +2,7 @@ import {candidates,serialize,insertTranslation,restoreElement,sourceNodes,own,un
 import {pageRule} from './site-adapters.mjs';
 import {CaptionReader,CaptionOverlay,captionRoots,installSubtitleSidecar} from './captions.mjs';
 const api=globalThis.browser || chrome;
-let config={},active=false,epoch=0,processing=false,scanTimer,hovered,input,lastSelection='',captionOn=false,captionLast='';
+let config={},active=false,epoch=0,processing=false,scanTimer,viewportTimer,hovered,input,lastSelection='',captionOn=false,captionLast='';
 const states=new Map(),queue=new Set(),roots=new Set();let completed=0,failed=0,lastError='';
 const send=async message=>{const response=await api.runtime.sendMessage(message);if(!response?.ok)throw new Error(response?.error?.message || 'Open Translate is unavailable.');return response.result;};
 const translate=texts=>send({type:'translate',job:{source_lang:config.source || 'auto',target_lang:config.target || 'en',text_list:texts}});
@@ -147,3 +147,6 @@ async function navigationChanged() {
 addEventListener('popstate',()=>void navigationChanged());
 addEventListener('hashchange',()=>void navigationChanged());
 setInterval(()=>void navigationChanged(),1000);
+function viewportChanged(){if(active && !viewportTimer)viewportTimer=setTimeout(()=>{viewportTimer=undefined;if(active)scan();},120);}
+addEventListener('resize',viewportChanged,{passive:true});
+  root.addEventListener('scroll',viewportChanged,{capture:true,passive:true});

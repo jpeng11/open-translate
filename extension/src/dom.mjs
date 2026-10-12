@@ -76,14 +76,20 @@ export function candidates(root,rule={}) {
   const elements=[...(root.nodeType===1 && root.matches(selector)?[root]:[]),...root.querySelectorAll(selector)];
   for(const element of elements)if(!ignored(element,rule.exclude))segmentMixed(element,selector,rule.exclude);
   const segments=Array.from(root.querySelectorAll('[data-ot-segment]'));
-  return [...new Set([...elements,...segments])].filter(element=>{
+  const eligible=[...new Set([...elements,...segments])].filter(element=>{
     if(ignored(element,rule.exclude) || element.closest('[hidden],[aria-hidden="true"]'))return false;
     if(!element.hasAttribute('data-ot-segment') && element.querySelector(selector))return false;
     const text=sourceNodes(element).map(n=>n.textContent).join('').trim();
     if(!text || !/[\p{L}]/u.test(text))return false;
     const style=getComputedStyle(element);
     return style.display!=='none' && style.visibility!=='hidden';
-  }).slice(0,5000);
+  });
+  // Keep observation bounded without permanently excluding the document tail.
+  // A scroll rescan can bring any paragraph into this viewport-first window.
+  if(eligible.length<=5000)return eligible;
+  const nearby=[],offscreen=[];
+  for(const element of eligible){const box=element.getBoundingClientRect();(box.bottom>-600 && box.top<innerHeight+600?nearby:offscreen).push(element);}
+  return [...nearby,...offscreen].slice(0,5000);
 }
 export function unwrapSegments(root) {
   for(const segment of root.querySelectorAll('[data-ot-segment]'))segment.replaceWith(...Array.from(segment.childNodes));

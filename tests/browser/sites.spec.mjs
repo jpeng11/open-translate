@@ -25,3 +25,8 @@ test('focused email fields never submit their value to the translation endpoint'
  const page=await context.newPage();await page.goto(origin+'/page');await page.evaluate(()=>{const email=document.createElement('input');email.id='private-email';email.type='email';email.value='private.person@example.invalid';document.body.append(email);email.focus();});
  const response=await command(page,'translate-input');expect(response.ok).toBe(false);await expect(page.locator('#private-email')).toHaveValue('private.person@example.invalid');expect(requests.some(job=>job.items.some(item=>item.text.includes('private.person@example.invalid')))).toBe(false);await page.close();
 });
+
+test('long-page scrolling reaches paragraphs beyond the candidate window',async()=>{
+ const page=await context.newPage();await page.goto(origin+'/page');await page.evaluate(()=>{const main=document.querySelector('#article');main.replaceChildren();for(let index=0;index<5105;index++){const paragraph=document.createElement('p');paragraph.id='long-'+index;paragraph.textContent=`Long reading paragraph ${index} with independently authored acceptance text.`;main.append(paragraph);}});
+ await command(page,'page.start');await expect(page.locator('#long-0 > [data-ot-target]')).toHaveText('Translated Long reading paragraph 0 with independently authored acceptance text.');await page.locator('#long-5104').scrollIntoViewIfNeeded();await expect(page.locator('#long-5104 > [data-ot-target]')).toHaveText('Translated Long reading paragraph 5104 with independently authored acceptance text.');await command(page,'page.restore');await expect(page.locator('[data-ot-target],[data-ot-segment]')).toHaveCount(0);await page.close();
+});
