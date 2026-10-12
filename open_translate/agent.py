@@ -1,6 +1,5 @@
 """Translate batches through an OpenAI-compatible Chat Completions endpoint."""
 
-from collections import Counter
 from dataclasses import dataclass, field
 from http.client import HTTPException
 import json
@@ -118,8 +117,8 @@ class BatchTranslator:
                 raise BridgeError(502, "empty_translation", "Agent returned an empty translation")
             mapping = protected[index]
             tokens = re.findall("⟦" + prefix + r"_\d+_\d+⟧", text)
-            if Counter(tokens) != Counter(mapping.keys()):
-                raise BridgeError(502, "placeholder_mismatch", "Agent changed protected markup; retry with a more reliable model")
+            if tokens != list(mapping):
+                raise BridgeError(502, "placeholder_mismatch", "Agent changed protected markup or its order; retry with a more reliable model")
             for token, original in mapping.items():
                 text = text.replace(token, original)
             if prefix in text:
@@ -176,7 +175,8 @@ class Agent(BatchTranslator):
             envelope = json.loads(data)
             choice = envelope["choices"][0]
             message = choice["message"]
-            if choice.get("finish_reason") in ("length", "content_filter") or message.get("refusal"):
+            if (choice.get("finish_reason") in ("length", "content_filter", "tool_calls", "function_call")
+                    or message.get("refusal") or message.get("tool_calls") or message.get("function_call")):
                 raise ValueError("Incomplete or refused response")
             content = message["content"]
             if not isinstance(content, str):

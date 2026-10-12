@@ -262,6 +262,31 @@ class BridgeIntegrationTests(unittest.TestCase):
                 self.upstream.respond = lambda _, v=value: (200, v)
                 self.assertEqual(request(self.translate_url, JOB)[0], 502)
 
+    def test_tool_responses_with_valid_translation_content_are_rejected(self):
+        for extra in ({"finish_reason": "tool_calls"}, {"finish_reason": "function_call"},
+                      {"message": {"tool_calls": [{"id": "call_1", "type": "function"}]}},
+                      {"message": {"function_call": {"name": "browse", "arguments": "{}"}}}):
+            def respond(data):
+                value = envelope({"translations": translations(data)})
+                value["choices"][0].update({k: v for k, v in extra.items() if k != "message"})
+                value["choices"][0]["message"].update(extra.get("message", {}))
+                return 200, value
+            with self.subTest(extra=extra):
+                self.upstream.respond = respond
+                status, body, _ = request(self.translate_url, JOB)
+                self.assertEqual((status, body["error"]["code"]), (502, "invalid_agent_response"))
+
+    def test_reordered_formatting_boundaries_are_rejected(self):
+        def respond(data):
+            items = translations(data)
+            import re
+            tokens = re.findall(r"⟦[^⟧]+⟧", items[0]["text"])
+            items[0]["text"] = items[0]["text"].replace(tokens[0], "TEMP").replace(tokens[1], tokens[0]).replace("TEMP", tokens[1])
+            return 200, envelope({"translations": items})
+        self.upstream.respond = respond
+        status, body, _ = request(self.translate_url, {**JOB, "text_list": ["Bonjour <b>monde</b> {0}"]})
+        self.assertEqual((status, body["error"]["code"]), (502, "placeholder_mismatch"))
+
     def test_cli_connection_check_over_real_http(self):
         env = {k: v for k, v in os.environ.items() if not k.startswith("OPEN_TRANSLATE_")}
         result = subprocess.run([sys.executable, "-m", "open_translate", "--base-url", self.upstream_url,

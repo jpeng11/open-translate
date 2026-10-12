@@ -66,3 +66,25 @@ test('known bridge errors have useful messages without exposing response bodies'
  const job={source_lang:'fr',target_lang:'en',text_list:['Bonjour']};
  await assert.rejects(translateBatch(job,DEFAULTS,async()=>new Response(JSON.stringify({error:{code:'agy_tool_use',message:'private source secret'}}),{status:502})),error=>error.code==='agy_tool_use' && !error.message.includes('private source secret'));
 });
+
+test('formatting boundaries cannot be reordered by a direct endpoint or bridge',()=>{
+ for(const direct of [true,false]){
+  const item=protect('Bonjour <b>monde</b> {0}',[],'ordercheck',direct);
+  const markers=item.text.match(direct?/⟦[^⟧]+⟧/g:/<[^>]+>|\{\d+\}/g);
+  const changed=item.text.replace(markers[0],'TEMP').replace(markers[1],markers[0]).replace('TEMP',markers[1]);
+  assert.throws(()=>item.restore(changed),error=>error.code==='placeholder_mismatch');
+ }
+ // Glossary tokens are allocated after markup; validation follows their actual text order.
+ const item=protect('Open Translate <b>bonjour</b>',[{source:'Open Translate',target:'Open Translate™'}],'mixedorder');
+ assert.equal(item.restore(item.text),'Open Translate™ <b>bonjour</b>');
+});
+test('tool and legacy function responses are rejected even when they contain valid translations',async()=>{
+ const content=JSON.stringify({translations:[{id:0,text:'Hello'}]});
+ for(const extra of [{finish_reason:'tool_calls'},{finish_reason:'function_call'},
+  {message:{tool_calls:[{id:'call_1',type:'function',function:{name:'browse',arguments:'{}'}}]}},
+  {message:{function_call:{name:'browse',arguments:'{}'}}}]){
+  const choice={finish_reason:'stop',...extra,message:{content,...extra.message}};
+  await assert.rejects(translateBatch({source_lang:'fr',target_lang:'en',text_list:['Bonjour']},settings,
+   async()=>new Response(JSON.stringify({choices:[choice]}))),error=>error.code==='invalid_agent_response');
+ }
+});

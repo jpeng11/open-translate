@@ -91,8 +91,11 @@ export function protect(text, glossary=[], nonce=crypto.randomUUID().replaceAll(
     const regex=new RegExp(`(?<![\\p{L}\\p{N}_])${needle}(?![\\p{L}\\p{N}_])`,'giu');
     masked=masked.replace(regex,()=>put(entry.source,entry.target));
   }
+  const tokenPattern=new RegExp(`⟦OT${nonce}_\\d+⟧`,'g');
+  const sequence=masked.match(tokenPattern) || [];
   return {text:masked,restore(translated) {
     if (typeof translated!=='string' || !translated.trim()) fail('invalid_translation','Agent returned empty text.');
+    if(JSON.stringify(translated.match(tokenPattern) || [])!==JSON.stringify(sequence) || (!maskMarkup && JSON.stringify(translated.match(markup) || [])!==JSON.stringify(rawTokens))) fail('placeholder_mismatch','Agent changed the order of protected markup or terminology.');
     for(const token of new Set(rawTokens))if(translated.split(token).length!==text.split(token).length)fail('placeholder_mismatch','Bridge changed protected markup. Try a smaller batch.');
     for (const [token,original] of tokens) {
       if (translated.split(token).length!==2) fail('placeholder_mismatch','Agent changed protected markup or terminology. Try a smaller batch.');
@@ -156,7 +159,7 @@ export async function translateBatch(raw, settings, fetcher=fetch) {
       if(settings.jsonMode)body.response_format={type:'json_object'};
       const value=await responseJson(await fetcher(endpoint(settings.apiUrl),{method:'POST',headers,body:JSON.stringify(body),signal:controller.signal,credentials:'omit',redirect:'error'}));
       const choice=value.choices?.[0];
-      if(!choice || ['length','content_filter'].includes(choice.finish_reason) || choice.message?.refusal || choice.message?.tool_calls?.length) fail('invalid_agent_response','Agent did not return a completed translation.');
+      if(!choice || ['length','content_filter','tool_calls','function_call'].includes(choice.finish_reason) || choice.message?.refusal || choice.message?.tool_calls?.length || choice.message?.function_call) fail('invalid_agent_response','Agent did not return a completed translation.');
       entries=orderedResult(parseJson(choice.message?.content),items.map(i=>i.id));
     }
     entries.forEach((entry,index)=>{
