@@ -1,0 +1,422 @@
+{
+  "schema": 1,
+  "suite": "documents",
+  "status": "passed",
+  "testedAt": "2026-10-12T22:45:34.242Z",
+  "implementationSha256": "8dd07427a2d438c2750dd79859ef9fd338bc3a472f47fbdebdf43dcf010bc77a",
+  "buildEvidence": {
+    "schema": 1,
+    "browser": "chrome",
+    "implementationSha256": "8dd07427a2d438c2750dd79859ef9fd338bc3a472f47fbdebdf43dcf010bc77a",
+    "bundleSha256": "fad02e923d7dd3eaed7e61ae57fdc2b839b071cd86351944fd081fa458912933"
+  },
+  "regressionEvidence": {
+    "path": "docs/acceptance/regression.json",
+    "sha256": "9369b3d6561635ce6ea41be3f6490870f3d740e28a34700c967451dab12a58b9",
+    "playwrightSha256": "5f2c6fd2587fb2657dcf740df837020889476d5bc890b8f5617a578a541bc1ab"
+  },
+  "cases": [
+    {
+      "id": "document-corpus.spec.mjs:19:136742e8",
+      "name": "actual import/export embeds CJK, RTL, Indic and Thai; companion retains exact logical Unicode",
+      "status": "passed",
+      "harness": "source-module browser bundle with packaged assets",
+      "evidence": {
+        "testFile": "document-corpus.spec.mjs",
+        "line": 19,
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 1258
+          }
+        ]
+      }
+    },
+    {
+      "id": "document-corpus.spec.mjs:20:ad644deb",
+      "name": "actual import respects two-column order and rotated cropped page geometry",
+      "status": "passed",
+      "harness": "source-module browser bundle with packaged assets",
+      "evidence": {
+        "testFile": "document-corpus.spec.mjs",
+        "line": 20,
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 1425
+          }
+        ]
+      }
+    },
+    {
+      "id": "document-corpus.spec.mjs:21:bbc8613c",
+      "name": "image-only scanned PDF uses real bundled OCR and exports searchable recognized text",
+      "status": "passed",
+      "harness": "source-module browser bundle with packaged assets",
+      "evidence": {
+        "testFile": "document-corpus.spec.mjs",
+        "line": 21,
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 1456
+          }
+        ]
+      }
+    },
+    {
+      "id": "document-corpus.spec.mjs:22:525c5462",
+      "name": "DOCX footnotes/endnotes keep references, styles and embedded assets in bilingual export",
+      "status": "passed",
+      "harness": "source-module browser bundle with packaged assets",
+      "evidence": {
+        "testFile": "document-corpus.spec.mjs",
+        "line": 22,
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 27
+          }
+        ]
+      }
+    },
+    {
+      "id": "document-corpus.spec.mjs:23:69a242c5",
+      "name": "malformed and oversized PDF inputs fail before export with actionable limits",
+      "status": "passed",
+      "harness": "source-module browser bundle with packaged assets",
+      "evidence": {
+        "testFile": "document-corpus.spec.mjs",
+        "line": 23,
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 294
+          }
+        ]
+      }
+    },
+    {
+      "id": "document-corpus.spec.mjs:24:27fbb5c5",
+      "name": "valid password-protected and empty-password encrypted PDFs require an unlocked copy",
+      "status": "passed",
+      "harness": "source-module browser bundle with packaged assets",
+      "evidence": {
+        "testFile": "document-corpus.spec.mjs",
+        "line": 24,
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 953
+          }
+        ]
+      }
+    },
+    {
+      "id": "document-corpus.spec.mjs:25:e061efdc",
+      "name": "invalid DOCX/EPUB XML and oversized archive metadata fail without partial exports",
+      "status": "passed",
+      "harness": "source-module browser bundle with packaged assets",
+      "evidence": {
+        "testFile": "document-corpus.spec.mjs",
+        "line": 25,
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 10
+          }
+        ]
+      }
+    },
+    {
+      "id": "document-corpus.spec.mjs:26:4de74cb4",
+      "name": "actual imported narrow region preserves full long translation on continuation pages",
+      "status": "passed",
+      "harness": "source-module browser bundle with packaged assets",
+      "evidence": {
+        "testFile": "document-corpus.spec.mjs",
+        "line": 26,
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 3304
+          }
+        ]
+      }
+    },
+    {
+      "id": "document-corpus.spec.mjs:27:e802b362",
+      "name": "packaged EPUB retains valid image bytes, nested spine paths and Unicode links",
+      "status": "passed",
+      "harness": "source-module browser bundle with packaged assets",
+      "evidence": {
+        "testFile": "document-corpus.spec.mjs",
+        "line": 27,
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 33
+          }
+        ]
+      }
+    },
+    {
+      "id": "document-parity.spec.mjs:6:67f18c63",
+      "name": "DOCX preserves run properties, hyperlink relationships, paragraph styles, tables and headers/footers",
+      "status": "passed",
+      "harness": "source-module browser bundle with packaged assets",
+      "evidence": {
+        "testFile": "document-parity.spec.mjs",
+        "line": 6,
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 28
+          }
+        ]
+      }
+    },
+    {
+      "id": "document-parity.spec.mjs:7:eacddc07",
+      "name": "HTML translation retains safe formatting, links and code while removing active/network content",
+      "status": "passed",
+      "harness": "source-module browser bundle with packaged assets",
+      "evidence": {
+        "testFile": "document-parity.spec.mjs",
+        "line": 7,
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 10
+          }
+        ]
+      }
+    },
+    {
+      "id": "document-parity.spec.mjs:8:7b326557",
+      "name": "EPUB preserves internal stylesheet/resources, inline formatting and relative links",
+      "status": "passed",
+      "harness": "source-module browser bundle with packaged assets",
+      "evidence": {
+        "testFile": "document-parity.spec.mjs",
+        "line": 8,
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 20
+          }
+        ]
+      }
+    },
+    {
+      "id": "document-parity.spec.mjs:9:00548b53",
+      "name": "export retains vector/searchable originals and searchable Unicode translation, with overflow continuation",
+      "status": "passed",
+      "harness": "source-module browser bundle with packaged assets",
+      "evidence": {
+        "testFile": "document-parity.spec.mjs",
+        "line": 9,
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 1389
+          }
+        ]
+      }
+    },
+    {
+      "id": "document-parity.spec.mjs:11:9cdccacf",
+      "name": "EPUB translation order follows the package spine rather than ZIP member order",
+      "status": "passed",
+      "harness": "source-module browser bundle with packaged assets",
+      "evidence": {
+        "testFile": "document-parity.spec.mjs",
+        "line": 11,
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 15
+          }
+        ]
+      }
+    },
+    {
+      "id": "document-parity.spec.mjs:12:335da108",
+      "name": "PDF bilingual browser navigation and forms remain connected to exported pages",
+      "status": "passed",
+      "harness": "source-module browser bundle with packaged assets",
+      "evidence": {
+        "testFile": "document-parity.spec.mjs",
+        "line": 12,
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 683
+          }
+        ]
+      }
+    },
+    {
+      "id": "document-parity.spec.mjs:12:44ad4fcd",
+      "name": "PDF translated-only browser navigation and forms remain connected to exported pages",
+      "status": "passed",
+      "harness": "source-module browser bundle with packaged assets",
+      "evidence": {
+        "testFile": "document-parity.spec.mjs",
+        "line": 12,
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 733
+          }
+        ]
+      }
+    },
+    {
+      "id": "document-parity.spec.mjs:13:1f57534a",
+      "name": "translated signed fixture removes digital signature semantics and prints an invalidation notice",
+      "status": "passed",
+      "harness": "source-module browser bundle with packaged assets",
+      "evidence": {
+        "testFile": "document-parity.spec.mjs",
+        "line": 13,
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 369
+          }
+        ]
+      }
+    },
+    {
+      "id": "extension.spec.mjs:35:14f25c68",
+      "name": "HTML, Markdown, DOCX and EPUB preserve format through bilingual export",
+      "status": "passed",
+      "harness": "built unpacked Chrome extension",
+      "evidence": {
+        "testFile": "extension.spec.mjs",
+        "line": 35,
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 1056
+          }
+        ]
+      }
+    },
+    {
+      "id": "extension.spec.mjs:43:d3ead5fe",
+      "name": "PDF text extraction, lazy preview and bilingual PDF export",
+      "status": "passed",
+      "harness": "built unpacked Chrome extension",
+      "evidence": {
+        "testFile": "extension.spec.mjs",
+        "line": 43,
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 1101
+          }
+        ]
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "dist/acceptance/documents/columns.pdf",
+      "bytes": 1072,
+      "sha256": "5827d36e61a9edecfdaf68f3f58ae037a3bc06ac8b3c13956bcbdf6ab231c697"
+    },
+    {
+      "path": "dist/acceptance/documents/multilingual-translated.pdf",
+      "bytes": 31862,
+      "sha256": "19ca90ebd2bb52c6f5cf73dd5bfd3b0178637c8d716754c3e3c092ab8717fb79"
+    },
+    {
+      "path": "dist/acceptance/documents/multilingual.pdf",
+      "bytes": 1010,
+      "sha256": "00e7edd450e8bb3c57bf3ca337b13ceb11075d095afe8fea7bc37bbd6b155f77"
+    },
+    {
+      "path": "dist/acceptance/documents/multilingual.png",
+      "bytes": 28108,
+      "sha256": "1b2167c9626123d4c7c5f1733b6d7137b6237f520a04beadb391994379b726a3"
+    },
+    {
+      "path": "dist/acceptance/documents/overflow-translated.pdf",
+      "bytes": 27505,
+      "sha256": "cdae0d9fa9c37244b3e5430d8e968e6c6d5580361c06e27098406de4f2f5991f"
+    },
+    {
+      "path": "dist/acceptance/documents/overflow.pdf",
+      "bytes": 848,
+      "sha256": "a1f065c4683e7f16372181eca08ecd701d3410a7845d249c6ce905a0922bf598"
+    },
+    {
+      "path": "dist/acceptance/documents/rotated-cropped.pdf",
+      "bytes": 888,
+      "sha256": "f1013c6757dd680bc2024d2c4b4dc383b1d69d7e15275258077f7a4db3a3c6e9"
+    },
+    {
+      "path": "dist/acceptance/documents/rotated-translated.pdf",
+      "bytes": 9552,
+      "sha256": "1fc7fec9caa5b56b61050b1517fc3311c8b9a52fbdf3fd158e63e5859a8f2890"
+    },
+    {
+      "path": "dist/acceptance/documents/rotated.png",
+      "bytes": 9519,
+      "sha256": "dbee8ecd53ae08f60e71ae1a9b451df2845441ceac94483f1bdf3b8a23c393f8"
+    },
+    {
+      "path": "dist/acceptance/documents/scan-translated.pdf",
+      "bytes": 33949,
+      "sha256": "b5f4d795dd744b36ee3a514fdf48c8470c6f3dd759be3f60e64fc9123d7bd4f2"
+    },
+    {
+      "path": "dist/acceptance/documents/scan.pdf",
+      "bytes": 21462,
+      "sha256": "906266d31540970e0c0e6b2ea5ecf15141a74acc6ca5180288620ea96871e826"
+    },
+    {
+      "path": "dist/acceptance/documents/scan.png",
+      "bytes": 16785,
+      "sha256": "6fab838bfc388fec127e57d847181de7ad469d37303866b377eb28ad796360fc"
+    }
+  ],
+  "fontEvidence": {
+    "file": "NotoSansCJKsc-Regular.ttf",
+    "source": "https://raw.githubusercontent.com/notofonts/noto-cjk/main/Sans/Variable/TTF/NotoSansCJKsc-VF.ttf",
+    "sha256": "65e0b2df8309d78dc086a41b67b6c96ab508bda0fb5ab090b7c9afb6514e1ea7",
+    "bytes": 21758036,
+    "sourceSha256": "990c807e79c25662a5a9ecf7f971baeb2bf2eab9a559e5ecf15cdfdb8561d21f",
+    "processing": "Static weight 400 instance generated with fonttools 4.60.1: python -m fontTools.varLib.instancer NotoSansCJKsc-VF.ttf wght=400 -o NotoSansCJKsc-Regular.ttf. Retains all source glyphs; TrueType outlines avoid CFF subset glyph loss in PDF export. Re-save with font[\"glyf\"].padding=4 before bundling; fontkit 1.1.1 subset short loca requires even glyph offsets."
+  },
+  "inspection": {
+    "performedAt": "2026-10-12T22:45:47.159Z",
+    "artifacts": [
+      "dist/acceptance/documents/multilingual.png",
+      "dist/acceptance/documents/rotated.png",
+      "dist/acceptance/documents/scan.png"
+    ],
+    "findings": [
+      "All seven script samples visibly rendered; Japanese glyph pixel assertions guard silent subset loss.",
+      "Rotated translated baseline follows the cropped source page.",
+      "Real English scan OCR exports readable searchable text; slight glyph repair remnants may remain."
+    ]
+  },
+  "independentParsers": [
+    "PDF.js 6.4.299: exported text, attachment contents, bookmarks, links, labels, fields, rendering",
+    "PDF-lib 1.17.1: exported field edit and reload",
+    "fflate 0.8.3: independent DOCX/EPUB ZIP extraction",
+    "Chromium DOMParser and createImageBitmap: exported XML/resources"
+  ],
+  "limitations": [
+    "Synthetic independently authored corpus; deterministic translations validate mechanics, not linguistic quality.",
+    "Standalone corpus bundles source modules; separate app cases execute the built extension interface.",
+    "PDF.js exact copy/search ordering differs for RTL words with trailing digits and Indic combining marks; attached semantic HTML retains exact logical Unicode.",
+    "Translated backgrounds are rasterized; original bilingual pages retain native vector objects.",
+    "Dense texture repair, ambiguous/skewed layout and unusual form appearances require review.",
+    "No Word/LibreOffice layout, EPUBCheck/reader pagination, PDF/UA, handwriting, mobile/Safari or commercial export equivalence claim.",
+    "Encrypted inputs require a locally unlocked copy; scan OCR is qualified here only for crisp printed English."
+  ]
+}
