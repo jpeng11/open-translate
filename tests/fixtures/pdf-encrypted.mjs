@@ -1,0 +1,11 @@
+// Synthetic PDF 1.4 /Standard R2 fixture. No copied/private document content.
+import {createHash} from 'node:crypto';
+const padding=Buffer.from('28bf4e5e4e758a4164004e56fffa01082e2e00b6d0683e802f0ca9fe6453697a','hex');
+const md5=bytes=>createHash('md5').update(bytes).digest();
+function padded(password){return Buffer.concat([Buffer.from(password,'latin1'),padding]).subarray(0,32);}
+function rc4(key,input){const state=Array.from({length:256},(_,i)=>i);let j=0;for(let i=0;i<256;i++){j=(j+state[i]+key[i%key.length])&255;[state[i],state[j]]=[state[j],state[i]];}let i=0;j=0;return Buffer.from(input.map(byte=>{i=(i+1)&255;j=(j+state[i])&255;[state[i],state[j]]=[state[j],state[i]];return byte^state[(state[i]+state[j])&255];}));}
+export function encryptedPdfFixture(password='secret'){
+ const id=Buffer.from('00112233445566778899aabbccddeeff','hex'),owner=rc4(md5(padded('owner')).subarray(0,5),padded(password)),permissions=Buffer.alloc(4);permissions.writeInt32LE(-4);const key=md5(Buffer.concat([padded(password),owner,permissions,id])).subarray(0,5),user=rc4(key,padding),object=Buffer.from([4,0,0,0,0]),stream=rc4(md5(Buffer.concat([key,object])).subarray(0,10),Buffer.from('BT /F1 16 Tf 30 100 Td (Encrypted fixture) Tj ET'));
+ const bodies=['<< /Type /Catalog /Pages 2 0 R >>','<< /Type /Pages /Kids [3 0 R] /Count 1 >>','<< /Type /Page /Parent 2 0 R /MediaBox [0 0 300 200] /Resources << /Font << /F1 6 0 R >> >> /Contents 4 0 R >>',Buffer.concat([Buffer.from(`<< /Length ${stream.length} >>\nstream\n`),stream,Buffer.from('\nendstream')]),`<< /Filter /Standard /V 1 /R 2 /Length 40 /O <${owner.toString('hex')}> /U <${user.toString('hex')}> /P -4 >>`,'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>'];
+ const chunks=[Buffer.from('%PDF-1.4\n')],offsets=[0];for(let i=0;i<bodies.length;i++){offsets.push(chunks.reduce((n,b)=>n+b.length,0));chunks.push(Buffer.from(`${i+1} 0 obj\n`),Buffer.isBuffer(bodies[i])?bodies[i]:Buffer.from(bodies[i]),Buffer.from('\nendobj\n'));}const xref=chunks.reduce((n,b)=>n+b.length,0);chunks.push(Buffer.from(`xref\n0 7\n0000000000 65535 f \n${offsets.slice(1).map(n=>String(n).padStart(10,'0')+' 00000 n \n').join('')}trailer\n<< /Size 7 /Root 1 0 R /Encrypt 5 0 R /ID [<${id.toString('hex')}> <${id.toString('hex')}>] >>\nstartxref\n${xref}\n%%EOF\n`));return new Uint8Array(Buffer.concat(chunks));
+}

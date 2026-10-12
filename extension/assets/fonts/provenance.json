@@ -32,10 +32,12 @@
       "bytes": 37752
     },
     {
-      "file": "NotoSansCJKsc-Regular.otf",
-      "source": "https://raw.githubusercontent.com/notofonts/noto-cjk/main/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf",
-      "sha256": "2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b",
-      "bytes": 16437364
+      "file": "NotoSansCJKsc-Regular.ttf",
+      "source": "https://raw.githubusercontent.com/notofonts/noto-cjk/main/Sans/Variable/TTF/NotoSansCJKsc-VF.ttf",
+      "sha256": "65e0b2df8309d78dc086a41b67b6c96ab508bda0fb5ab090b7c9afb6514e1ea7",
+      "bytes": 21758036,
+      "sourceSha256": "990c807e79c25662a5a9ecf7f971baeb2bf2eab9a559e5ecf15cdfdb8561d21f",
+      "processing": "Static weight 400 instance generated with fonttools 4.60.1: python -m fontTools.varLib.instancer NotoSansCJKsc-VF.ttf wght=400 -o NotoSansCJKsc-Regular.ttf. Retains all source glyphs; TrueType outlines avoid CFF subset glyph loss in PDF export. Re-save with font[\"glyf\"].padding=4 before bundling; fontkit 1.1.1 subset short loca requires even glyph offsets."
     }
   ]
 }

@@ -1,7 +1,7 @@
 import fontkit from '@pdf-lib/fontkit';
 import {PDFHexString,PDFName,PDFOperator,PDFOperatorNames,setFillingRgbColor,beginText,endText,setFontAndSize,setTextMatrix,showText} from 'pdf-lib';
 import {visualPdfRuns} from './pdf-bidi.mjs';
-const FONTS=[['NotoSans-Regular.ttf',/./u],['NotoSansArabic-Regular.ttf',/[\u0600-\u08ff\ufb50-\ufdff\ufe70-\ufeff]/u],['NotoSansHebrew-Regular.ttf',/[\u0590-\u05ff\ufb1d-\ufb4f]/u],['NotoSansDevanagari-Regular.ttf',/[\u0900-\u097f]/u],['NotoSansThai-Regular.ttf',/[\u0e00-\u0e7f]/u],['NotoSansCJKsc-Regular.otf',/[\u1100-\u11ff\u2e80-\ua4cf\uac00-\ud7ff\uf900-\ufaff\uff00-\uffef\u{20000}-\u{3134f}]/u]];
+const FONTS=[['NotoSans-Regular.ttf',/./u],['NotoSansArabic-Regular.ttf',/[\u0600-\u08ff\ufb50-\ufdff\ufe70-\ufeff]/u],['NotoSansHebrew-Regular.ttf',/[\u0590-\u05ff\ufb1d-\ufb4f]/u],['NotoSansDevanagari-Regular.ttf',/[\u0900-\u097f]/u],['NotoSansThai-Regular.ttf',/[\u0e00-\u0e7f]/u],['NotoSansCJKsc-Regular.ttf',/[\u1100-\u11ff\u2e80-\ua4cf\uac00-\ud7ff\uf900-\ufaff\uff00-\uffef\u{20000}-\u{3134f}]/u]];
 export async function createPdfFonts(output,texts,loader=async name=>new Uint8Array(await(await fetch((globalThis.browser || chrome).runtime.getURL('assets/fonts/'+name))).arrayBuffer())) {
   output.registerFontkit(fontkit);const needed=new Set([FONTS[0][0]]);
   for(const text of texts)for(const [name,pattern]of FONTS.slice(1))if(pattern.test(text))needed.add(name);
@@ -14,8 +14,8 @@ export async function createPdfFonts(output,texts,loader=async name=>new Uint8Ar
   function runs(text){return visualPdfRuns(text.replace(/\t/g,'    '),chooseFont);}
   function layout(run){return run.font.face.layout(run.text,undefined,undefined,undefined,run.direction);}
   function measure(text,size){return runs(text).reduce((sum,run)=>sum+layout(run).advanceWidth/run.font.face.unitsPerEm*size,0);}
-  function draw(page,text,{x,y,size,color=[0,0,0]}) {
-    let cursor=x;const parts=runs(text);
+  function draw(page,text,{x,y,size,color=[0,0,0],angle=0}) {
+    let cursor=0;const parts=runs(text),cos=Math.cos(angle),sin=Math.sin(angle);
     // ActualText records logical Unicode independently of shaped visual glyph order.
     page.pushOperators(setFillingRgbColor(...color),PDFOperator.of(PDFOperatorNames.BeginMarkedContentSequence,[PDFName.of('Span'),output.context.obj({ActualText:PDFHexString.fromText(text)})]));
     for(const run of parts) {
@@ -29,7 +29,7 @@ export async function createPdfFonts(output,texts,loader=async name=>new Uint8Ar
       for(let index=0;index<shaped.glyphs.length;index++) {
         const position=shaped.positions[index],code=glyphCodes.get(shaped.glyphs[index].id);
         if(!code)throw new Error('PDF shaping produced an unsupported directional glyph. Download accessible HTML instead.');
-        page.pushOperators(setTextMatrix(1,0,0,1,cursor+position.xOffset*scale,y+position.yOffset*scale),showText(PDFHexString.of(code)));
+        page.pushOperators(setTextMatrix(cos,sin,-sin,cos,x+cos*(cursor+position.xOffset*scale)-sin*position.yOffset*scale,y+sin*(cursor+position.xOffset*scale)+cos*position.yOffset*scale),showText(PDFHexString.of(code)));
         cursor+=position.xAdvance*scale;
       }
       page.pushOperators(endText());
