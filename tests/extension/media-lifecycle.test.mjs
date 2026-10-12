@@ -69,3 +69,7 @@ test('caption overlap preserves multiline RTL, reselecting native captions hides
 test('CJK OCR removes segmentation separators without changing Latin, Korean or line breaks',async()=>{
  const {normalizeOcrText}=await import('../../extension/src/ocr-text.mjs');assert.equal(normalizeOcrText('中 文 翻 译 测试','chi_sim'),'中文翻译测试');assert.equal(normalizeOcrText('Hello 世 界\n日本 語 の 翻 訳','eng+jpn'),'Hello 世界\n日本語の翻訳');assert.equal(normalizeOcrText('한국어 번역','kor'),'한국어 번역');assert.equal(normalizeOcrText('A B 中 文','eng'),'A B 中 文');
 });
+
+test('inpainting includes antialiasing strokes just outside tight OCR bounds',async()=>{
+ const {inpaintRegions}=await import('../../extension/src/image-inpaint.mjs'),width=32,height=24,data=new Uint8ClampedArray(width*height*4);for(let i=0;i<data.length;i+=4)data.set([205,220,232,255],i);for(let y=7;y<=15;y++)for(let x=9;x<=20;x++)if(x<12 || x>18)data.set([20,30,40,255],(y*width+x)*4);inpaintRegions({width,height,data},[{x0:10,y0:7,x1:19,y1:15}]);for(let y=7;y<=15;y++)for(let x=9;x<=20;x++)assert.ok(data[(y*width+x)*4]>190);assert.deepEqual([...data.slice(0,4)],[205,220,232,255]);
+});

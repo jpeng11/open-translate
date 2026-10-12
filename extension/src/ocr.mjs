@@ -20,7 +20,7 @@ async function recognizeJob(image,lang,progress) {
   const paragraphs=[];
   for(const block of data.blocks || [])for(const paragraph of block.paragraphs || []) {
     const text=normalizeOcrText(paragraph.text || paragraph.lines?.map(l=>l.text).join('\n') || '',lang).trim();
-    if(text)paragraphs.push({text,bbox:paragraph.bbox,confidence:paragraph.confidence,wordBoxes:paragraph.lines?.flatMap(line=>(line.words || []).map(word=>word.bbox).filter(Boolean)) || []});
+    if(text)paragraphs.push({text,bbox:paragraph.bbox,confidence:paragraph.confidence,lineBoxes:paragraph.lines?.map(line=>line.bbox).filter(Boolean) || [],wordBoxes:paragraph.lines?.flatMap(line=>(line.words || []).map(word=>word.bbox).filter(Boolean)) || []});
   }
   const text=normalizeOcrText(data.text,lang);
   if(!paragraphs.length && text.trim())paragraphs.push({text:text.trim(),bbox:null,confidence:data.confidence});
@@ -40,7 +40,9 @@ export function drawTextRegion(context,text,bbox,scale=1,{erase=true,color='#172
 }
 export function imageOverlay(image,paragraphs,translated) {
   const canvas=canvasImage(image),ctx=canvas.getContext('2d');
-  const pixels=ctx.getImageData(0,0,canvas.width,canvas.height),boxes=paragraphs.flatMap(p=>p.wordBoxes?.length?p.wordBoxes:p.bbox?[p.bbox]:[]);
+  // CJK word segmentation can split a glyph and omit its remaining strokes.
+  // Mask the complete detected line while retaining non-glyph pixels inside it.
+  const pixels=ctx.getImageData(0,0,canvas.width,canvas.height),boxes=paragraphs.flatMap(p=>p.lineBoxes?.length?p.lineBoxes:p.bbox?[p.bbox]:p.wordBoxes || []);
   inpaintRegions(pixels,boxes);ctx.putImageData(pixels,0,0);
   paragraphs.forEach((paragraph,index)=>{if(!paragraph.bbox)return;
     const box=paragraph.bbox,x=Math.max(0,Math.min(canvas.width-1,Math.floor(box.x0))),y=Math.max(0,Math.min(canvas.height-1,Math.floor(box.y0))),offset=(y*canvas.width+x)*4;
