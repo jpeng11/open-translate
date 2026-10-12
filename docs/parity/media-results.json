@@ -1,0 +1,405 @@
+{
+  "schema": 1,
+  "implementationSha256": "84723ce80e6495ea9e3e400c07739526c2ec0f56d7689b1d2334c11334f6522d",
+  "buildEvidence": {
+    "schema": 1,
+    "browser": "chrome",
+    "implementationSha256": "84723ce80e6495ea9e3e400c07739526c2ec0f56d7689b1d2334c11334f6522d",
+    "bundleSha256": "4e9a46dbf6266b12386d2d647107333c1ed6cd391c159f0c8183d0345d49664d"
+  },
+  "createdAt": "2026-10-12T21:55:57.409Z",
+  "networkPolicy": {
+    "externalHostnameResolution": "blocked",
+    "allowedHosts": [
+      "localhost",
+      "127.0.0.1"
+    ],
+    "proxy": "disabled",
+    "literalIpTraffic": "not firewalled"
+  },
+  "reference": {
+    "version": "1.33.3",
+    "commit": "c470f0aca3c75b2785c9009a0ac48e78ead34126",
+    "contentSha256": "bfe7e3e640bf90bb6b1103b0fe2e097068a751ca182beadc0bba25a8e38cda4c"
+  },
+  "fixtureSha256": "5fa0673e6e8187b311deea273957fb3e259677d51100ad5bd952eb1ef55fcad4",
+  "status": "differences-or-unknowns",
+  "cases": [
+    {
+      "name": "caption-native-first-source-target",
+      "status": "matched",
+      "original": {
+        "status": "observed",
+        "value": {
+          "source": "Hello world. This is a complete English sentence for the translation test.",
+          "target": "Bonjour le monde. Ceci est une phrase anglaise complète pour le test de traduction.",
+          "rendered": true,
+          "visible": true
+        }
+      },
+      "replacement": {
+        "status": "observed",
+        "value": {
+          "source": "Hello world. This is a complete English sentence for the translation test.",
+          "target": "Bonjour le monde. Ceci est une phrase anglaise complète pour le test de traduction.",
+          "rendered": true,
+          "visible": true
+        }
+      }
+    },
+    {
+      "name": "caption-native-changed-source-target",
+      "status": "matched",
+      "original": {
+        "status": "observed",
+        "value": {
+          "source": "Thank you for your help. We are testing the next timed caption in this video.",
+          "target": "Merci pour votre aide. Nous testons le prochain sous-titre dans cette vidéo.",
+          "rendered": true,
+          "visible": true
+        }
+      },
+      "replacement": {
+        "status": "observed",
+        "value": {
+          "source": "Thank you for your help. We are testing the next timed caption in this video.",
+          "target": "Merci pour votre aide. Nous testons le prochain sous-titre dans cette vidéo.",
+          "rendered": true,
+          "visible": true
+        }
+      }
+    },
+    {
+      "name": "caption-native-stop",
+      "status": "different",
+      "original": {
+        "status": "observed",
+        "value": {
+          "visible": false,
+          "trackMode": "hidden"
+        }
+      },
+      "replacement": {
+        "status": "observed",
+        "value": {
+          "visible": false,
+          "trackMode": "showing"
+        }
+      }
+    },
+    {
+      "name": "caption-dom-first-source-target",
+      "status": "matched",
+      "original": {
+        "status": "observed",
+        "value": {
+          "source": "Hello world. This is a complete English sentence for the translation test.",
+          "target": "Bonjour le monde. Ceci est une phrase anglaise complète pour le test de traduction.",
+          "rendered": true,
+          "visible": true
+        }
+      },
+      "replacement": {
+        "status": "observed",
+        "value": {
+          "source": "Hello world. This is a complete English sentence for the translation test.",
+          "target": "Bonjour le monde. Ceci est une phrase anglaise complète pour le test de traduction.",
+          "rendered": true,
+          "visible": true
+        }
+      }
+    },
+    {
+      "name": "caption-dom-changed-source-target",
+      "status": "reference-unresolved",
+      "original": {
+        "status": "unresolved",
+        "reason": "The configured adapter did not establish positive source/target rendering for this case.",
+        "attemptedValue": {
+          "source": "Thank you for your help. We are testing the next timed caption in this video.",
+          "target": "Merci pour votre aide. Nous testons le prochain sous-titre dans cette vidéo.",
+          "rendered": false,
+          "visible": true
+        }
+      },
+      "replacement": {
+        "status": "observed",
+        "value": {
+          "source": "Thank you for your help. We are testing the next timed caption in this video.",
+          "target": "Merci pour votre aide. Nous testons le prochain sous-titre dans cette vidéo.",
+          "rendered": true,
+          "visible": true
+        }
+      }
+    },
+    {
+      "name": "caption-dom-stop",
+      "status": "different",
+      "original": {
+        "status": "observed",
+        "value": {
+          "visible": true
+        }
+      },
+      "replacement": {
+        "status": "observed",
+        "value": {
+          "visible": false
+        }
+      }
+    },
+    {
+      "name": "caption-native-gap",
+      "status": "matched",
+      "original": {
+        "status": "observed",
+        "value": {
+          "visible": false,
+          "hasTranslatedText": false
+        }
+      },
+      "replacement": {
+        "status": "observed",
+        "value": {
+          "visible": false,
+          "hasTranslatedText": false
+        }
+      }
+    },
+    {
+      "name": "caption-native-cue-times",
+      "status": "matched",
+      "original": {
+        "status": "observed",
+        "value": [
+          [
+            0,
+            3
+          ],
+          [
+            4,
+            16
+          ]
+        ]
+      },
+      "replacement": {
+        "status": "observed",
+        "value": [
+          [
+            0,
+            3
+          ],
+          [
+            4,
+            16
+          ]
+        ]
+      }
+    },
+    {
+      "name": "caption-native-native-track-hidden",
+      "status": "matched",
+      "original": {
+        "status": "observed",
+        "value": "hidden"
+      },
+      "replacement": {
+        "status": "observed",
+        "value": "hidden"
+      }
+    },
+    {
+      "name": "caption-native-fullscreen",
+      "status": "matched",
+      "original": {
+        "status": "observed",
+        "value": {
+          "visible": true,
+          "insideFullscreen": true,
+          "rendered": true
+        }
+      },
+      "replacement": {
+        "status": "observed",
+        "value": {
+          "visible": true,
+          "insideFullscreen": true,
+          "rendered": true
+        }
+      }
+    }
+  ],
+  "captures": [
+    {
+      "kind": "original",
+      "scenario": "native",
+      "tool": "rea-agents",
+      "version": "6.4.0",
+      "operation": "inspect-web-page",
+      "sha256": "dd5ab8b9770016fbeebcf110dc86ffbd9341e7025b333b35809cfd782219bf69"
+    },
+    {
+      "kind": "replacement",
+      "scenario": "native",
+      "tool": "rea-agents",
+      "version": "6.4.0",
+      "operation": "inspect-web-page",
+      "sha256": "1fa3c3013345f932e7c78a8875d21b60b099367aeb1f147ac3adcf019a0a394a"
+    },
+    {
+      "kind": "original",
+      "scenario": "dom",
+      "tool": "rea-agents",
+      "version": "6.4.0",
+      "operation": "inspect-web-page",
+      "sha256": "2367bbdd5ba1ba54942d1ae261e0d46f51e1a7f19b3cbe34cac51a9396b8d4ba"
+    },
+    {
+      "kind": "replacement",
+      "scenario": "dom",
+      "tool": "rea-agents",
+      "version": "6.4.0",
+      "operation": "inspect-web-page",
+      "sha256": "bbd4dda28675b6cad39b4791433d36a23120e12b07e773ea787dc51a83d524a8"
+    }
+  ],
+  "observations": {
+    "original": {
+      "native": {
+        "first": {
+          "visible": true,
+          "text": "Hello world. This is a complete English sentence for the translation test. Bonjour le monde. Ceci est une phrase anglaise complète pour le test de traduction.",
+          "fullscreenContained": false
+        },
+        "translationReachedEndpoint": true,
+        "nativeMode": "hidden",
+        "gap": {
+          "visible": false,
+          "text": "",
+          "fullscreenContained": false
+        },
+        "gapTrack": {
+          "time": 3.5,
+          "seeking": false,
+          "readyState": 4,
+          "active": []
+        },
+        "second": {
+          "visible": true,
+          "text": "Thank you for your help. We are testing the next timed caption in this video. Merci pour votre aide. Nous testons le prochain sous-titre dans cette vidéo.",
+          "fullscreenContained": false
+        },
+        "cueTimes": [
+          [
+            0,
+            3
+          ],
+          [
+            4,
+            16
+          ]
+        ],
+        "fullscreen": {
+          "visible": true,
+          "text": "Thank you for your help. We are testing the next timed caption in this video. Merci pour votre aide. Nous testons le prochain sous-titre dans cette vidéo.",
+          "fullscreenContained": true
+        },
+        "stopped": {
+          "visible": false,
+          "text": "",
+          "fullscreenContained": false
+        },
+        "stoppedMode": "hidden"
+      },
+      "dom": {
+        "first": {
+          "visible": true,
+          "text": "Hello world. This is a complete English sentence for the translation test.\nBonjour le monde. Ceci est une phrase anglaise complète pour le test de traduction.\n",
+          "fullscreenContained": false
+        },
+        "translationReachedEndpoint": true,
+        "nativeMode": null,
+        "second": {
+          "visible": true,
+          "text": "Thank you for your help. We are testing the next timed caption in this video.\nThank you for your help. We are testing the next timed caption in this video.\n",
+          "fullscreenContained": false
+        },
+        "stopped": {
+          "visible": true,
+          "text": "Thank you for your help. We are testing the next timed caption in this video.\nThank you for your help. We are testing the next timed caption in this video.\n",
+          "fullscreenContained": false
+        },
+        "stoppedMode": null
+      }
+    },
+    "replacement": {
+      "native": {
+        "first": {
+          "visible": true,
+          "text": "Hello world. This is a complete English sentence for the translation test. Bonjour le monde. Ceci est une phrase anglaise complète pour le test de traduction. ×",
+          "fullscreenContained": false
+        },
+        "translationReachedEndpoint": true,
+        "nativeMode": "hidden",
+        "gap": {
+          "visible": false,
+          "text": "×",
+          "fullscreenContained": false
+        },
+        "gapTrack": {
+          "time": 3.5,
+          "seeking": false,
+          "readyState": 4,
+          "active": []
+        },
+        "second": {
+          "visible": true,
+          "text": "Thank you for your help. We are testing the next timed caption in this video. Merci pour votre aide. Nous testons le prochain sous-titre dans cette vidéo. ×",
+          "fullscreenContained": false
+        },
+        "cueTimes": [
+          [
+            0,
+            3
+          ],
+          [
+            4,
+            16
+          ]
+        ],
+        "fullscreen": {
+          "visible": true,
+          "text": "Thank you for your help. We are testing the next timed caption in this video. Merci pour votre aide. Nous testons le prochain sous-titre dans cette vidéo. ×",
+          "fullscreenContained": true
+        },
+        "stopped": {
+          "visible": false,
+          "text": "×",
+          "fullscreenContained": false
+        },
+        "stoppedMode": "showing"
+      },
+      "dom": {
+        "first": {
+          "visible": true,
+          "text": "Hello world. This is a complete English sentence for the translation test. Bonjour le monde. Ceci est une phrase anglaise complète pour le test de traduction. ×",
+          "fullscreenContained": false
+        },
+        "translationReachedEndpoint": true,
+        "nativeMode": null,
+        "second": {
+          "visible": true,
+          "text": "Thank you for your help. We are testing the next timed caption in this video. Merci pour votre aide. Nous testons le prochain sous-titre dans cette vidéo. ×",
+          "fullscreenContained": false
+        },
+        "stopped": {
+          "visible": false,
+          "text": "×",
+          "fullscreenContained": false
+        },
+        "stoppedMode": null
+      }
+    }
+  },
+  "scope": "Only deterministic local native VTT and generic DOM caption adapters, using private reference configuration to enable them on localhost. No production player/private API, DRM, speech quality, image restoration quality or pixel equality is established. The original DOM changed-caption probe repeated English instead of reaching the expected French result in this run; that case remains unresolved. Stop probes use original tempDisableSubtitleChanged versus replacement captions.toggle."
+}
