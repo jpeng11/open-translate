@@ -2,26 +2,30 @@
 
 Acceptance date: 2026-10-12. The current product follows the [accepted behavior contract](accepted-behavior.md), with an independent [visual identity](visual-identity.md). Recommended differences and unresolved reference observations are retained explicitly. Matching the commercial product's UI or defects is not the release requirement.
 
-The final implementation SHA-256 is `8dd07427a2d438c2750dd79859ef9fd338bc3a472f47fbdebdf43dcf010bc77a`. The Linux Chromium bundle is `fad02e923d7dd3eaed7e61ae57fdc2b839b071cd86351944fd081fa458912933`; the Mac bundle is `e8fc83d3a27dd318e8efb23e89bf3ef6ff4c3063bee50b566b6a1c8d790fd9ef`. They contain the same implementation inputs; platform-produced bundle bytes differ and are separately recorded.
+The final implementation SHA-256 is `959eda573d5da737ad0daa5926ca4631e011958af8310004a12033ee92b2b2df`. The Linux Chromium bundle is `2e9f0a1031df4b235bcc5be95cfe7d46058c01132d5d95118871b7f716a90452`; the Mac bundle is `176e45849b428105e5b7ec09e54d9f012c9b9129639dcb6d6d9ee8b5b38f0b7d`. They contain the same implementation inputs; platform-produced bundle bytes differ and are separately recorded.
 
 ## Current results
 
 | Acceptance | Result | Evidence |
 | --- | --- | --- |
-| Node tests | 64 passed, zero failures | [Full regression](acceptance/regression.json) |
+| Node tests | 66 passed, zero failures | [Full regression](acceptance/regression.json) |
 | Python bridge tests | 39 passed, zero failures | Full regression |
-| Chromium browser tests | 49 passed in one complete final run | Full regression; real unpacked MV3 workflows and browser module corpora |
+| Chromium browser tests | 51 passed in one complete final run | Full regression; real unpacked MV3 workflows and browser module corpora |
 | Firefox desktop | Actual temporary extension passed | Trusted settings, workspace/page/input translation, restoration, credential isolation, transcription and image fallback |
 | Public websites | Five sites plus two stress fixtures passed | [Web report](acceptance/web.json), [scope](web-acceptance.md) |
-| Documents | 19 passing browser cases, included in the 49 above | [Document report](acceptance/documents.json), [scope and limits](document-acceptance.md) |
+| Documents | 19 passing browser cases, included in the 51 above | [Document report](acceptance/documents.json), [scope and limits](document-acceptance.md) |
 | Media/OCR/live | 24 Node + 9 browser cases, included above | [Media report](acceptance/media.json), [scope and limits](media-acceptance.md) |
-| Independent UI | All eight routes in light/dark, desktop/narrow widths, keyboard navigation, labels, contrast and overflow | [UI report and screenshot hashes](acceptance/ui.json) |
+| Independent UI | All eight routes in light/dark and desktop/narrow layouts; six UI languages; keyboard navigation, labels, contrast, overflow and cross-window language persistence | [UI report and screenshot hashes](acceptance/ui.json) |
 | Mac live AGY integration | Final build passed actual extension → bridge → AGY translation | [Provider report](acceptance/mac-agent.json) |
 | Chrome/Edge/Firefox/Safari packaging | Four final archives built, about 29 MiB each | Build stamps in `dist/<browser>/build-evidence.json` |
 
 `npm run acceptance` completed successfully after the final source freeze. `npm run acceptance:verify` validated all four regression/web/documents/media report bindings against the current implementation and complete Chrome bundle. The regression additionally binds tests, scripts and Python backend inputs. Focused reports are subsets of the full run, not additional test counts.
 
 The public site run used actual Wikipedia, MDN, GitHub, W3C and WHATWG pages with default reader rules. It checked 35 sampled paragraphs, 65 safe links, code exclusions, dynamic changes, preserved events and exact restoration. Stress fixtures covered the tail of a 5,105-paragraph page, 300 inserted nodes, and frames. A local deterministic provider isolates extension mechanics; it does not establish linguistic translation quality or unrestricted website compatibility.
+
+## Six-language documentation and controls
+
+Chinese, English, French, Spanish, Japanese and Korean READMEs share the same installation, protocol, privacy, platform and license facts. Button/menu names match the actual localized workspace and popup catalog. The language picker persists across windows and reloads without changing endpoint fields, model names, translation languages or source/output content. Progress widgets use the underlying status data so localized status text does not break them. Humanizer 3.1.0 is pinned with its MIT license under `.agents/skills/humanizer/`.
 
 ## Defects found and corrected during this expansion
 

@@ -90,7 +90,7 @@ Las páginas de ajustes, las tiendas de extensiones, los visores protegidos, los
 
 El límite es de 30 MiB por documento, 100 MiB por archivo descomprimido, 200 páginas por PDF y 20.000 caracteres por lote de solicitudes. Cancelar impide nuevas solicitudes; una ya enviada al proveedor puede terminar.
 
-La validación completa del 2026-10-12 superó 64 pruebas Node, 39 Python y 49 Chromium, además de las comprobaciones de la extensión en Firefox. Las páginas públicas probadas incluyen Wikipedia, MDN, GitHub, W3C y WHATWG, con una comprobación aparte de AGY en un Mac. El [registro de validación](docs/validation.md) recoge el alcance y los hashes de los paquetes. Estos resultados no demuestran la calidad de traducción de todos los sitios o modelos.
+La validación completa del 2026-10-12 superó 66 pruebas Node, 39 Python y 51 Chromium, además de las comprobaciones de la extensión en Firefox. Las páginas públicas probadas incluyen Wikipedia, MDN, GitHub, W3C y WHATWG, con una comprobación aparte de AGY en un Mac. El [registro de validación](docs/validation.md) recoge el alcance y los hashes de los paquetes. Estos resultados no demuestran la calidad de traducción de todos los sitios o modelos.
 
 ## Desarrollo y documentación
 

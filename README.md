@@ -90,7 +90,7 @@ API 凭据保存在可信扩展存储中，不会通过页面设置消息发给�
 
 单个文档上限为 30 MiB，解压后的归档上限为 100 MiB，PDF 最多 200 页，每批请求最多 20,000 个字符。取消操作会阻止后续请求，已经发给服务商的请求可能仍会完成。
 
-2026-10-12 的完整验收通过了 64 项 Node、39 项 Python、49 项 Chromium 测试，以及实际 Firefox 扩展检查。公共网页覆盖 Wikipedia、MDN、GitHub、W3C 和 WHATWG，另有 Mac 上的真实 AGY 链路检查。测试范围和构建哈希见[验收记录](docs/validation.md)；这些结果不代表所有网站或模型的翻译质量。
+2026-10-12 的完整验收通过了 66 项 Node、39 项 Python、51 项 Chromium 测试，以及实际 Firefox 扩展检查。公共网页覆盖 Wikipedia、MDN、GitHub、W3C 和 WHATWG，另有 Mac 上的真实 AGY 链路检查。测试范围和构建哈希见[验收记录](docs/validation.md)；这些结果不代表所有网站或模型的翻译质量。
 
 ## 开发与文档
 

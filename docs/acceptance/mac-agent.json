@@ -2,15 +2,15 @@
   "schema": 1,
   "suite": "mac-live-agent",
   "status": "passed",
-  "testedAt": "2026-10-12T22:44:11.612377+00:00",
-  "implementationSha256": "8dd07427a2d438c2750dd79859ef9fd338bc3a472f47fbdebdf43dcf010bc77a",
+  "testedAt": "2026-10-12T23:25:53.193783+00:00",
+  "implementationSha256": "959eda573d5da737ad0daa5926ca4631e011958af8310004a12033ee92b2b2df",
   "buildEvidence": {
     "schema": 1,
     "browser": "chrome",
-    "implementationSha256": "8dd07427a2d438c2750dd79859ef9fd338bc3a472f47fbdebdf43dcf010bc77a",
-    "bundleSha256": "e8fc83d3a27dd318e8efb23e89bf3ef6ff4c3063bee50b566b6a1c8d790fd9ef"
+    "implementationSha256": "959eda573d5da737ad0daa5926ca4631e011958af8310004a12033ee92b2b2df",
+    "bundleSha256": "176e45849b428105e5b7ec09e54d9f012c9b9129639dcb6d6d9ee8b5b38f0b7d"
   },
-  "sourceCommit": "c270772",
+  "sourceCommit": "5a8b9d3",
   "browser": "Chromium 156.0.8078.4",
   "provider": "local Python bridge → signed-in Google AGY CLI",
   "cases": [
@@ -35,7 +35,7 @@
       "status": "passed"
     }
   ],
-  "logSha256": "3e9f6d2494c0f6c0b3228013b47206159ea817df066fa2fbdb750890ef70b1d4",
+  "logSha256": "04b58a2bf3e64b0e58702b4ea41466881200a3a2761dace8ce654a8492985d59",
   "limitations": [
     "Two synthetic sentences test the live integration, not general model translation quality.",
     "Private connection files and authentication remain outside the repository.",

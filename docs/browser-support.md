@@ -89,4 +89,4 @@ parameters follow the [WebExtensions WebDriver draft](https://w3c.github.io/webe
 
 ## Current acceptance scope
 
-The final independent-product acceptance includes a complete 49-case Chromium run and actual Firefox extension checks. Public default-reader checks cover Wikipedia, MDN, GitHub, W3C and WHATWG; they do not qualify every selector adapter listed above. See [validation](validation.md) for current build hashes, the real Mac AGY route and the separately delegated Safari status.
+The final independent-product acceptance includes a complete 51-case Chromium run and actual Firefox extension checks. Public default-reader checks cover Wikipedia, MDN, GitHub, W3C and WHATWG; they do not qualify every selector adapter listed above. See [validation](validation.md) for current build hashes, the real Mac AGY route and the separately delegated Safari status.

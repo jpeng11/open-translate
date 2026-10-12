@@ -90,7 +90,7 @@ Browser settings, extension stores, protected viewers, DRM video and inaccessibl
 
 Documents are limited to 30 MiB, expanded archives to 100 MiB, PDFs to 200 pages and request batches to 20,000 characters. Cancellation prevents subsequent requests; an in-flight provider request may still finish.
 
-The complete acceptance run on 2026-10-12 passed 64 Node, 39 Python and 49 Chromium tests, plus actual Firefox extension checks. Public-page coverage includes Wikipedia, MDN, GitHub, W3C and WHATWG, with a separate real AGY check on a Mac. The [acceptance record](docs/validation.md) identifies scope and build hashes. These results do not establish translation quality for every website or model.
+The complete acceptance run on 2026-10-12 passed 66 Node, 39 Python and 51 Chromium tests, plus actual Firefox extension checks. Public-page coverage includes Wikipedia, MDN, GitHub, W3C and WHATWG, with a separate real AGY check on a Mac. The [acceptance record](docs/validation.md) identifies scope and build hashes. These results do not establish translation quality for every website or model.
 
 ## Development and documentation
 

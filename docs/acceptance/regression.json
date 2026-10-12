@@ -2,56 +2,56 @@
   "schema": 1,
   "suite": "regression",
   "status": "passed",
-  "testedAt": "2026-10-12T22:45:34.242Z",
-  "implementationSha256": "8dd07427a2d438c2750dd79859ef9fd338bc3a472f47fbdebdf43dcf010bc77a",
-  "verificationSha256": "9968b1d35b3f6d1dc76116fd00d65b5ab485174a138968d03df5082b247ad57f",
+  "testedAt": "2026-10-12T23:26:55.225Z",
+  "implementationSha256": "959eda573d5da737ad0daa5926ca4631e011958af8310004a12033ee92b2b2df",
+  "verificationSha256": "6fbc1335121dd040243120a73c3e0f7d3efd1b6aca5c3d460c2e445d88711b6a",
   "buildEvidence": {
     "schema": 1,
     "browser": "chrome",
-    "implementationSha256": "8dd07427a2d438c2750dd79859ef9fd338bc3a472f47fbdebdf43dcf010bc77a",
-    "bundleSha256": "fad02e923d7dd3eaed7e61ae57fdc2b839b071cd86351944fd081fa458912933"
+    "implementationSha256": "959eda573d5da737ad0daa5926ca4631e011958af8310004a12033ee92b2b2df",
+    "bundleSha256": "2e9f0a1031df4b235bcc5be95cfe7d46058c01132d5d95118871b7f716a90452"
   },
   "results": [
     {
       "id": "node",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 794,
-      "logSha256": "0f8b2a278528954275a9d524d154e161a0333eb528234b19719968d6a9d48aa8"
+      "durationMs": 839,
+      "logSha256": "3dd3c6ad6afd8c0d5fc13d271abd04a6ce542369f7681de405bc2b10bc5956a4"
     },
     {
       "id": "python",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 2145,
-      "logSha256": "7e54df5c75466e2f2aadcfa63cc77809d7259f1f11ae193405be41ab6b9f26d4"
+      "durationMs": 2030,
+      "logSha256": "8220ce3bfe33f06db1a696e8e2347c0c277bd521633322104a822e4a447f08ad"
     },
     {
       "id": "build",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 10977,
-      "logSha256": "dd84cd49d40a77809c050b6183b1b51613ba0e3106b535bf20abdec64aafb70c"
+      "durationMs": 11738,
+      "logSha256": "2a7a8008dc402b836a52a107677447c55c6d5defd64f0cbd37ab4683ec5adc15"
     },
     {
       "id": "chromium",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 103448,
-      "logSha256": "eb7a1705ebb1851311b2682ad6492c38da92cd4c2549875e3196fd167e4d563c"
+      "durationMs": 112154,
+      "logSha256": "6cf80a7dc96479b3a71fa43d30d5bbfbdda6b0ed6a4e6b83c31b01638abe2393"
     },
     {
       "id": "firefox",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 3146,
+      "durationMs": 3259,
       "logSha256": "924f41693f955e6f50bdbb54b8b9f51359d73f7e68128ac828ee5e74350eeb13"
     }
   ],
   "browser": {
-    "startTime": "2026-10-12T22:43:48.044Z",
-    "duration": 102732.715,
-    "expected": 49,
+    "startTime": "2026-10-12T23:25:00.315Z",
+    "duration": 111324.46800000001,
+    "expected": 51,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0,
@@ -219,6 +219,16 @@
       {
         "title": "popup language labels and display/cache controls persist through reopening",
         "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "six languages change real controls and persist across popup/workspace without changing entered content",
+        "file": "localization.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "localized statuses keep progress working and never translate source or translated output",
+        "file": "localization.spec.mjs",
         "status": "passed"
       },
       {

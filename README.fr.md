@@ -90,7 +90,7 @@ Les pages de paramètres, les boutiques d’extensions, les lecteurs protégés,
 
 Les limites sont de 30 MiB par document, 100 MiB pour une archive décompressée, 200 pages par PDF et 20 000 caractères par lot de requête. L’annulation empêche les requêtes suivantes ; une requête déjà envoyée au fournisseur peut se terminer.
 
-La validation complète du 2026-10-12 a réussi 64 tests Node, 39 tests Python et 49 tests Chromium, ainsi que les vérifications de l’extension dans Firefox. Les pages publiques testées proviennent de Wikipedia, MDN, GitHub, W3C et WHATWG. Un contrôle séparé a utilisé AGY sur un Mac. Le [rapport de validation](docs/validation.md) indique le périmètre et les empreintes des paquets ; ces résultats ne mesurent pas la qualité de traduction de tous les sites ou modèles.
+La validation complète du 2026-10-12 a réussi 66 tests Node, 39 tests Python et 51 tests Chromium, ainsi que les vérifications de l’extension dans Firefox. Les pages publiques testées proviennent de Wikipedia, MDN, GitHub, W3C et WHATWG. Un contrôle séparé a utilisé AGY sur un Mac. Le [rapport de validation](docs/validation.md) indique le périmètre et les empreintes des paquets ; ces résultats ne mesurent pas la qualité de traduction de tous les sites ou modèles.
 
 ## Développement et documentation
 
