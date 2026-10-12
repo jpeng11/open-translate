@@ -27,6 +27,11 @@ remain `different`; a reference assertion that cannot be established remains
 
 ## Compared workflows
 
+The final build-bound run compared 17 cases: **12 matched, 3 differed and 2
+reference cases remained unresolved**. The sanitized report is committed at
+[parity/web-results.json](parity/web-results.json). The report deliberately does
+not pass overall.
+
 The extended fixture covers these independent cases:
 
 | Case | Acceptance or observation |
@@ -50,13 +55,20 @@ The extended fixture covers these independent cases:
 
 ## Findings and limits
 
-The initial actual paired observations established equal table, mixed-text,
-iframe, open-shadow, dynamic-text, restoration/event, password-exclusion and SPA
-behavior. Inline visible text/markers and translation-only visible text also
-matched. The latest machine-readable report is authoritative for the current
-build, particularly the subsequently added cross-origin frame probe.
+The final actual paired observations matched inline visible text/markers,
+complete-sentence tables, same- and cross-origin frames, open shadow roots,
+dynamic source edits, translation-only visible text, source restoration/events,
+complete-sentence input, password/email exclusion and SPA route replacement.
+The feature probes use complete English sentences to avoid conflating DOM
+coverage with the original's short-text language detection.
 
-Two observed implementation differences remain explicit. With the configured
+Mixed leading/trailing prose matched in earlier runs but did not fully establish
+in the final fixture: the original left the leading run at its loading spinner
+and marked the container `data-imt_insert_failed_reason="already_translated"`.
+The replacement translated both runs. This unstable original behavior remains
+`reference-unresolved`, rather than being discarded or counted as a match.
+
+Three observed implementation differences remain explicit. With the configured
 custom service, the original emits plain translated text: its translated output
 contains neither the source anchor nor the strong element. Open Translate keeps
 a safe translated anchor and strong markup. In translation-only mode, the

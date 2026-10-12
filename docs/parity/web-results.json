@@ -1,0 +1,326 @@
+{
+  "schema": 1,
+  "networkPolicy": {
+    "externalHostnameResolution": "blocked",
+    "allowedHosts": [
+      "localhost",
+      "127.0.0.1"
+    ],
+    "proxy": "disabled",
+    "literalIpTraffic": "not firewalled"
+  },
+  "createdAt": "2026-10-12T21:49:40.483Z",
+  "implementationSha256": "84723ce80e6495ea9e3e400c07739526c2ec0f56d7689b1d2334c11334f6522d",
+  "buildEvidence": {
+    "schema": 1,
+    "browser": "chrome",
+    "implementationSha256": "84723ce80e6495ea9e3e400c07739526c2ec0f56d7689b1d2334c11334f6522d",
+    "bundleSha256": "4e9a46dbf6266b12386d2d647107333c1ed6cd391c159f0c8183d0345d49664d"
+  },
+  "replacementBundleSha256": {
+    "background.js": "2331d83d7ea9add486d663d84cb3eecfbfe178d49f926fb087863cab895a2a4e",
+    "content.js": "5bd84d12760034ee6710c77ab784d75077dfe9696775b22243981661f45d3acf",
+    "manifest.json": "b3bef1fe68fb54d69178716c88c88c4e1743e38fef487d7ed6fdc5593991427c"
+  },
+  "reference": {
+    "version": "1.33.3",
+    "commit": "c470f0aca3c75b2785c9009a0ac48e78ead34126",
+    "contentSha256": "bfe7e3e640bf90bb6b1103b0fe2e097068a751ca182beadc0bba25a8e38cda4c"
+  },
+  "fixtureSha256": "d921ef24f30362859b4c456e8b0894435f618424944b8e8a2a6af21f3b92100e",
+  "harnessSha256": "e16454adacb6fb5cf52d41d9e277c079bdbfa12271b7c174314592c0cc49503e",
+  "cases": [
+    {
+      "name": "inline-text-markers",
+      "status": "matched",
+      "original": {
+        "status": "observed",
+        "value": {
+          "text": "Bonjour linked reader and bold reader {0}."
+        }
+      },
+      "replacement": {
+        "status": "observed",
+        "value": {
+          "text": "Bonjour linked reader and bold reader {0}."
+        }
+      }
+    },
+    {
+      "name": "inline-target-markup",
+      "status": "different",
+      "original": {
+        "status": "observed",
+        "value": {
+          "linkCount": 0,
+          "href": null,
+          "boldCount": 0,
+          "bold": null
+        }
+      },
+      "replacement": {
+        "status": "observed",
+        "value": {
+          "linkCount": 1,
+          "href": "https://example.com/reader?q=1",
+          "boldCount": 1,
+          "bold": "bold reader"
+        }
+      }
+    },
+    {
+      "name": "table-heading-cell",
+      "status": "matched",
+      "original": {
+        "status": "observed",
+        "value": {
+          "heading": "Bonjour table heading. This is a complete English sentence for the translation test.",
+          "cell": "Bonjour table cell. This is a complete English sentence for the translation test."
+        }
+      },
+      "replacement": {
+        "status": "observed",
+        "value": {
+          "heading": "Bonjour table heading. This is a complete English sentence for the translation test.",
+          "cell": "Bonjour table cell. This is a complete English sentence for the translation test."
+        }
+      }
+    },
+    {
+      "name": "mixed-leading-trailing",
+      "status": "reference-unresolved",
+      "original": {
+        "status": "unobserved",
+        "error": "expect(received).toEqual(expected) // deep equality\n\nExpected: ArrayContaining [\"Bonjour leading prose around a nested paragraph.\", \"Bonjour trailing prose around a nested paragraph.\"]\nReceived: [\"Bonjour linked reader and bold reader {0}.\", \"Bonjour trailing prose around a nested paragraph.\", \"Bonjour table heading. This is a complete English sentence for the translation test.\", \"Bonjour table cell. This is a complete English sentence for the translation test.\", \"Bonjour initial dynamic paragraph.\", \"Bonjour open shadow paragraph. This is a complete English sentence for the translation test.\"]\n\nCall Log:\n- Timeout 12000ms exceeded while waiting on the predicate"
+      },
+      "replacement": {
+        "status": "observed",
+        "value": {
+          "leading": true,
+          "trailing": true
+        }
+      }
+    },
+    {
+      "name": "same-origin-frame",
+      "status": "matched",
+      "original": {
+        "status": "observed",
+        "value": {
+          "text": "Bonjour iframe paragraph. This is a complete English sentence for the translation test."
+        }
+      },
+      "replacement": {
+        "status": "observed",
+        "value": {
+          "text": "Bonjour iframe paragraph. This is a complete English sentence for the translation test."
+        }
+      }
+    },
+    {
+      "name": "cross-origin-frame",
+      "status": "matched",
+      "original": {
+        "status": "observed",
+        "value": {
+          "text": "Bonjour iframe paragraph. This is a complete English sentence for the translation test."
+        }
+      },
+      "replacement": {
+        "status": "observed",
+        "value": {
+          "text": "Bonjour iframe paragraph. This is a complete English sentence for the translation test."
+        }
+      }
+    },
+    {
+      "name": "open-shadow",
+      "status": "matched",
+      "original": {
+        "status": "observed",
+        "value": {
+          "text": "Bonjour open shadow paragraph. This is a complete English sentence for the translation test."
+        }
+      },
+      "replacement": {
+        "status": "observed",
+        "value": {
+          "text": "Bonjour open shadow paragraph. This is a complete English sentence for the translation test."
+        }
+      }
+    },
+    {
+      "name": "reused-text-node",
+      "status": "matched",
+      "original": {
+        "status": "observed",
+        "value": {
+          "text": "Bonjour updated dynamic paragraph.",
+          "count": 1
+        }
+      },
+      "replacement": {
+        "status": "observed",
+        "value": {
+          "text": "Bonjour updated dynamic paragraph.",
+          "count": 1
+        }
+      }
+    },
+    {
+      "name": "translation-only",
+      "status": "matched",
+      "original": {
+        "status": "observed",
+        "value": {
+          "visibleText": "Bonjour linked reader and bold reader {0}."
+        }
+      },
+      "replacement": {
+        "status": "observed",
+        "value": {
+          "visibleText": "Bonjour linked reader and bold reader {0}."
+        }
+      }
+    },
+    {
+      "name": "translation-only-source-dom",
+      "status": "different",
+      "original": {
+        "status": "observed",
+        "value": {
+          "sourceLinkInLiveDom": false
+        }
+      },
+      "replacement": {
+        "status": "observed",
+        "value": {
+          "sourceLinkInLiveDom": true
+        }
+      }
+    },
+    {
+      "name": "source-link-event-after-restore",
+      "status": "matched",
+      "original": {
+        "status": "observed",
+        "value": {
+          "clickPreserved": true,
+          "text": "Hello linked reader and bold reader {0}."
+        }
+      },
+      "replacement": {
+        "status": "observed",
+        "value": {
+          "clickPreserved": true,
+          "text": "Hello linked reader and bold reader {0}."
+        }
+      }
+    },
+    {
+      "name": "short-focused-input",
+      "status": "reference-unresolved",
+      "original": {
+        "status": "unobserved",
+        "error": "expect(locator).toHaveValue(expected) failed\n\nLocator:  locator('#input')\nExpected: \"Bonjour focused input sentence.\"\nReceived: \"Hello focused input sentence.\"\nTimeout:  12000ms\n\nCall log:\n  - Expect \"toHaveValue\" locator('#input') with timeout 12000ms\n  - waiting for locator('#input')\n    28 × locator resolved to <textarea id=\"input\">Hello focused input sentence.</textarea>\n       - unexpected value \"Hello focused input sentence.\"\n"
+      },
+      "replacement": {
+        "status": "observed",
+        "value": {
+          "value": "Bonjour focused input sentence.",
+          "targetLanguage": "fr"
+        }
+      }
+    },
+    {
+      "name": "focused-input",
+      "status": "matched",
+      "original": {
+        "status": "observed",
+        "value": {
+          "value": "Bonjour world. This is a complete English sentence for the translation test",
+          "targetLanguage": "fr"
+        }
+      },
+      "replacement": {
+        "status": "observed",
+        "value": {
+          "value": "Bonjour world. This is a complete English sentence for the translation test",
+          "targetLanguage": "fr"
+        }
+      }
+    },
+    {
+      "name": "input-terminal-period",
+      "status": "different",
+      "original": {
+        "status": "observed",
+        "value": {
+          "value": "Bonjour world. This is a complete English sentence for the translation test"
+        }
+      },
+      "replacement": {
+        "status": "observed",
+        "value": {
+          "value": "Bonjour world. This is a complete English sentence for the translation test."
+        }
+      }
+    },
+    {
+      "name": "password-exclusion",
+      "status": "matched",
+      "original": {
+        "status": "observed",
+        "value": {
+          "value": "unchanged",
+          "submitted": false
+        }
+      },
+      "replacement": {
+        "status": "observed",
+        "value": {
+          "value": "unchanged",
+          "submitted": false
+        }
+      }
+    },
+    {
+      "name": "email-exclusion",
+      "status": "matched",
+      "original": {
+        "status": "observed",
+        "value": {
+          "value": "unchanged",
+          "submitted": false
+        }
+      },
+      "replacement": {
+        "status": "observed",
+        "value": {
+          "value": "unchanged",
+          "submitted": false
+        }
+      }
+    },
+    {
+      "name": "spa-route-replacement",
+      "status": "matched",
+      "original": {
+        "status": "observed",
+        "value": {
+          "text": "Bonjour replacement route paragraph.",
+          "count": 1
+        }
+      },
+      "replacement": {
+        "status": "observed",
+        "value": {
+          "text": "Bonjour replacement route paragraph.",
+          "count": 1
+        }
+      }
+    }
+  ],
+  "status": "differences-or-unknowns",
+  "scope": "Only the listed desktop Chromium fixture workflows, using a deterministic private endpoint. Unobserved reference behavior is unresolved, never counted as parity."
+}
