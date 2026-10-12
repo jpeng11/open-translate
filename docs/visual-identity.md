@@ -13,7 +13,11 @@ An original language workbench for people using their own translation engine.
 
 The single token system in `extension/pages/ui.css` also feeds Rare UI's theme aliases. The injected page panel and translation marks use the same ink/paper/teal palette. Video overlays retain a high-contrast neutral background for readability.
 
-Our original SVG mark consists of offset brackets and a central diamond. All four extension icon sizes are rendered from this vector. No reference-product assets or fonts are used for branding. Document font assets are separately attributed in their font notices.
+The original mark is an open globe: a paper-colored ring, mint meridian and horizon, and a point beyond the opening. The horizon extends through the open edge, echoing “Don’t let language stand between you and the world.” It sits on an ink tile with rounded corners and uses the same artwork in light and dark themes. No reference-product assets or fonts are used for branding. Document font assets are separately attributed in their font notices.
+
+`extension/assets/identity.svg` is the editable master. It supplies the workspace, popup and tab favicon. The four manifest icons (16, 32, 48 and 128px), 512px README image and 1200 × 630 sharing card are rendered with `npm run brand:build` using the existing Playwright dependency. Install Chromium with `npx playwright install chromium` if needed. PNGs are checked in, so normal extension builds do not require a browser to render artwork. All six README editions use the same mark with their own localized slogan.
+
+Keep the mark square, preserve its colors and leave at least one quarter of its width clear around it when used alone. Do not add detail at small sizes; 16px is the minimum. The original logo artwork is covered by the repository’s MIT license. The sharing card is available at `docs/assets/social-card.png` for manual use in GitHub’s social preview setting.
 
 Workspace navigation starts with tasks, followed by engine and preferences. The popup is 392px wide with an engine header, visible language labels, page action, reading preferences and a linear tool list. It does not reproduce the reference layout. Components use 6–10px corner radii, restrained borders, system typography and mono labels. The workspace collapses to a wrapping navigation bar on narrow screens.
 

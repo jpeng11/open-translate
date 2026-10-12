@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/assets/logo.png" width="112" height="112" alt="Open Translate"></p>
+
 # Open Translate
 
 言葉の壁を越えて、世界を見よう。

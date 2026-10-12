@@ -1,1 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128"><rect width="128" height="128" rx="28" fill="#12232e"/><path d="M26 35h35v14H40v30h21v14H26z" fill="#b8edd8"/><path d="M68 35h34v58H88V49H68z" fill="#ffffff"/><path d="m54 63 10-10 10 10-10 10z" fill="#b8edd8"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Open Translate</title>
+  <desc id="desc">An open globe with a horizon extending through its edge and a point beyond it.</desc>
+  <rect width="128" height="128" rx="30" fill="#12232e"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M76 29.1a37 37 0 1 0 23 45.9" stroke="#fffef9" stroke-width="8"/>
+    <path d="M61 28c-18 18-18 54 0 72M61 28c9 9 13.5 22.5 13.5 36" stroke="#b8edd8" stroke-width="6"/>
+    <path d="M28 64h73" stroke="#b8edd8" stroke-width="8"/>
+  </g>
+  <circle cx="97" cy="33" r="7" fill="#b8edd8"/>
+</svg>

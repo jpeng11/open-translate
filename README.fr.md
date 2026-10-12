@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/assets/logo.png" width="112" height="112" alt="Open Translate"></p>
+
 # Open Translate
 
 Ne laissez pas la langue vous couper du monde.

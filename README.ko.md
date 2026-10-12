@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/assets/logo.png" width="112" height="112" alt="Open Translate"></p>
+
 # Open Translate
 
 언어의 벽을 넘어 세상을 만나세요.

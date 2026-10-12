@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/assets/logo.png" width="112" height="112" alt="Open Translate"></p>
+
 # Open Translate
 
 Don’t let language stand between you and the world.

@@ -2,13 +2,13 @@
   "schema": 1,
   "suite": "ui",
   "status": "passed",
-  "testedAt": "2026-10-12T23:26:55.225Z",
-  "implementationSha256": "959eda573d5da737ad0daa5926ca4631e011958af8310004a12033ee92b2b2df",
+  "testedAt": "2026-10-12T23:43:36.930Z",
+  "implementationSha256": "3bb0aa1c4750d9c65c81cf6b1cfed3768b06339b127e2980eb8dd63510e3de2f",
   "buildEvidence": {
     "schema": 1,
     "browser": "chrome",
-    "implementationSha256": "959eda573d5da737ad0daa5926ca4631e011958af8310004a12033ee92b2b2df",
-    "bundleSha256": "2e9f0a1031df4b235bcc5be95cfe7d46058c01132d5d95118871b7f716a90452"
+    "implementationSha256": "3bb0aa1c4750d9c65c81cf6b1cfed3768b06339b127e2980eb8dd63510e3de2f",
+    "bundleSha256": "b314a12e66433323a153b9f6381271d392964b608be03d53033d07354df50f82"
   },
   "cases": [
     {
@@ -40,80 +40,110 @@
   "screenshots": [
     {
       "path": "dist/acceptance/ui/dark-connection-390.png",
-      "sha256": "b82fe4d80db7d797a7d8bc2e08bd846572bf9201fd193113b89a94fe8a9057b8"
+      "sha256": "6bb03cade714151b45f1799f30dedbda461e789df499ed2e2c2f432dd2f0ba4d"
     },
     {
       "path": "dist/acceptance/ui/dark-home-1280.png",
-      "sha256": "25772990c82ab5732054d577c591bf9672afd842b4bf63489c4a865eb9ede3bc"
+      "sha256": "e019ff0957c60bba321ba337204d2fc929991b24306d92a751390a6432356b5d"
     },
     {
       "path": "dist/acceptance/ui/light-connection-390.png",
-      "sha256": "222e0840b395696ff4cbee7d5504aaf81bd8377dfdcd2a1b716783abbdee8daa"
+      "sha256": "3a9654b7086797a7baf62ccf0f2c4b5c4b32bbe6b5ee6939e7091addfd9a347f"
     },
     {
       "path": "dist/acceptance/ui/light-home-1280.png",
-      "sha256": "68418f075cbbdb902e19d07df698eec60c760fa63cf6b9ef6990b33a158456da"
+      "sha256": "b0ec165eff678950a778e2835070c71910c018e0e8f01f4d99c9fd37c7e7c7f5"
     },
     {
       "path": "dist/acceptance/ui/popup-dark.png",
-      "sha256": "69e4a657cf70047b73368221b4096f74d3ef17864f93cd3fd8baac67b04f66e5"
+      "sha256": "dac1d302e2af9381c8574fa9a0f778cd70e15b5a047244c95136aaeb1affd2af"
     },
     {
       "path": "dist/acceptance/ui/popup-light.png",
-      "sha256": "ab2364a96c8b9274ee5f560f77eef93597074c2355b819b24cda828885e32a60"
+      "sha256": "bb5ad9832b2d2874a8e9dffbb91cf20a2d3a097f739b98813028181c6595e34c"
     },
     {
       "path": "dist/acceptance/localization/popup-en.png",
-      "sha256": "690eadb5a8d84ac98eeed0e52830419dd15a440dec312ab4e893191df656da5b"
+      "sha256": "49852813fac9f279f7372c9c197249d84b3349f1f10fd71c4807c21bb1e696ea"
     },
     {
       "path": "dist/acceptance/localization/popup-es.png",
-      "sha256": "4c2d43bf912d6a218f45413dfa7bafe135e42085d7c4d9dc24fc0839619120e0"
+      "sha256": "b071e56663da9b2cad8058327009579d1d1242d4f73fa46f58701b92490de677"
     },
     {
       "path": "dist/acceptance/localization/popup-fr.png",
-      "sha256": "63e1fa81a23acc59f25da74f088f4338e3883cea4185fa6920a29e4b5245667a"
+      "sha256": "6db6687622ede2f0320e06632705c291ea3c3a336cc17f1ad0d245e2cf372631"
     },
     {
       "path": "dist/acceptance/localization/popup-ja.png",
-      "sha256": "0387f8244345d11213524eca5425d50ffa02ae1488fdad8eb7b481a47e4ddcd4"
+      "sha256": "f276b0ded12e37e63ce12e100ee58510e7221782f55eeb7bce49f979aff6e695"
     },
     {
       "path": "dist/acceptance/localization/popup-ko.png",
-      "sha256": "7248d4574c1d4c7da1f9c1a908e5c4c2ccafe168a49013ea3691502674044b04"
+      "sha256": "86361630c4e3934e5c907ec2eb37a43b6420eab680383de21f7fd46e911ea911"
     },
     {
       "path": "dist/acceptance/localization/popup-zh.png",
-      "sha256": "ca2b57650f161ec05cd3e2c82fca51357a36dcec981f803689371279b369a275"
+      "sha256": "696f8451c8bf02b1c4ec0aaa64ece25b18b428729e8d4af96dc0dd14ad48130b"
     },
     {
       "path": "dist/acceptance/localization/workspace-en.png",
-      "sha256": "6fdec6174c7926eca9ac26f8f049a043611a3c3078c5f8d6aa28fe20e8425d77"
+      "sha256": "cc71e77e9729a7bd2da396692c3255f3ca94c882de7016527851adbfb4928a6d"
     },
     {
       "path": "dist/acceptance/localization/workspace-es.png",
-      "sha256": "61ad19d4efe76ac50baf2be7fcfc374df4fb50d2f6664dcde09261f1c88cbafa"
+      "sha256": "cf976622110497489ea8a3609b0e7f4a876f81e16619a4f42695602606f77a66"
     },
     {
       "path": "dist/acceptance/localization/workspace-fr.png",
-      "sha256": "7443cf63b341c700c373c945615e245c272f6e1d7be2c026553b3cad58bd19bb"
+      "sha256": "02234d5714378744cb56198c50cdbb70be45e699c097b9501a135b096684feaf"
     },
     {
       "path": "dist/acceptance/localization/workspace-ja.png",
-      "sha256": "3a99773cab8c016a1687968429e53e55204af6e503825bd553de90ae8c18ea58"
+      "sha256": "0771fc3a4841b301a45ddd7bedcee5a32411ca84d61341cbd20183d022c8378e"
     },
     {
       "path": "dist/acceptance/localization/workspace-ko.png",
-      "sha256": "e652ac9898a5f7eeb75ae81e742e8ea942690a5430e694ec58f75a2451e5f999"
+      "sha256": "6e617e734db37228d2f2afa1afd4f6a9633d5c441901f2b4d29a406c0b31a668"
     },
     {
       "path": "dist/acceptance/localization/workspace-zh.png",
-      "sha256": "092eee291ffe36021cb453a898867182c2abbf5fa3e055aa30b168f8a332d00f"
+      "sha256": "909695cff36b451f0365b997f5661b1b8bd42b41d970597e831323286cb7c7ee"
     }
   ],
-  "visualReview": "Reviewed rendered Chinese workspace, French and Korean popup screenshots. Six language controls, all eight routes at narrow width, cross-window persistence and preservation of user input/output passed automated checks. Light/dark English workspace and popup checks also passed.",
+  "visualReview": "Reviewed the original open-globe logo at 16/32/48/128px and the 1200 × 630 sharing card, plus the updated workspace and popup in light/dark themes. All five existing UI/localization cases passed. The logo and both favicon formats decoded; manifest icon dimensions and source bytes matched in all four browser builds.",
   "limitations": [
     "Focused labels, keyboard, contrast and overflow checks are not full WCAG certification.",
     "Original interface assets were not copied; this visual review is not a legal similarity clearance."
+  ],
+  "brandAssets": [
+    {
+      "path": "extension/assets/identity.svg",
+      "sha256": "d1981f6e80990d6dfac680d502e9bbfc80bdf19107c0040d41ae9e229c274e1d"
+    },
+    {
+      "path": "extension/assets/icon16.png",
+      "sha256": "2069307b3220155c1af6c53bf33ff313792b764d6d60908a7ab9420bfc66fb04"
+    },
+    {
+      "path": "extension/assets/icon32.png",
+      "sha256": "2009b6a956666f07f7c21d556dee1e44e9864307e5602dabbeb973ecd0a93336"
+    },
+    {
+      "path": "extension/assets/icon48.png",
+      "sha256": "7983d6a94692769f771827534ec5cada39e5b6ad23763c6d459601db0d6eafd3"
+    },
+    {
+      "path": "extension/assets/icon128.png",
+      "sha256": "8be5d151e48f83c4d3ec6da6cbf9df8f1253b278be6bec2713fae3a6620611fd"
+    },
+    {
+      "path": "docs/assets/logo.png",
+      "sha256": "afd1166e61ba9a4ded7acdd339333d56d4c82b9975907c61395b9f01ec31964d"
+    },
+    {
+      "path": "docs/assets/social-card.png",
+      "sha256": "7b094708924243e218336a0c12ae7d99c7b5a62c4b5c246d1cc9a60f24ebbc6b"
+    }
   ]
 }

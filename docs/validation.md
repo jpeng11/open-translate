@@ -2,9 +2,15 @@
 
 Acceptance date: 2026-10-12. The current product follows the [accepted behavior contract](accepted-behavior.md), with an independent [visual identity](visual-identity.md). Recommended differences and unresolved reference observations are retained explicitly. Matching the commercial product's UI or defects is not the release requirement.
 
-The final implementation SHA-256 is `959eda573d5da737ad0daa5926ca4631e011958af8310004a12033ee92b2b2df`. The Linux Chromium bundle is `2e9f0a1031df4b235bcc5be95cfe7d46058c01132d5d95118871b7f716a90452`; the Mac bundle is `176e45849b428105e5b7ec09e54d9f012c9b9129639dcb6d6d9ee8b5b38f0b7d`. They contain the same implementation inputs; platform-produced bundle bytes differ and are separately recorded.
+The full functional acceptance at commit `775d87e` used implementation SHA-256 `959eda573d5da737ad0daa5926ca4631e011958af8310004a12033ee92b2b2df`. The Linux Chromium bundle is `2e9f0a1031df4b235bcc5be95cfe7d46058c01132d5d95118871b7f716a90452`; the Mac bundle is `176e45849b428105e5b7ec09e54d9f012c9b9129639dcb6d6d9ee8b5b38f0b7d`. They contain the same implementation inputs; platform-produced bundle bytes differ and are separately recorded.
 
-## Current results
+## Logo update
+
+The subsequent logo-only update replaces the original bracket mark with an open globe, adds tab favicons, and updates the README images and sharing artwork. All four browser packages built successfully. All five existing UI/localization tests passed, covering light/dark themes, narrow layouts and six languages. Manifest PNG dimensions and bytes match the source artwork in every package; both favicon formats and the in-page mark decode successfully. Updated screenshots were visually reviewed. See the [current UI evidence](acceptance/ui.json) and [artwork source and export instructions](visual-identity.md).
+
+This update uses implementation SHA-256 `3bb0aa1c4750d9c65c81cf6b1cfed3768b06339b127e2980eb8dd63510e3de2f` and Linux Chrome bundle `b314a12e66433323a153b9f6381271d392964b608be03d53033d07354df50f82`. Translation and bridge code did not change. Full regression, public-site, document, media and Mac live-provider reports below remain bound to `775d87e`; those suites were not rerun for the artwork change. Their old hashes are preserved, so `acceptance:verify` will require fresh broad evidence before qualifying this new asset build as a full acceptance release.
+
+## Full functional results at 775d87e
 
 | Acceptance | Result | Evidence |
 | --- | --- | --- |
@@ -15,11 +21,11 @@ The final implementation SHA-256 is `959eda573d5da737ad0daa5926ca4631e011958af83
 | Public websites | Five sites plus two stress fixtures passed | [Web report](acceptance/web.json), [scope](web-acceptance.md) |
 | Documents | 19 passing browser cases, included in the 51 above | [Document report](acceptance/documents.json), [scope and limits](document-acceptance.md) |
 | Media/OCR/live | 24 Node + 9 browser cases, included above | [Media report](acceptance/media.json), [scope and limits](media-acceptance.md) |
-| Independent UI | All eight routes in light/dark and desktop/narrow layouts; six UI languages; keyboard navigation, labels, contrast, overflow and cross-window language persistence | [UI report and screenshot hashes](acceptance/ui.json) |
+| Independent UI | All eight routes in light/dark and desktop/narrow layouts; six UI languages; keyboard navigation, labels, contrast, overflow and cross-window language persistence | [UI report and screenshot hashes](acceptance/ui.json), refreshed for the logo update above |
 | Mac live AGY integration | Final build passed actual extension → bridge → AGY translation | [Provider report](acceptance/mac-agent.json) |
 | Chrome/Edge/Firefox/Safari packaging | Four final archives built, about 29 MiB each | Build stamps in `dist/<browser>/build-evidence.json` |
 
-`npm run acceptance` completed successfully after the final source freeze. `npm run acceptance:verify` validated all four regression/web/documents/media report bindings against the current implementation and complete Chrome bundle. The regression additionally binds tests, scripts and Python backend inputs. Focused reports are subsets of the full run, not additional test counts.
+`npm run acceptance` completed successfully after the final source freeze. `npm run acceptance:verify` validated all four regression/web/documents/media report bindings against that implementation and complete Chrome bundle. The regression additionally binds tests, scripts and Python backend inputs. Focused reports are subsets of the full run, not additional test counts.
 
 The public site run used actual Wikipedia, MDN, GitHub, W3C and WHATWG pages with default reader rules. It checked 35 sampled paragraphs, 65 safe links, code exclusions, dynamic changes, preserved events and exact restoration. Stress fixtures covered the tail of a 5,105-paragraph page, 300 inserted nodes, and frames. A local deterministic provider isolates extension mechanics; it does not establish linguistic translation quality or unrestricted website compatibility.
 
