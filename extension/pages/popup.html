@@ -1,0 +1,6 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Open Translate</title><link rel="stylesheet" href="ui.css"></head><body class="popup">
+<div class="brand"><span class="mark">ot</span>Open Translate</div><h1>Read in your language.</h1>
+<div class="field"><label for="target">Translate to</label><input id="target" list="languages" value="en"><datalist id="languages"></datalist></div>
+<div class="field"><label for="mode">Page display</label><select id="mode"><option value="bilingual">Original + translation</option><option value="translation">Translation only</option></select></div>
+<div class="actions"><button class="primary" id="translate-page">Translate this page</button><button id="page.restore">Restore page</button><button id="translate-selection">Selection</button><button id="translate-input">Translate input</button><button id="captions.toggle">Video captions</button></div>
+<p class="status" id="status" role="status"></p><div class="popup-footer"><span>Your language. Your agent.</span><button class="ghost" id="workspace">Open workspace ↗</button></div><script type="module" src="popup.js"></script></body></html>

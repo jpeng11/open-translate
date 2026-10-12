@@ -22,7 +22,7 @@ export function parseSubtitles(text,format='srt') {
     if(index<0)continue;
     const timing=lines[index].match(/^\s*((?:\d+:)?\d{2}:\d{2}[.,]\d{3})\s*-->\s*((?:\d+:)?\d{2}:\d{2}[.,]\d{3})(.*)$/);
     if(!timing)throw new Error('Invalid subtitle timestamp.');
-    cues.push({id:index?lines.slice(0,index).join('\n'):String(cues.length+1),start:timing[1],end:timing[2],settings:timing[3],text:lines.slice(index+1).join('\n'),blockIndex});
+    cues.push({id:index?lines.slice(0,index).join('\n'):String(cues.length+1),start:timing[1],end:timing[2],settings:timing[3],text:lines.slice(index+1).join('\n').replace(/\n+$/,''),blockIndex});
   }
   if(!cues.length)throw new Error('No timed subtitle cues found.');
   return {format:formatVtt?'vtt':'srt',chunks,cues};

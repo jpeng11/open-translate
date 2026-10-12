@@ -25,7 +25,9 @@ export function endpoint(base, suffix='chat/completions') {
   return url.href;
 }
 export function validateSettings(input) {
-  const value={...DEFAULTS,...input};
+  const value=Object.fromEntries(Object.entries(DEFAULTS).map(([key,fallback])=>[key,input?.[key] ?? fallback]));
+  for(const key of ['apiUrl','bridgeUrl','model','apiKey','speechUrl','speechKey','speechModel','ocrLanguage','captionSelector'])if(typeof value[key]!=='string' || value[key].length>16384)fail('configuration',`Invalid ${key}.`);
+  for(const key of ['jsonMode','autoTranslate','selection','hover','cache'])if(typeof value[key]!=='boolean')fail('configuration',`Invalid ${key}.`);
   if (!['bridge','openai'].includes(value.provider)) fail('configuration','Choose a supported provider.');
   if (value.provider==='bridge') endpoint(value.bridgeUrl,'translate');
   else { endpoint(value.apiUrl); if (!value.model.trim()) fail('configuration','Enter your endpoint model name.'); }
@@ -41,6 +43,9 @@ export function validateSettings(input) {
   if (!Array.isArray(value.rules) || value.rules.length>100) fail('configuration','At most 100 site rules are supported.');
   for (const rule of value.rules) {
     if (!rule || typeof rule.host!=='string' || !/^(\*\.)?[a-z0-9.-]+(?::\d+)?$/i.test(rule.host)) fail('configuration','Rules need a hostname, such as example.com or *.example.com.');
+    for(const key of ['source','target','inputTarget'])if(key in rule && (typeof rule[key]!=='string' || !/^[a-z][a-z0-9-]{0,34}$/i.test(rule[key]) || key!=='source' && rule[key]==='auto'))fail('configuration','Invalid language in site rule.');
+    for(const key of ['disabled','autoTranslate','selection','hover'])if(key in rule && typeof rule[key]!=='boolean')fail('configuration','Site rule flags must be true or false.');
+    if(rule.mode && !['bilingual','translation'].includes(rule.mode) || rule.style && !['underline','muted','box','plain'].includes(rule.style) || rule.batchSize!==undefined && (!Number.isInteger(rule.batchSize) || rule.batchSize<1 || rule.batchSize>16))fail('configuration','Invalid site rule display or batch size.');
     if (rule.include && typeof rule.include!=='string' || rule.exclude && typeof rule.exclude!=='string') fail('configuration','Rule selectors must be text.');
   }
   if (value.speechUrl) endpoint(value.speechUrl,'audio/transcriptions');
@@ -52,7 +57,7 @@ export function publicSettings(settings, pageUrl='') {
   const result=Object.fromEntries(keys.map(k=>[k,settings[k]]));
   let host=''; try { host=new URL(pageUrl).host; } catch {}
   for (const rule of settings.rules || []) {
-    const match=rule.host.startsWith('*.') ? host===rule.host.slice(2) || host.endsWith('.'+rule.host.slice(2)) : host===rule.host;
+    const pattern=rule.host.toLowerCase();const match=pattern.startsWith('*.') ? host===pattern.slice(2) || host.endsWith('.'+pattern.slice(2)) : host===pattern;
     if (match) for (const key of [...keys,'include','exclude','disabled']) if (key in rule) result[key]=rule[key];
   }
   return result;

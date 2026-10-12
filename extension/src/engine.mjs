@@ -26,7 +26,7 @@ async function prune() {
   request.onsuccess=()=>{const cursor=request.result;if(!cursor)return;if(++count>1000 || cursor.value.time<Date.now()-TTL)cursor.delete();cursor.continue();};
 }
 export function createEngine() {
-  const memory=new Map(), waiting=[], inFlight=new Map(); let active=0;
+  const memory=new Map(), waiting=[], inFlight=new Map(); let active=0,generation=0;
   const drain=()=>{
     while(waiting.length && active<waiting[0].settings.concurrency) {
       const next=waiting.shift(); active++;
@@ -36,7 +36,7 @@ export function createEngine() {
   return {
     async translate(job, settings) {
       const signature=JSON.stringify({job,provider:settings.provider,url:settings.provider==='bridge'?settings.bridgeUrl:settings.apiUrl,
-        model:settings.model,glossary:settings.glossary,jsonMode:settings.jsonMode});
+        model:settings.model,account:settings.apiKey,glossary:settings.glossary,jsonMode:settings.jsonMode});
       const hash=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(signature));
       const key=Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,'0')).join('');
       const saved=memory.get(key);
@@ -49,12 +49,12 @@ export function createEngine() {
       const promise=new Promise((resolve,reject)=>{waiting.push({job,settings,resolve,reject});drain();});
       inFlight.set(key,promise);
       try {
-        const value=await promise; memory.set(key,{value,time:Date.now()});
+        const version=generation;const value=await promise;if(version!==generation)return value; memory.set(key,{value,time:Date.now()});
         if(memory.size>200)memory.delete(memory.keys().next().value);
         if(settings.cache)try{await store('put',key,value);await prune();}catch{}
         return value;
       }finally{inFlight.delete(key);}
     },
-    async clear() {memory.clear();await store('clear').catch(()=>{});}
+    async clear() {generation++;memory.clear();await store('clear').catch(()=>{});}
   };
 }

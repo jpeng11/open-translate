@@ -1,6 +1,6 @@
 # Mac setup and current runtime
 
-The repository is checked out at `~/projects/open-translate` on the Mac mini, with its local commit history and no GitHub remote.
+The repository is checked out at `~/projects/open-translate` on the Mac mini, with its local commit history and the GitHub origin `git@github.com:jpeng11/open-translate.git`.
 
 The current bridge uses Homebrew Python 3.12 and the installed `~/.local/bin/agy`, with model `gemini-3.8-flash-low`. It listens at `http://127.0.0.1:8765`. Its configuration and runtime files are in:
 
@@ -23,9 +23,9 @@ Open the generated settings on the Mac:
 open -a TextEdit "$HOME/Library/Application Support/Open Translate/extension-config.json"
 ```
 
-In Immersive Translate, enable **Options → Developer settings → Beta Testing Features** if necessary. Merge the displayed `translationService` and `translationServices.custom` values into **Developer settings → Edit Full User Config**, preserving other settings. Alternatively, select **Custom API** in General settings and copy the URL and request settings into its fields.
+For the standalone extension, build with `npm ci && npm run build` and load `dist/chrome` through Chrome/Edge’s extensions page in Developer mode. In **Workspace → Connection**, choose **Local bridge** and import `extension-config.json` using the file picker, or paste its full translation URL. Immersive Translate is not required.
 
-The generated settings use concurrency one and a 210-second timeout, matching the bridge's 180-second agent timeout. Start with one text group per request if full webpage batches are slow. Select your target language and translate a webpage.
+Use concurrency one, a 210-second timeout and batch size one to start, matching the bridge’s 180-second agent timeout. Select your target language and translate a webpage.
 
 The bridge runs in the background for the current setup; it is not installed as a login service. Check it with:
 

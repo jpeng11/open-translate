@@ -1,4 +1,4 @@
-import {DEFAULTS,validateSettings,publicSettings,validateJob,endpoint,responseJson,TranslationError} from './core.mjs';
+import {DEFAULTS,validateSettings,publicSettings,validateJob,TranslationError} from './core.mjs';
 import {createEngine} from './engine.mjs';
 const api=globalThis.browser || chrome;
 const engine=createEngine();
@@ -24,17 +24,6 @@ async function activeCommand(type,extra={}) {
   try {return await api.tabs.sendMessage(tab.id,{type,...extra});}
   catch {throw new Error('This browser page cannot be translated. Open a normal website and reload it after installing the extension.');}
 }
-async function transcribe(message,config) {
-  if(!config.speechUrl || !config.speechModel)throw new Error('Configure a speech endpoint and model under Connection first.');
-  if(typeof message.audio!=='string' || message.audio.length>8*1024*1024 || !['audio/webm','audio/ogg','audio/wav','audio/mpeg','video/webm','audio/mp4'].includes(message.mime))throw new Error('Unsupported or oversized audio chunk.');
-  const bytes=Uint8Array.from(atob(message.audio),c=>c.charCodeAt(0));
-  const form=new FormData();form.append('file',new Blob([bytes],{type:message.mime}),message.mime.includes('ogg')?'audio.ogg':message.mime.includes('mpeg')?'audio.mp3':message.mime.includes('mp4')?'audio.m4a':'audio.webm');
-  form.append('model',config.speechModel);
-  const headers={};if(config.speechKey)headers.Authorization='Bearer '+config.speechKey;
-  const response=await responseJson(await fetch(endpoint(config.speechUrl,'audio/transcriptions'),{method:'POST',headers,body:form,signal:AbortSignal.timeout(config.timeout*1000),redirect:'error',credentials:'omit'}));
-  if(typeof response.text!=='string')throw new Error('Speech endpoint must return a JSON text field.');
-  return {text:response.text};
-}
 async function handle(message,sender) {
   if(sender.id!==api.runtime.id)throw new Error('Unknown extension sender.');
   if(message.type==='keepalive')return {};
@@ -51,7 +40,7 @@ async function handle(message,sender) {
     case 'cache.clear':await engineCall('engine.clear');return {};
     case 'page.command':return activeCommand(message.command,message.options);
     case 'capture':{const [tab]=await api.tabs.query({active:true,currentWindow:true});return {image:await api.tabs.captureVisibleTab(tab.windowId,{format:'png'})};}
-    case 'transcribe':return transcribe(message,await settings());
+    case 'transcribe':return engineCall('engine.transcribe',message,await settings());
     default:throw new Error('Unknown Open Translate action.');
   }
 }

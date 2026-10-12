@@ -1,10 +1,18 @@
 # Architecture and protocol
 
-Open Translate is a small independent adapter between Immersive Translate's Custom API and a user-configured OpenAI-compatible endpoint or the installed AGY CLI. It is based on the public interface, official API documentation and static inspection of extension version 1.33.3 at official release-repository commit `c470f0aca3c75b2785c9009a0ac48e78ead34126`.
+Open Translate contains an independently implemented Manifest V3 extension and an optional Python bridge for a user-configured OpenAI-compatible endpoint or the installed AGY CLI. It is based on the public interface, official API documentation and static inspection of extension version 1.33.3 at official release-repository commit `c470f0aca3c75b2785c9009a0ac48e78ead34126`.
 
 No proprietary extension bundles are included in this repository.
 
-## Request flow
+## Standalone browser pipeline
+
+The content script discovers visible leaf paragraphs, preserves inline markup using numeric DOM markers, schedules viewport work and observes dynamic text changes. It retains the original DOM nodes for restoration. Model output is rendered through text nodes and a whitelist of original inline elements; returned HTML is never evaluated. Responses are discarded after restoration or when the source changes.
+
+The service worker owns credentials and validates sender contexts. Content scripts receive only reading preferences. A Chrome offscreen document owns an actual dedicated engine worker; the worker performs long provider and speech requests, with heartbeat messages keeping reply channels available. A bounded queue, in-flight deduplication, memory cache and optional IndexedDB cache are shared across tabs. Changing settings clears the cache. Site rules select content and translation languages; the configured endpoint cannot be overridden by webpage messages.
+
+The workspace parses documents with local DOM/ZIP libraries. PDF.js extracts text and renders one page on demand; scanned pages use Tesseract. PDF-lib exports rasterized originals and translated overlays. OCR workers, WebAssembly and three language models ship inside the package. SRT/VTT/ASS import/export retains timing; preview uses native text tracks. Live capture uses explicit browser permissions, independent 15-second MediaRecorder chunks and the configured transcription endpoint.
+
+## Optional bridge request flow
 
 1. The extension selects text, preserves inline DOM content using placeholders, and sends a JSON batch to `POST /translate`.
 2. The local HTTP server checks its access token, browser origin, body size and request schema.

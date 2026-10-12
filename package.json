@@ -10,6 +10,17 @@
     "test:browser": "playwright test",
     "check": "npm test && npm run build && npm run test:browser"
   },
-  "dependencies": {"fflate":"0.8.3","pdf-lib":"1.17.1","pdfjs-dist":"6.4.299","tesseract.js":"7.0.0"},
-  "devDependencies": {"@playwright/test":"1.64.0","esbuild":"0.28.2"}
+  "dependencies": {
+    "@tesseract.js-data/chi_sim": "^1.0.0",
+    "@tesseract.js-data/eng": "^1.0.0",
+    "@tesseract.js-data/jpn": "^1.0.0",
+    "fflate": "0.8.3",
+    "pdf-lib": "1.17.1",
+    "pdfjs-dist": "6.4.299",
+    "tesseract.js": "7.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.0",
+    "esbuild": "0.28.2"
+  }
 }

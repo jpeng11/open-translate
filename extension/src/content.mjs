@@ -1,13 +1,11 @@
-import {batches} from './core.mjs';
 import {candidates,serialize,insertTranslation,restoreElement,sourceNodes,own,PAGE_STYLE} from './dom.mjs';
 const api=globalThis.browser || chrome;
-let config={},active=false,epoch=0,processing=false,scanTimer,hovered,input,lastSelection='',captionOn=false,captionLast='',captionCleanup=()=>{};
+let config={},active=false,epoch=0,processing=false,scanTimer,hovered,input,lastSelection='',captionOn=false,captionLast='';
 const states=new Map(),queue=new Set(),roots=new Set();let completed=0,failed=0;
 const send=async message=>{const response=await api.runtime.sendMessage(message);if(!response?.ok)throw new Error(response?.error?.message || 'Open Translate is unavailable.');return response.result;};
 const translate=texts=>send({type:'translate',job:{source_lang:config.source || 'auto',target_lang:config.target || 'en',text_list:texts}});
 let host,panel;
 function notification(text,result=false) {
-  if(window!==window.top)return;
   if(!host) {
     host=document.createElement('div');host.setAttribute('data-ot-ui','');host.style.cssText='position:fixed;z-index:2147483647;right:20px;bottom:20px;';
     const shadow=host.attachShadow({mode:'closed'}),style=document.createElement('style');
@@ -59,7 +57,7 @@ async function drain() {
   try {
     while(active && queue.size) {
       const currentEpoch=epoch;
-      const pending=Array.from(queue).slice(0,config.batchSize || 4);pending.forEach(el=>queue.delete(el));
+      const pending=[];let chars=0;for(const element of queue){const length=serialize(element).text.length;if(pending.length && (pending.length>=(config.batchSize || 4) || chars+length>12000))break;pending.push(element);chars+=length;}pending.forEach(el=>queue.delete(el));
       const work=pending.filter(el=>el.isConnected).map(element=>{const serialized=serialize(element);const state={element,serialized,text:serialized.text,status:'pending'};states.set(element,state);return state;});
       if(!work.length)continue;
       try {
@@ -88,7 +86,7 @@ async function selection(text) {
 }
 async function translateInput() {
   const element=document.activeElement?.matches('input,textarea,[contenteditable="true"]')?document.activeElement:input;
-  if(!element || element.type==='password' || element.readOnly || element.disabled)throw new Error('Focus a text input first. Password fields are excluded.');
+  if(!element || element.tagName==='INPUT' && !['text','search','url','email','tel'].includes(element.type) || element.readOnly || element.disabled)throw new Error('Focus a text input first. Password fields are excluded.');
   const original=element.isContentEditable?element.textContent:element.value;
   if(!original?.trim())throw new Error('The input is empty.');
   const result=await send({type:'translate',job:{source_lang:config.source || 'auto',target_lang:config.inputTarget || 'en',text_list:[original]}});
@@ -117,11 +115,11 @@ api.runtime.onMessage.addListener((message,_sender,reply)=>{
       case 'page.start':return start();
       case 'translate-page':return active?restore():start();
       case 'page.restore':return restore();
-      case 'translate-selection':return selection(message.selection);
-      case 'translate-input':return translateInput();
+      case 'translate-selection':config=await send({type:'settings.public'});return selection(message.selection);
+      case 'translate-input':config=await send({type:'settings.public'});return translateInput();
       case 'page.status':return {active,completed,failed};
-      case 'captions.toggle':captionOn=!captionOn;addRoot(document);scanCaptions();notification(captionOn?'Caption translation is on. Enable the video’s subtitles.':'Caption translation is off.');return {captionOn};
-      case 'page.mode':{config.mode=message.mode;for(const [el,state]of states)if(state.status==='done'){const text=el.querySelector('[data-ot-target]')?.textContent;restoreElement(el);states.delete(el);}if(active)scan();return {};}
+      case 'captions.toggle':config=await send({type:'settings.public'});captionOn=!captionOn;addRoot(document);scanCaptions();notification(captionOn?'Caption translation is on. Enable the video’s subtitles.':'Caption translation is off.');return {captionOn};
+      case 'page.mode':{config.mode=message.mode;for(const [el,state]of states)if(state.status==='done'){restoreElement(el);states.delete(el);}if(active)scan();return {};}
       default:return {};
     }
   };
