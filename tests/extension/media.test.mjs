@@ -68,3 +68,11 @@ test('live cancellation drops pending results and overload does not flush into a
 test('screen OCR normalized presets and reversed drag stay inside the captured video',async()=>{
  const {normalizeScreenRegion,regionFromDrag}=await import('../../extension/src/screen-region.mjs');assert.deepEqual(normalizeScreenRegion('top'),{left:0,top:0,width:1,height:.3});assert.deepEqual(normalizeScreenRegion(.3),{left:0,top:.7,width:1,height:.3});assert.deepEqual(regionFromDrag({x:.9,y:.8},{x:.2,y:.3}),{left:.2,top:.3,width:.7,height:.5});assert.deepEqual(regionFromDrag({x:-.2,y:-.4},{x:2,y:3}),{left:0,top:0,width:1,height:1});assert.throws(()=>normalizeScreenRegion({left:.8,top:0,width:.5,height:.2}));assert.throws(()=>normalizeScreenRegion({left:0,top:0,width:NaN,height:.2}));assert.throws(()=>regionFromDrag({x:.3,y:.3},{x:.301,y:.301}));
 });
+test('caption reader hides duplicate native captions, switches selected tracks and restores mode',()=>{
+ const oldObserver=globalThis.MutationObserver;globalThis.MutationObserver=class{observe(){}disconnect(){}};
+ try{
+  const make=(mode,text)=>Object.assign(new EventTarget(),{mode,kind:'subtitles',language:'en',activeCues:[{text}]});const first=make('showing','First language'),second=make('disabled','Second language'),video={textTracks:[first,second],isConnected:true},document={querySelector(){},querySelectorAll:selector=>selector==='video,audio'?[video]:[]},values=[],reader=new CaptionReader({document,emit:text=>values.push(text)});
+  reader.start({source:'auto'});assert.equal(first.mode,'hidden');assert.equal(values.at(-1),'First language');second.mode='showing';reader.refresh();assert.equal(first.mode,'disabled');assert.equal(second.mode,'hidden');assert.equal(values.at(-1),'Second language');reader.stop();assert.equal(second.mode,'showing');
+  reader.start({source:'auto'});second.mode='disabled';reader.stop();assert.equal(second.mode,'disabled');
+ }finally{globalThis.MutationObserver=oldObserver;}
+});
