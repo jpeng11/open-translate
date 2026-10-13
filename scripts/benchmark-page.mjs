@@ -7,15 +7,19 @@ import {performance} from 'node:perf_hooks';
 const {chromium}=await import(pathToFileURL(resolve('node_modules/playwright-core/index.mjs')));
 const {DEFAULTS,validateSettings}=await import(pathToFileURL(resolve('extension/src/core.mjs')));
 const {implementationDigest,verifyBuildEvidence}=await import(pathToFileURL(resolve('scripts/parity-source.mjs')));
-if(!process.argv[2])throw new Error('Usage: node scripts/benchmark-page.mjs /private/connection.json [batch-size=4] [plain|formatted] [concurrency=1]');
+if(!process.argv[2])throw new Error('Usage: node scripts/benchmark-page.mjs /private/connection.json [batch-size=4] [plain|formatted] [concurrency=1] [output-directory] [total-deadline-seconds]');
 const supplied=JSON.parse(await readFile(process.argv[2],'utf8'));
 const url='https://en.wikipedia.org/wiki/Machine_translation';
 const config=validateSettings({...DEFAULTS,...supplied,source:'en',target:'zh-CN',batchSize:Number(process.argv[3]||4),concurrency:Number(process.argv[5]||1),cache:false,autoTranslate:false,mode:'bilingual',rules:[{host:'en.wikipedia.org',include:'p[data-ot-speed]'}]});
 const report={schema:1,status:'running',startedAt:new Date().toISOString(),sourceUrl:url,sourceLanguage:'en',targetLanguage:'zh-CN',provider:config.provider==='bridge'?'Mac local bridge → signed-in AGY CLI':'Configured OpenAI-compatible endpoint',model:supplied.benchmarkModel||(config.provider==='openai'?config.model:'Not identified; verify bridge process configuration'),settings:{batchSize:config.batchSize,concurrency:config.concurrency,timeout:config.timeout,reasoningEffort:config.reasoningEffort || 'model default',cache:false},method:'Real public page in a clean Chromium extension profile. Select approximately 1,000 words in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. One uncached run.',requests:[],requestTimingNote:'Browser network events may not expose offscreen worker requests; DOM timings are authoritative'};
 report.buildEvidence=await verifyBuildEvidence('dist/chrome',await implementationDigest());
 const bridgeHash=createHash('sha256');for(const file of ['agent.py','agy.py','fragments.py','server.py']){bridgeHash.update(file+'\0');bridgeHash.update(await readFile('open_translate/'+file));}report.bridgeSourceSha256=bridgeHash.digest('hex');
-await mkdir('dist/benchmarks',{recursive:true});
-const output='dist/benchmarks/page-speed.json';const save=()=>writeFile(output,JSON.stringify(report,null,2)+'\n');
+const outputDir=process.argv[6] || 'dist/benchmarks';
+const deadlineSeconds=process.argv[7]===undefined?null:Number(process.argv[7]);
+if(deadlineSeconds!==null && (!Number.isFinite(deadlineSeconds)||deadlineSeconds<1||deadlineSeconds>3600))throw Error('Invalid total deadline');
+report.totalDeadlineSeconds=deadlineSeconds;
+await mkdir(outputDir,{recursive:true});
+const output=resolve(outputDir,'page-speed.json');const save=()=>writeFile(output,JSON.stringify(report,null,2)+'\n');
 let context;
 try{
  context=await chromium.launchPersistentContext('',{channel:'chromium',headless:true,viewport:{width:1280,height:900},ignoreDefaultArgs:['--disable-extensions'],args:['--no-sandbox',`--disable-extensions-except=${resolve('dist/chrome')}`,`--load-extension=${resolve('dist/chrome')}`]});
@@ -45,7 +49,7 @@ try{
  await page.locator('[data-ot-speed="0"]').scrollIntoViewIfNeeded();
  await page.evaluate(()=>{const state=window.__otSpeed;state.start=performance.now();state.observer=new MutationObserver(()=>{const done=state.items.filter(x=>x.node.querySelector(':scope > [data-ot-target]')?.textContent.trim()).length;if(done&&(state.events.at(-1)?.paragraphs!==done))state.events.push({paragraphs:done,ms:Math.round(performance.now()-state.start)});});state.observer.observe(document.body,{childList:true,subtree:true});});
  start=performance.now();const started=await command('page.start');if(!started?.ok)throw new Error('Could not start translation');
- let lastCount=-1,lastLog=0;const deadline=start+Math.max(600000,Math.ceil(sample.paragraphs/4)*config.timeout*1000+30000);
+ let lastCount=-1,lastLog=0;const deadline=start+(deadlineSeconds===null?Math.max(600000,Math.ceil(sample.paragraphs/4)*config.timeout*1000+30000):deadlineSeconds*1000);
  while(performance.now()<deadline){
   const progress=await page.evaluate(()=>{const state=window.__otSpeed;const pending=state.items.find(x=>!x.node.querySelector(':scope > [data-ot-target]')?.textContent.trim());pending?.node.scrollIntoView({block:'center'});return {done:state.items.filter(x=>x.node.querySelector(':scope > [data-ot-target]')?.textContent.trim()).length,events:state.events};});
   const elapsed=Math.round(performance.now()-start);report.progress={...progress,elapsedMs:elapsed};
@@ -60,8 +64,8 @@ try{
  const result=await page.evaluate(()=>window.__otSpeed.items.map(x=>({source:x.text,translation:x.node.querySelector(':scope > [data-ot-target]').textContent,lang:x.node.querySelector(':scope > [data-ot-target]').lang})));
  report.output={translatedParagraphs:result.length,chineseParagraphs:result.filter(x=>/\p{Script=Han}/u.test(x.translation)).length,characters:result.reduce((s,x)=>s+x.translation.length,0),sha256:createHash('sha256').update(JSON.stringify(result)).digest('hex')};
  if(report.output.chineseParagraphs!==sample.paragraphs)throw new Error('Some outputs have no Chinese text');
- await writeFile('dist/benchmarks/page-speed-translations.json',JSON.stringify({sourceUrl:url,attribution:'Wikipedia contributors, Machine translation, CC BY-SA 4.0',items:result},null,2)+'\n');
- await page.locator('[data-ot-speed="0"]').scrollIntoViewIfNeeded();await page.screenshot({path:'dist/benchmarks/page-speed.png'});
+ await writeFile(resolve(outputDir,'page-speed-translations.json'),JSON.stringify({sourceUrl:url,attribution:'Wikipedia contributors, Machine translation, CC BY-SA 4.0',items:result},null,2)+'\n');
+ await page.locator('[data-ot-speed="0"]').scrollIntoViewIfNeeded();await page.screenshot({path:resolve(outputDir,'page-speed.png')});
  await command('page.restore');report.restored=await page.evaluate(()=>window.__otSpeed.items.every(x=>x.node.innerHTML===x.html));
  if(!report.restored)throw new Error('Original DOM did not restore exactly');
  report.finishedAt=new Date().toISOString();await save();console.log(JSON.stringify({event:'complete',...report}));

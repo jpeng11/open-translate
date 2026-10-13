@@ -49,9 +49,13 @@ function scan() {
       if(current!==state.text){restoreElement(element);states.delete(element);}
     }
     for(const root of roots) {
-      for(const element of candidates(root,pageRule(config,location.href)))if(!states.has(element)) {
+      const eligible=candidates(root,pageRule(config,location.href));
+      // A short article can fill all configured batches immediately. Larger
+      // documents retain viewport loading instead of submitting the whole site.
+      const eager=eligible.length<=32 && eligible.reduce((sum,el)=>sum+sourceNodes(el).reduce((n,node)=>n+(node.textContent?.length || 0),0),0)<=12000;
+      for(const element of eligible)if(!states.has(element)) {
         const box=element.getBoundingClientRect();
-        if(box.bottom>-600 && box.top<innerHeight+600)enqueue(element);else visibility.observe(element);
+        if(eager || box.bottom>-600 && box.top<innerHeight+600)enqueue(element);else visibility.observe(element);
       }
       for(const element of root.querySelectorAll('*'))if(element.shadowRoot)addRoot(element.shadowRoot);
     }

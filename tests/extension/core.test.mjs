@@ -33,7 +33,7 @@ test('real request shape, reordered IDs and blank items',async()=>{
  let request;
  const result=await translateBatch({source_lang:'fr',target_lang:'en',text_list:['Bonjour {0}',' ','Merci']},settings,async(url,init)=>{
   request={url,init};const body=JSON.parse(init.body);const job=JSON.parse(body.messages[1].content);
-  return envelope({translations:job.items.toReversed().map(item=>({id:item.id,text:item.text.replace('Bonjour','Hello').replace('Merci','Thanks'),detected_source_lang:'fr'}))});
+  return envelope({translations:job.items.toReversed().map(item=>({id:item.id,text:Array.isArray(item.text)?item.text.map(part=>part.replace('Bonjour','Hello').replace('Merci','Thanks')):item.text.replace('Bonjour','Hello').replace('Merci','Thanks'),detected_source_lang:'fr'}))});
  });
  assert.deepEqual(result.translations.map(i=>i.text),['Hello {0}',' ','Thanks']);
  assert.equal(request.init.headers.Authorization,'Bearer private-key');assert.equal(request.init.redirect,'error');
@@ -104,4 +104,24 @@ test('tool and legacy function responses are rejected even when they contain val
   await assert.rejects(translateBatch({source_lang:'fr',target_lang:'en',text_list:['Bonjour']},settings,
    async()=>new Response(JSON.stringify({choices:[choice]}))),error=>error.code==='invalid_agent_response');
  }
+});
+test('direct formatting and glossary stay local while consecutive parts retain paragraph context',async()=>{
+ const config={...settings,glossary:[{source:'Open Translate',target:'开放翻译'}]};
+ const job={source_lang:'en',target_lang:'zh-CN',text_list:['  Read {0}this link{1}, Open Translate!\n','{2} [12] {3}']};
+ let calls=0;
+ const result=await translateBatch(job,config,async(_url,init)=>{
+  calls++;const input=JSON.parse(JSON.parse(init.body).messages[1].content);
+  assert.deepEqual(input.items,[{id:0,text:['Read','this link']}]);
+  assert.ok(!JSON.stringify(input).includes('⟦OT'));
+  return envelope({translations:[{id:0,text:['阅读','这个链接']}]});
+ });
+ assert.equal(calls,1);
+ assert.deepEqual(result.translations.map(x=>x.text),['  阅读 {0}这个链接{1}, 开放翻译!\n','{2} [12] {3}']);
+});
+test('invalid part arrays cannot publish partial or invented formatting',async()=>{
+ const job={source_lang:'en',target_lang:'zh-CN',text_list:['Read {0}this link{1}']};
+ for(const text of ['阅读链接',['阅读'],['阅读',''],['阅读','链接','额外'],['阅读','<b>链接</b>'],['阅读','{0}链接'],['阅读',null]]){
+  await assert.rejects(translateBatch(job,settings,async()=>envelope({translations:[{id:0,text}]})));
+ }
+ assert.equal((await translateBatch({source_lang:'en',target_lang:'zh-CN',text_list:['{0} 123 {1}']},settings,()=>{throw Error('No model needed');})).translations[0].text,'{0} 123 {1}');
 });
