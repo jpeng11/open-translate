@@ -34,36 +34,37 @@ function literalInline(node) {
   copy.append(...Array.from(node.childNodes,literalInline));return copy;
 }
 export function serialize(element) {
-  const markers=[];
-  const put=value=>{const token='{'+markers.length+'}';markers.push(value);return token;};
+  const markers=new Map();let next=0;
+  const put=value=>{const token='<ot'+next+++'/>';markers.set(token,value);return token;};
   const walk=(node,parent=null)=>{
-    if(node.nodeType===3)return node.textContent.replace(/\{\{?\d+\}\}?/g,text=>put({type:'atom',node:document.createTextNode(text),parent}));
+    if(node.nodeType===3)return node.textContent.replace(/\{\{?\d+\}\}?|<\/?ot\d+\/?>/g,text=>put({type:'atom',node:document.createTextNode(text),parent}));
     if(node.nodeType!==1 || own(node) || ignored(node))return '';
     if(node.tagName==='BR')return put({type:'atom',node:document.createElement('br'),parent});
     if(['CODE','KBD','SAMP'].includes(node.tagName)) {const copy=document.createElement(node.localName);copy.textContent=node.textContent;return put({type:'atom',node:copy,parent});}
     if(!INLINE.has(node.tagName))return Array.from(node.childNodes,child=>walk(child,parent)).join('');
     if(!/[\p{L}]/u.test(node.textContent || ''))return put({type:'atom',node:literalInline(node),parent});
-    const open=put({type:'open',node:safeClone(node),source:node,parent});
+    const id=next++,open='<ot'+id+'>',close='</ot'+id+'>';
+    markers.set(open,{type:'open',node:safeClone(node),source:node,parent});
     const inner=Array.from(node.childNodes,child=>walk(child,node)).join('');
-    return open+inner+put({type:'close',source:node});
+    markers.set(close,{type:'close',source:node});return open+inner+close;
   };
   // Text placeholders above receive their own atomic DOM marker.
   const text=sourceNodes(element).map(node=>walk(node)).join('');
   return {text,render(translated) {
     const fragment=document.createDocumentFragment(),stack=[{node:fragment,source:null}];
     const counts=new Map();let offset=0;
-    for(const match of translated.matchAll(/\{(\d+)\}/g)) {
-      const marker=markers[Number(match[1])];
+    for(const match of translated.matchAll(/<\/?ot\d+\/?>/g)) {
+      const marker=markers.get(match[0]);
       if(!marker)throw new Error('Agent returned an unknown inline formatting marker.');
       stack.at(-1).node.append(document.createTextNode(translated.slice(offset,match.index)));
-      counts.set(Number(match[1]),(counts.get(Number(match[1])) || 0)+1);
+      counts.set(match[0],(counts.get(match[0]) || 0)+1);
       if(marker.type!=='close' && marker.parent!==stack.at(-1).source)throw new Error('Agent changed inline formatting hierarchy.');
       if(marker.type==='open') {const clone=marker.node.cloneNode(false);stack.at(-1).node.append(clone);stack.push({node:clone,source:marker.source});}
       else if(marker.type==='close') {if(stack.length===1 || stack.at(-1).source!==marker.source)throw new Error('Agent changed inline formatting order.');stack.pop();}
       else stack.at(-1).node.append(marker.node.cloneNode(true));
       offset=match.index+match[0].length;
     }
-    if(stack.length!==1 || markers.some((_,i)=>counts.get(i)!==1))throw new Error('Agent changed an inline formatting marker.');
+    if(stack.length!==1 || [...markers.keys()].some(token=>counts.get(token)!==1))throw new Error('Agent changed an inline formatting marker.');
     fragment.append(document.createTextNode(translated.slice(offset)));
     return fragment;
   }};

@@ -107,7 +107,7 @@ test('numeric citations keep safe nested formatting locally using one marker',as
  const target=page.locator('#citation [data-ot-target]');
  await expect(target).toHaveText('Translated Read [12][13] and new ideas.');
  const input=JSON.parse(requests[0].value.messages.at(-1).content).items[0].text;
- expect(input).toBe('Read {0} and {1}new ideas{2}.');
+ expect(input).toBe('Read <ot0/> and <ot1>new ideas</ot1>.');
  await expect(target.locator('sup span[title="Reference"] a')).toHaveCount(2);
  await expect(target.locator('a').first()).toHaveAttribute('href','https://example.com/reference');
  expect(await target.locator('a').first().getAttribute('onclick')).toBeNull();
@@ -122,7 +122,7 @@ test('translated sibling phrases may move while keeping their link identities',a
  const page=await context.newPage();await page.goto(origin+'/page');
  await page.evaluate(()=>document.body.innerHTML='<p id="phrases">Please <a href="https://example.com/translate">translate</a> a <a href="https://example.com/language">language</a>.</p>');
  const before=await page.locator('#phrases').innerHTML();
- translationOverride=()=> '请将一种{2}语言{3}{0}翻译{1}。';
+ translationOverride=()=> '请将一种<ot1>语言</ot1><ot0>翻译</ot0>。';
  await command(page,'page.start');const target=page.locator('#phrases [data-ot-target]');
  await expect(target).toHaveText('请将一种语言翻译。');
  await expect(target.locator('a[href="https://example.com/language"]')).toHaveText('语言');
@@ -131,7 +131,7 @@ test('translated sibling phrases may move while keeping their link identities',a
 });
 test('crossed, duplicated, missing and reparented markers never produce page output',async()=>{
  const page=await context.newPage();await page.goto(origin+'/page');
- for(const translated of ['{0}粗体{1}斜体{3}{2}{4}','{0}粗体{3}{1}斜体{2}{4}','{0}粗体{1}斜体{2}{4}{3}','{0}粗体{1}斜体{2}{3}{4}{4}','{0}粗体{1}斜体{2}{3}']){
+ for(const translated of ['<ot0>粗体<ot1>斜体</ot0></ot1><ot2/>','<ot0>粗体</ot0><ot1>斜体</ot1><ot2/>','<ot0>粗体<ot1>斜体</ot1><ot2/></ot0>','<ot0>粗体<ot1>斜体</ot1></ot0><ot2/><ot2/>','<ot0>粗体<ot1>斜体</ot1></ot0>']){
   await page.evaluate(()=>document.body.innerHTML='<p id="structure"><b>Bold <i>italic</i></b> <sup>[1]</sup>.</p>');
   translationOverride=()=>translated;await command(page,'page.start');
   await expect.poll(async()=> (await command(page,'page.status')).failed).toBeGreaterThan(0);
