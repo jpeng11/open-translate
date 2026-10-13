@@ -2,56 +2,56 @@
   "schema": 1,
   "suite": "regression",
   "status": "passed",
-  "testedAt": "2026-10-13T14:00:33.695Z",
-  "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
-  "verificationSha256": "90781128f3a0b7ee4f37424f81c9c08dc4f9bcf2e30691aef3532d40c4d826ce",
+  "testedAt": "2026-10-13T16:14:00.463Z",
+  "implementationSha256": "e3afb7ae177858dafe951de046357bd3ea5fb47748b5f1fdfc2e42e24d9f7629",
+  "verificationSha256": "f4e9805bfdc3938c3d00be82d7936e5a4af8cc03d427cc93738a9242204acaac",
   "buildEvidence": {
     "schema": 1,
     "browser": "chrome",
-    "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
-    "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
+    "implementationSha256": "e3afb7ae177858dafe951de046357bd3ea5fb47748b5f1fdfc2e42e24d9f7629",
+    "bundleSha256": "54b0173fefee66aa6e141bde98755273b2192f09531e81a104a949a9c000beb2"
   },
   "results": [
     {
       "id": "node",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 836,
-      "logSha256": "01bf69d5296ad82ac0929424f480e6df41aa7912ab370883878ab0394da154c2"
+      "durationMs": 827,
+      "logSha256": "1df814cd8d93d00df1559f0cc7450c4814d5fa4f351736e65b7d8ae4951be156"
     },
     {
       "id": "python",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 2121,
+      "durationMs": 2115,
       "logSha256": "b8224d3f7d06d174510a451facbdff09bc8eea54d1ec7f25eab77321a2991718"
     },
     {
       "id": "build",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 10891,
-      "logSha256": "2a7a8008dc402b836a52a107677447c55c6d5defd64f0cbd37ab4683ec5adc15"
+      "durationMs": 10749,
+      "logSha256": "2e40c19f734ec4e440db36ed89837603052f7073da7e6711985e6751ebcdb008"
     },
     {
       "id": "chromium",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 116460,
-      "logSha256": "70ec81148f1d6ce9f8d7071dc2ba419e26ef7613d32f29e284ed55968b77b480"
+      "durationMs": 118563,
+      "logSha256": "b3fca482136507dd496d46ce8bd0d8cd4189f63f474aef53696721d0cfc3af09"
     },
     {
       "id": "firefox",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 3139,
+      "durationMs": 3184,
       "logSha256": "924f41693f955e6f50bdbb54b8b9f51359d73f7e68128ac828ee5e74350eeb13"
     }
   ],
   "browser": {
-    "startTime": "2026-10-13T13:58:34.568Z",
-    "duration": 115724.95999999999,
-    "expected": 58,
+    "startTime": "2026-10-13T16:11:59.135Z",
+    "duration": 117805.284,
+    "expected": 63,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0,
@@ -253,6 +253,31 @@
       },
       {
         "title": "balanced six-request batches render every paragraph at its original node",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "dropped inline markers recover as a whole paragraph, preserving nested links, citations and exact source restoration",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "restoring while format recovery is pending cannot reinsert translated DOM",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "malformed completed JSON is recovered without dropping plain or formatted paragraphs",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "wrong-language long prose is repaired before it can appear as a completed paragraph",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "final full-context tree recovery preserves nested nodes and exact restoration",
         "file": "extension.spec.mjs",
         "status": "passed"
       },

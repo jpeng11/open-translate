@@ -1,13 +1,13 @@
 {
   "schema": 1,
   "kind": "web-acceptance",
-  "createdAt": "2026-10-13T03:15:04.622Z",
-  "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+  "createdAt": "2026-10-13T16:14:01.323Z",
+  "implementationSha256": "e3afb7ae177858dafe951de046357bd3ea5fb47748b5f1fdfc2e42e24d9f7629",
   "buildEvidence": {
     "schema": 1,
     "browser": "chrome",
-    "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
-    "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
+    "implementationSha256": "e3afb7ae177858dafe951de046357bd3ea5fb47748b5f1fdfc2e42e24d9f7629",
+    "bundleSha256": "54b0173fefee66aa6e141bde98755273b2192f09531e81a104a949a9c000beb2"
   },
   "binding": "verified",
   "harnessSha256": "225036dc4decd956daf923d5029784ab08ceed00db74d13b61fcc5905c8eb926",
@@ -26,12 +26,12 @@
     {
       "id": "wikipedia",
       "url": "https://en.wikipedia.org/wiki/Machine_translation",
-      "observedAt": "2026-10-13T03:15:04.622Z",
+      "observedAt": "2026-10-13T16:14:01.324Z",
       "status": "passed",
       "httpStatus": 200,
       "finalUrl": "https://en.wikipedia.org/wiki/Machine_translation",
-      "responseSha256": "a1cf9aa27286387afdc650be2fc2f6665d8a12cca1c1e35375b7ae21584302e3",
-      "responseBytes": 519501,
+      "responseSha256": "921bfc37a7342b5e8725efd9b2344bed9aca2e0ffd312454edaab103f02e0c2b",
+      "responseBytes": 519423,
       "sample": {
         "paragraphCount": 8,
         "eligibleParagraphs": 60,
@@ -57,7 +57,7 @@
     {
       "id": "mdn",
       "url": "https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API",
-      "observedAt": "2026-10-13T03:15:08.944Z",
+      "observedAt": "2026-10-13T16:14:05.671Z",
       "status": "passed",
       "httpStatus": 200,
       "finalUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API",
@@ -88,12 +88,12 @@
     {
       "id": "github",
       "url": "https://github.com/microsoft/TypeScript",
-      "observedAt": "2026-10-13T03:15:14.588Z",
+      "observedAt": "2026-10-13T16:14:11.197Z",
       "status": "passed",
       "httpStatus": 200,
       "finalUrl": "https://github.com/microsoft/TypeScript",
-      "responseSha256": "75fd91ae89547f39a85f2620ff7fc8cc8530cff56fcf36e1882b02f2d2119abc",
-      "responseBytes": 321523,
+      "responseSha256": "0c22ee38f98add873062f2562ea6d9ce1c78677e1c3e6d9f0523080c85678d62",
+      "responseBytes": 321386,
       "sample": {
         "paragraphCount": 3,
         "eligibleParagraphs": 3,
@@ -119,7 +119,7 @@
     {
       "id": "w3c",
       "url": "https://www.w3.org/TR/WCAG22/",
-      "observedAt": "2026-10-13T03:15:18.291Z",
+      "observedAt": "2026-10-13T16:14:14.715Z",
       "status": "passed",
       "httpStatus": 200,
       "finalUrl": "https://www.w3.org/TR/WCAG22/",
@@ -150,11 +150,11 @@
     {
       "id": "whatwg",
       "url": "https://html.spec.whatwg.org/multipage/introduction.html",
-      "observedAt": "2026-10-13T03:15:22.893Z",
+      "observedAt": "2026-10-13T16:14:19.385Z",
       "status": "passed",
       "httpStatus": 200,
       "finalUrl": "https://html.spec.whatwg.org/multipage/introduction.html",
-      "responseSha256": "3d3aef0bd2b3834315755bf34cc3d96d3da4161d606a0277e2537c08e2fa9866",
+      "responseSha256": "dfb7b675ba93a8f0fdc58f3673f02b7bd31676a98d45438972574b31efd15837",
       "responseBytes": 98181,
       "sample": {
         "paragraphCount": 8,
@@ -183,7 +183,7 @@
     {
       "name": "long-page-beyond-5000",
       "status": "passed",
-      "observedAt": "2026-10-13T03:15:26.184Z",
+      "observedAt": "2026-10-13T16:14:22.687Z",
       "details": {
         "paragraphs": 5105,
         "lastParagraph": 5104,
@@ -194,7 +194,7 @@
     {
       "name": "large-dynamic-batch-and-frames",
       "status": "passed",
-      "observedAt": "2026-10-13T03:15:27.362Z",
+      "observedAt": "2026-10-13T16:14:23.866Z",
       "details": {
         "insertedParagraphs": 300,
         "sampled": [
@@ -209,8 +209,8 @@
     }
   ],
   "provider": {
-    "requests": 409,
-    "characters": 145815
+    "requests": 410,
+    "characters": 145891
   },
   "status": "passed"
 }

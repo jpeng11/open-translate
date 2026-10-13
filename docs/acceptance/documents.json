@@ -2,18 +2,18 @@
   "schema": 1,
   "suite": "documents",
   "status": "passed",
-  "testedAt": "2026-10-13T03:14:03.057Z",
-  "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+  "testedAt": "2026-10-13T16:14:00.463Z",
+  "implementationSha256": "e3afb7ae177858dafe951de046357bd3ea5fb47748b5f1fdfc2e42e24d9f7629",
   "buildEvidence": {
     "schema": 1,
     "browser": "chrome",
-    "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
-    "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
+    "implementationSha256": "e3afb7ae177858dafe951de046357bd3ea5fb47748b5f1fdfc2e42e24d9f7629",
+    "bundleSha256": "54b0173fefee66aa6e141bde98755273b2192f09531e81a104a949a9c000beb2"
   },
   "regressionEvidence": {
     "path": "docs/acceptance/regression.json",
-    "sha256": "9476be7e6b6c8f96812ce567f9f12b496e1def50f85657d431cdeb7ddc7e1c5f",
-    "playwrightSha256": "7e17e826340aef66bb3e84b87511a6d82ef8d1fa0aaeda4a913f7af90079f5b1"
+    "sha256": "a4a765871eac64c6797ee098cf7642992789ebbf36852b414016c1fcd8532ee2",
+    "playwrightSha256": "637fd5906791ed78836d0cbcebb1f11b442557b90d0af17fe765580f49bacb2a"
   },
   "cases": [
     {
@@ -27,7 +27,7 @@
         "attempts": [
           {
             "status": "passed",
-            "durationMs": 1306
+            "durationMs": 1317
           }
         ]
       }
@@ -43,7 +43,7 @@
         "attempts": [
           {
             "status": "passed",
-            "durationMs": 1375
+            "durationMs": 1404
           }
         ]
       }
@@ -59,7 +59,7 @@
         "attempts": [
           {
             "status": "passed",
-            "durationMs": 1433
+            "durationMs": 1463
           }
         ]
       }
@@ -75,7 +75,7 @@
         "attempts": [
           {
             "status": "passed",
-            "durationMs": 26
+            "durationMs": 27
           }
         ]
       }
@@ -91,7 +91,7 @@
         "attempts": [
           {
             "status": "passed",
-            "durationMs": 340
+            "durationMs": 319
           }
         ]
       }
@@ -107,7 +107,7 @@
         "attempts": [
           {
             "status": "passed",
-            "durationMs": 912
+            "durationMs": 899
           }
         ]
       }
@@ -123,7 +123,7 @@
         "attempts": [
           {
             "status": "passed",
-            "durationMs": 9
+            "durationMs": 10
           }
         ]
       }
@@ -139,7 +139,7 @@
         "attempts": [
           {
             "status": "passed",
-            "durationMs": 3427
+            "durationMs": 3343
           }
         ]
       }
@@ -155,7 +155,7 @@
         "attempts": [
           {
             "status": "passed",
-            "durationMs": 30
+            "durationMs": 43
           }
         ]
       }
@@ -171,7 +171,7 @@
         "attempts": [
           {
             "status": "passed",
-            "durationMs": 34
+            "durationMs": 32
           }
         ]
       }
@@ -187,7 +187,7 @@
         "attempts": [
           {
             "status": "passed",
-            "durationMs": 19
+            "durationMs": 10
           }
         ]
       }
@@ -203,7 +203,7 @@
         "attempts": [
           {
             "status": "passed",
-            "durationMs": 26
+            "durationMs": 16
           }
         ]
       }
@@ -219,7 +219,7 @@
         "attempts": [
           {
             "status": "passed",
-            "durationMs": 1033
+            "durationMs": 1011
           }
         ]
       }
@@ -251,7 +251,7 @@
         "attempts": [
           {
             "status": "passed",
-            "durationMs": 657
+            "durationMs": 633
           }
         ]
       }
@@ -267,7 +267,7 @@
         "attempts": [
           {
             "status": "passed",
-            "durationMs": 638
+            "durationMs": 599
           }
         ]
       }
@@ -283,7 +283,7 @@
         "attempts": [
           {
             "status": "passed",
-            "durationMs": 351
+            "durationMs": 350
           }
         ]
       }
@@ -299,7 +299,7 @@
         "attempts": [
           {
             "status": "passed",
-            "durationMs": 943
+            "durationMs": 1037
           }
         ]
       }
@@ -315,7 +315,7 @@
         "attempts": [
           {
             "status": "passed",
-            "durationMs": 1062
+            "durationMs": 950
           }
         ]
       }
@@ -325,17 +325,17 @@
     {
       "path": "dist/acceptance/documents/columns.pdf",
       "bytes": 1072,
-      "sha256": "d0899ee3d3cbf6528f668053fd30996b41d8e0660c99a461a59cd72364049f2b"
+      "sha256": "163d38dbb8394f57016ad267ca01d9093d910fcd549590e14076a33965dfade5"
     },
     {
       "path": "dist/acceptance/documents/multilingual-translated.pdf",
       "bytes": 31859,
-      "sha256": "168f01780aa70a2061c6ba66ca8bbf1724d616be6eaed0f666623873a2d7796a"
+      "sha256": "a803fa1b96dd3eafe8f1102211fc4fc5654b1f6cd8068a2a862061276b2deb60"
     },
     {
       "path": "dist/acceptance/documents/multilingual.pdf",
       "bytes": 1010,
-      "sha256": "cc017f03e096f75005f2b688df1385776393a495535c6bd4d6ca182483872533"
+      "sha256": "068cebd44ab6e238c836041e78cdc4db806b5896c4434a569c62c94b475a74fb"
     },
     {
       "path": "dist/acceptance/documents/multilingual.png",
@@ -345,22 +345,22 @@
     {
       "path": "dist/acceptance/documents/overflow-translated.pdf",
       "bytes": 27505,
-      "sha256": "9e3d8e114690acc2c324a6b1703eccd64edbc872951e6e0ccc19696598dc2283"
+      "sha256": "439ac4faebe98d6f2d46b7b6669e3c10b87272d4368049a8b58411d1991c65b2"
     },
     {
       "path": "dist/acceptance/documents/overflow.pdf",
       "bytes": 848,
-      "sha256": "df289d6f661d238102203e3537da794345829d59e071bf71ec5f870dd9c862f8"
+      "sha256": "8bee8f324ac9fce78b7c42aaa0d163e10c4559a21897ea815593d5baad89bff3"
     },
     {
       "path": "dist/acceptance/documents/rotated-cropped.pdf",
-      "bytes": 889,
-      "sha256": "d5f1f2d0d8772700c36acb7ccfd5c8a5eef5cab2a1e523ec3a46f43adce36e19"
+      "bytes": 888,
+      "sha256": "0cadcaad0b2a1914124d27d85b805b8c7cc94cb733bc0af22d60eff0f0077c40"
     },
     {
       "path": "dist/acceptance/documents/rotated-translated.pdf",
       "bytes": 9551,
-      "sha256": "8981b2f67e13a400488c1439e2dd6838af62d835bd3aa8642e6d9a0f6f66d417"
+      "sha256": "7ff55864de6a5939fe3067999b848039f9470aab8ea3c1f9e916e7a509fa3125"
     },
     {
       "path": "dist/acceptance/documents/rotated.png",
@@ -369,13 +369,13 @@
     },
     {
       "path": "dist/acceptance/documents/scan-translated.pdf",
-      "bytes": 33951,
-      "sha256": "d6ed65550e77b47e983dacd2a736d06c82c03c24d64697dbd2f959f966d6cbef"
+      "bytes": 33949,
+      "sha256": "2ceb556a8d74bfbbb6b612e7ca38169076194a814e3ad486ac7af83f71585e27"
     },
     {
       "path": "dist/acceptance/documents/scan.pdf",
       "bytes": 21462,
-      "sha256": "6c7fc1ecd014185fb7116278d4dbed198a39831a81fbd60589fc23de5252fb69"
+      "sha256": "d05486351666529c68acfeffbd69e3641dde0ef1d945b2d38ff76cde6a5cad4a"
     },
     {
       "path": "dist/acceptance/documents/scan.png",
@@ -392,7 +392,7 @@
     "processing": "Static weight 400 instance generated with fonttools 4.60.1: python -m fontTools.varLib.instancer NotoSansCJKsc-VF.ttf wght=400 -o NotoSansCJKsc-Regular.ttf. Retains all source glyphs; TrueType outlines avoid CFF subset glyph loss in PDF export. Re-save with font[\"glyf\"].padding=4 before bundling; fontkit 1.1.1 subset short loca requires even glyph offsets."
   },
   "inspection": {
-    "performedAt": "2026-10-13T03:15:07.976Z",
+    "performedAt": "2026-10-13T16:15:29.383Z",
     "artifacts": [
       "dist/acceptance/documents/multilingual.png",
       "dist/acceptance/documents/rotated.png",

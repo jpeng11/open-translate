@@ -1,6 +1,31 @@
 # Translation performance
 
-## Long articles: 5,000 / 10,000 / 15,000 words, five languages
+## Long-article format recovery
+
+The extension now keeps valid results and repairs each paragraph that fails native-format validation individually. The first repair includes the complete source paragraph, its failed draft and the exact marker inventory. The final attempt discards the draft and translates a structured tree with stable node IDs. A complete native-markup paragraph wrapped in the root string is also accepted if it independently passes the full original preservation checks. Complete sibling nodes may move for target grammar. Duplicate or missing references, changed parents, invented nodes and HTML text are rejected before decoding back to native markers. At most two repair attempts share the original batch deadline and engine concurrency slot. No markers are guessed or appended locally; every repaired result must pass the same token, nesting and parent checks before rendering. A completed model response with malformed translation JSON or invalid IDs is re-requested paragraph by paragraph without guessing partial matches. Refusals, transport failures and still-invalid repair responses remain errors.
+
+On 2026-10-13, the eight failed cases in the baseline below were rerun with the same frozen article snapshot, selected paragraphs, model and settings. Seven passed on `c86833b`; Korean 15k then passed on `89a2982`, after adding strict compatibility for complete native-markup paragraphs returned inside a tree root. These are not eight measurements on the final build. Per-case hashes and the failed intermediate runs are retained in the record. A local recording relay forwarded request bodies unchanged to measure actual repair activity; timings include its overhead. The application cache was disabled, while provider load and upstream prompt caching remained uncontrolled.
+
+| English words | Target | Before | After: complete page | Repair calls |
+| --- | --- | --- | ---: | ---: |
+| 15,031 | Japanese | Failed (13/167 paragraphs) | 240.67 s | 9 |
+| 15,031 | Chinese | Failed (44/167 paragraphs) | 161.90 s | 6 |
+| 15,031 | French | Failed (137/167 paragraphs) | 183.97 s | 2 |
+| 15,031 | Korean | Failed (35/167 paragraphs) | 261.46 s | 6 |
+| 9,983 | Japanese | Failed (13/115 paragraphs) | 149.53 s | 2 |
+| 9,983 | Chinese | Failed (52/115 paragraphs) | 100.44 s | 2 |
+| 9,983 | Korean | Failed (5/115 paragraphs) | 168.61 s | 6 |
+| 4,970 | Chinese | Failed (7/55 paragraphs) | 59.06 s | 3 |
+
+Request-level validation and repair counts are in the [format-recovery measurement record](acceptance/format-repair-performance.json). Passing means all selected paragraphs were rendered, original links and formatting were retained, and exact source DOM restoration passed. This does not certify every sentence against omissions or mistranslations.
+
+Manual spot checks of recovered Chinese and Japanese paragraphs found all source sentences represented, with some literal or awkward Japanese phrasing. Formatting validation does not prove linked-phrase alignment or semantic accuracy.
+
+The target language is now named explicitly in system instructions. For long English prose, Chinese, Japanese and Korean output receives a narrow writing-system check. Wrong-language drafts are discarded and regenerated from the source within the same two-attempt limit. Short names and unknown source languages are exempt; this is not general language identification. These changes address failed translation validation; long-page throughput remains limited. The original viewport scheduling and full-paragraph translation path remain in use.
+
+The final-build 977-word Chinese regression passed in 3.66 seconds. This is a separate fresh-profile run; it is not a claim of sustained sub-five-second performance.
+
+## Baseline before format recovery: 5,000 / 10,000 / 15,000 words
 
 On 2026-10-13, the same DeepSeek profile was tested on a different article: [History of the United States](https://en.wikipedia.org/wiki/History_of_the_United_States). A fixed HTML snapshot of [revision 1379968084](https://en.wikipedia.org/w/index.php?title=History_of_the_United_States&oldid=1379968084) supplied nested prefixes of complete body paragraphs. Each size/language combination ran once, sequentially, in a fresh Linux Chromium extension profile with the application translation cache disabled. These are not Mac, Safari or mobile-device timings. Upstream prompt caching and service load were not controlled.
 
