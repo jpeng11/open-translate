@@ -1,0 +1,372 @@
+{
+  "schema": 1,
+  "suite": "opencode-go-live-performance",
+  "status": "completed-with-provider-failures",
+  "testedAt": "2026-10-13T01:30:39.055147+00:00",
+  "testedSourceCommit": "e8e94a4",
+  "implementationSha256": "4182cb1dd5704db46ad9e54c605be56e02070aee64c13cefba890c0bc950bdda",
+  "configuration": {
+    "provider": "opencode-go",
+    "copyResult": "Mac and Linux Magpie provider records already matched exactly, including private connection fields; no overwrite was necessary.",
+    "credentialsIncluded": false,
+    "otherProviderSettingsChanged": false
+  },
+  "target": {
+    "words": 1000,
+    "completeMs": 2000,
+    "met": false
+  },
+  "apiComparisons": [
+    {
+      "schema": 1,
+      "startedAt": "2026-10-13T01:17:14.967Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Machine_translation",
+      "sample": {
+        "paragraphs": 16,
+        "words": 977,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687"
+      },
+      "sourceLanguage": "en",
+      "targetLanguage": "zh-CN",
+      "method": "Sequential identical plain-text requests; stream=false, max_tokens=6000, no application cache. Includes endpoint routing and generation; excludes browser rendering. One run per model; upstream caching and load are uncontrolled. Item/Chinese checks do not certify semantic completeness.",
+      "runs": [
+        {
+          "model": "opencode-go/gpt-6-luna",
+          "startedAt": "2026-10-13T01:17:14.967Z",
+          "reasoningEffort": "low",
+          "jsonMode": true,
+          "httpStatus": 200,
+          "completeMs": 16486,
+          "usage": {
+            "promptTokens": 1629,
+            "completionTokens": 1865,
+            "reasoningTokens": 35,
+            "cachedTokens": 0
+          },
+          "finishReason": "stop",
+          "chineseParagraphs": 16,
+          "characters": 2310,
+          "status": "passed",
+          "outputSha256": "65986e72d71a6b26e2998fd8e67ded5e6563216561f19a09a2646b4ca7516db6"
+        },
+        {
+          "model": "opencode-go/glm-5.3-flash",
+          "startedAt": "2026-10-13T01:17:31.460Z",
+          "reasoningEffort": "low",
+          "jsonMode": true,
+          "httpStatus": 200,
+          "completeMs": 18396,
+          "usage": {
+            "promptTokens": 1637,
+            "completionTokens": 1525,
+            "reasoningTokens": 18,
+            "cachedTokens": 0
+          },
+          "finishReason": "stop",
+          "chineseParagraphs": 16,
+          "characters": 2238,
+          "status": "passed",
+          "outputSha256": "fe3e3461fa941b0a4edb3e9829fde1606712ba5454a5824898373cb7c698fbfd"
+        },
+        {
+          "model": "opencode-go/deepseek-v4.1-flash",
+          "startedAt": "2026-10-13T01:17:49.858Z",
+          "reasoningEffort": "low",
+          "jsonMode": true,
+          "httpStatus": 400,
+          "status": "failed",
+          "elapsedMs": 204,
+          "error": "provider_http_400"
+        },
+        {
+          "model": "opencode-go/claude-haiku-5-5",
+          "startedAt": "2026-10-13T01:17:50.064Z",
+          "reasoningEffort": "low",
+          "jsonMode": true,
+          "httpStatus": 200,
+          "completeMs": 12832,
+          "usage": {
+            "promptTokens": 2519,
+            "completionTokens": 2718,
+            "reasoningTokens": 0,
+            "cachedTokens": 0
+          },
+          "finishReason": "stop",
+          "chineseParagraphs": 16,
+          "characters": 2225,
+          "status": "passed",
+          "outputSha256": "ffadb7373f3e46aa3c780440055131bb5072a00f9fd21570bdfdf6e6c2962fe0"
+        }
+      ]
+    },
+    {
+      "schema": 1,
+      "startedAt": "2026-10-13T01:18:53.530Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Machine_translation",
+      "sample": {
+        "paragraphs": 16,
+        "words": 977,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687"
+      },
+      "sourceLanguage": "en",
+      "targetLanguage": "zh-CN",
+      "method": "Sequential identical plain-text requests; stream=false, max_tokens=6000, no application cache. Includes endpoint routing and generation; excludes browser rendering. One run per model; upstream caching and load are uncontrolled. Item/Chinese checks do not certify semantic completeness.",
+      "runs": [
+        {
+          "model": "opencode-go/mimo-v2.6-flash",
+          "startedAt": "2026-10-13T01:18:53.531Z",
+          "reasoningEffort": "model default",
+          "jsonMode": true,
+          "httpStatus": 200,
+          "completeMs": 50382,
+          "usage": {
+            "promptTokens": 1730,
+            "completionTokens": 3755,
+            "reasoningTokens": 2011,
+            "cachedTokens": 0
+          },
+          "finishReason": "stop",
+          "chineseParagraphs": 16,
+          "characters": 2368,
+          "status": "passed",
+          "outputSha256": "86bc075033b7c17a473a911953e02a56ac9c3600c74f7747b98a5b0248702d59"
+        },
+        {
+          "model": "opencode-go/deepseek-flash",
+          "startedAt": "2026-10-13T01:19:43.922Z",
+          "reasoningEffort": "model default",
+          "jsonMode": true,
+          "httpStatus": 400,
+          "status": "failed",
+          "elapsedMs": 176,
+          "error": "provider_http_400"
+        }
+      ]
+    }
+  ],
+  "pageRuns": [
+    {
+      "schema": 1,
+      "status": "failed",
+      "startedAt": "2026-10-13T01:19:58.056Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Machine_translation",
+      "sourceLanguage": "en",
+      "targetLanguage": "zh-CN",
+      "provider": "Configured OpenAI-compatible endpoint",
+      "model": "opencode-go/claude-haiku-5-5",
+      "settings": {
+        "batchSize": 4,
+        "concurrency": 4,
+        "timeout": 90,
+        "reasoningEffort": "low",
+        "cache": false
+      },
+      "method": "Real public page in a clean Chromium extension profile. Select approximately 1,000 words in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. One uncached run.",
+      "requests": [],
+      "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "4182cb1dd5704db46ad9e54c605be56e02070aee64c13cefba890c0bc950bdda",
+        "bundleSha256": "483096e53ba11c6f64b1ec861589ce24abe06fbf0433417f2edd6a7789750a2a"
+      },
+      "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+      "browser": "156.0.8078.4",
+      "contentMode": "Original public page markup",
+      "sample": {
+        "words": 977,
+        "paragraphs": 16,
+        "characters": 6683,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "progress": {
+        "done": 1,
+        "events": [
+          {
+            "paragraphs": 1,
+            "ms": 6473
+          }
+        ],
+        "elapsedMs": 14508
+      },
+      "extensionState": {
+        "ok": true,
+        "active": true,
+        "completed": 1,
+        "failed": 4,
+        "error": "Agent changed the order of protected markup or terminology."
+      },
+      "error": "Translation failed: Agent changed the order of protected markup or terminology."
+    },
+    {
+      "schema": 1,
+      "status": "failed",
+      "startedAt": "2026-10-13T01:20:51.426Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Machine_translation",
+      "sourceLanguage": "en",
+      "targetLanguage": "zh-CN",
+      "provider": "Configured OpenAI-compatible endpoint",
+      "model": "opencode-go/gpt-6-luna",
+      "settings": {
+        "batchSize": 4,
+        "concurrency": 4,
+        "timeout": 90,
+        "reasoningEffort": "low",
+        "cache": false
+      },
+      "method": "Real public page in a clean Chromium extension profile. Select approximately 1,000 words in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. One uncached run.",
+      "requests": [],
+      "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "4182cb1dd5704db46ad9e54c605be56e02070aee64c13cefba890c0bc950bdda",
+        "bundleSha256": "483096e53ba11c6f64b1ec861589ce24abe06fbf0433417f2edd6a7789750a2a"
+      },
+      "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+      "browser": "156.0.8078.4",
+      "contentMode": "Original public page markup",
+      "sample": {
+        "words": 977,
+        "paragraphs": 16,
+        "characters": 6683,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "progress": {
+        "done": 0,
+        "events": [],
+        "elapsedMs": 11355
+      },
+      "extensionState": {
+        "ok": true,
+        "active": true,
+        "completed": 0,
+        "failed": 1,
+        "error": "Agent returned invalid JSON."
+      },
+      "error": "Translation failed: Agent returned invalid JSON."
+    },
+    {
+      "schema": 1,
+      "status": "failed",
+      "startedAt": "2026-10-13T01:21:48.353Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Machine_translation",
+      "sourceLanguage": "en",
+      "targetLanguage": "zh-CN",
+      "provider": "Configured OpenAI-compatible endpoint",
+      "model": "opencode-go/glm-5.3-flash",
+      "settings": {
+        "batchSize": 4,
+        "concurrency": 4,
+        "timeout": 90,
+        "reasoningEffort": "low",
+        "cache": false
+      },
+      "method": "Real public page in a clean Chromium extension profile. Select approximately 1,000 words in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. One uncached run.",
+      "requests": [],
+      "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "4182cb1dd5704db46ad9e54c605be56e02070aee64c13cefba890c0bc950bdda",
+        "bundleSha256": "483096e53ba11c6f64b1ec861589ce24abe06fbf0433417f2edd6a7789750a2a"
+      },
+      "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+      "browser": "156.0.8078.4",
+      "contentMode": "Original public page markup",
+      "sample": {
+        "words": 977,
+        "paragraphs": 16,
+        "characters": 6683,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "progress": {
+        "done": 0,
+        "events": [],
+        "elapsedMs": 4411
+      },
+      "extensionState": {
+        "ok": true,
+        "active": true,
+        "completed": 0,
+        "failed": 1,
+        "error": "Agent changed the order of protected markup or terminology."
+      },
+      "error": "Translation failed: Agent changed the order of protected markup or terminology."
+    },
+    {
+      "schema": 1,
+      "status": "failed",
+      "startedAt": "2026-10-13T01:25:58.085Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Machine_translation",
+      "sourceLanguage": "en",
+      "targetLanguage": "zh-CN",
+      "provider": "Configured OpenAI-compatible endpoint",
+      "model": "opencode-go/mimo-v2.6-flash",
+      "settings": {
+        "batchSize": 4,
+        "concurrency": 4,
+        "timeout": 90,
+        "reasoningEffort": "model default",
+        "cache": false
+      },
+      "method": "Real public page in a clean Chromium extension profile. Select approximately 1,000 words in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. One uncached run.",
+      "requests": [],
+      "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "4182cb1dd5704db46ad9e54c605be56e02070aee64c13cefba890c0bc950bdda",
+        "bundleSha256": "483096e53ba11c6f64b1ec861589ce24abe06fbf0433417f2edd6a7789750a2a"
+      },
+      "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+      "browser": "156.0.8078.4",
+      "contentMode": "Original public page markup",
+      "sample": {
+        "words": 977,
+        "paragraphs": 16,
+        "characters": 6683,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "progress": {
+        "done": 0,
+        "events": [],
+        "elapsedMs": 22333
+      },
+      "extensionState": {
+        "ok": true,
+        "active": true,
+        "completed": 0,
+        "failed": 2,
+        "error": "Agent changed the order of protected markup or terminology."
+      },
+      "error": "Translation failed: Agent changed the order of protected markup or terminology."
+    }
+  ],
+  "deepseek": {
+    "status": "awaiting-workspace-region-update",
+    "models": [
+      "opencode-go/deepseek-v4.1-flash",
+      "opencode-go/deepseek-flash"
+    ],
+    "initialHttpStatus": 400,
+    "requirement": "Provider requires Global regions in workspace Privacy settings.",
+    "globalChangeRequestedByUser": true,
+    "globalChangeVerified": false,
+    "controlPlaneAttempt": "Console request returned HTTP 403; Mac Chrome and Safari AppleScript automation timed out. No successful settings mutation is claimed.",
+    "relatedUpstreamIssue": "https://github.com/anomalyco/opencode/issues/50155"
+  },
+  "limitations": [
+    "Same 977-word, 16-paragraph English-to-Chinese sample as the prior report.",
+    "One request or page run per configuration; failures are not completed-translation timings.",
+    "Application cache disabled; reported provider cached prompt tokens were zero in these API runs.",
+    "API requests run sequentially through Linux Magpie; browser runs use Mac Chromium through a private SSH loopback tunnel to that same gateway.",
+    "Correct item IDs and Chinese presence do not certify semantic translation completeness.",
+    "All four original-format webpage runs failed; plain-text results must not be reported as successful webpage timings.",
+    "Product code is unchanged; existing source-bound acceptance was reverified, not rerun."
+  ]
+}

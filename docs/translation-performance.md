@@ -32,6 +32,24 @@ A clean Chromium extension profile on the Mac translated the same public page, w
 
 Every passing webpage run retained all 70 links and supported formatting, then restored the exact original DOM. The counts establish structural completeness; they are not an exhaustive linguistic review. Plain-text API timings must not be presented as full webpage timings. AGY's explicit model is `gemini-3.8-flash-low`, using CLI 1.3.2.
 
+## OpenCode Go follow-up
+
+The Mac and Linux Magpie OpenCode Go provider records already matched exactly when checked, so no settings overwrite was needed. The following runs use the same 977-word sample and unchanged product implementation. Credentials are excluded from the [OpenCode Go report](acceptance/opencode-go-performance.json).
+
+| OpenCode Go model | Whole plain-text request | Original-format webpage |
+| --- | ---: | --- |
+| `claude-haiku-5-5`, low reasoning | 12.832 s, 16 Chinese items | Failed after 14.508 s; 1/16 paragraphs rendered; changed formatting marker order |
+| `gpt-6-luna`, low reasoning | 16.486 s, 16 Chinese items | Failed after 11.355 s; 0/16 paragraphs; invalid JSON |
+| `glm-5.3-flash`, low reasoning | 18.396 s, 16 Chinese items | Failed after 4.411 s; 0/16 paragraphs; changed formatting marker order |
+| `mimo-v2.6-flash`, default reasoning | 50.382 s, 16 Chinese items | Failed after 22.333 s; 0/16 paragraphs; changed formatting marker order |
+| `deepseek-v4.1-flash` / `deepseek-flash` | HTTP 400: workspace region requirement | Not run while access is rejected |
+
+All requests ask for JSON mode. The plain-text requests use `max_tokens=6000`; browser jobs use the extension defaults with batch size four and concurrency four. Each configuration has one measurement, and none establishes a successful complete-webpage time. MiMo returned 2,011 reasoning tokens; the other successful API runs returned 0–35. The API responses report zero cached prompt tokens.
+
+DeepSeek requires **Global regions** in the OpenCode workspace's Privacy settings. The user requested that change, but it has not been verified: the console request returned HTTP 403 and Mac browser automation timed out. A logged-in console update is needed before retesting. The upstream project has [reports of the Privacy page being absent from navigation or failing to save](https://github.com/anomalyco/opencode/issues/50155); this account's setting has not been claimed as changed.
+
+The product implementation remains unchanged and the existing broad acceptance bindings still verify. These live-provider failures establish a remaining compatibility limit in direct rich-text translation, even when the same models return valid plain-text batches.
+
 ## Changes retained
 
 Page scans fill batches before dispatch and run independent requests up to the configured concurrency. Documents and subtitles also respect concurrency while preserving order and cancellation. The default remains one. The bridge's own concurrency must allow the chosen browser limit.
