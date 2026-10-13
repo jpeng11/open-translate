@@ -1,0 +1,247 @@
+{
+  "schema": 1,
+  "suite": "reference-translation-transport",
+  "referenceVersion": "1.33.3",
+  "contentSha256": "bfe7e3e640bf90bb6b1103b0fe2e097068a751ca182beadc0bba25a8e38cda4c",
+  "cases": [
+    {
+      "id": "translation-latency-custom",
+      "summary": {
+        "referenceVersion": "1.33.3",
+        "contentSha256": "bfe7e3e640bf90bb6b1103b0fe2e097068a751ca182beadc0bba25a8e38cda4c",
+        "fixtureSha256": "e41cbc1704fb4247233b6e55727cd83122a9e8edceff83b2a4368e32350164d8",
+        "browser": "156.0.8078.4",
+        "customOpenAIEndpointConfirmed": true,
+        "commercialCredentialsUsed": false,
+        "requests": [
+          {
+            "path": "/v1/chat/completions",
+            "stream": false,
+            "model": "fixture-model",
+            "fields": [
+              "model",
+              "temperature",
+              "messages"
+            ],
+            "messages": [
+              {
+                "role": "system",
+                "characters": 296,
+                "hasMarkup": false
+              },
+              {
+                "role": "user",
+                "characters": 100,
+                "hasMarkup": false
+              }
+            ]
+          },
+          {
+            "path": "/v1/chat/completions",
+            "stream": false,
+            "model": "fixture-model",
+            "fields": [
+              "model",
+              "temperature",
+              "messages"
+            ],
+            "messages": [
+              {
+                "role": "system",
+                "characters": 296,
+                "hasMarkup": false
+              },
+              {
+                "role": "user",
+                "characters": 254,
+                "hasMarkup": false
+              }
+            ]
+          }
+        ],
+        "state": {
+          "source": "Machine translation helps readers understand ",
+          "targets": [
+            {
+              "text": "机器翻译帮助读者理解不同语言和新思想。这是一段用于观察翻译请求与排版输出的完整独立测试文字。",
+              "links": 0,
+              "bold": 0
+            }
+          ],
+          "originalLinks": 1
+        },
+        "limitations": [
+          "Provider is a deterministic local fixture. Timings do not measure a commercial model. REA is passive; Playwright configured the extension and triggered translation. External hostname resolution blocked; packaged defaults are pinned."
+        ]
+      },
+      "reaEvidenceId": "ev_d93bd69fae15db369e0fc69752a38daac8998cb49946b7db7092652587866b76",
+      "artifacts": {
+        "summary.json": "62f817f25091671526986ecef23b1240b2c2913e7b6136f098fb4457687ee63c",
+        "page-evidence.json": "058ba3074b330df9b8845ed68dae96004cc9fde7a345198d95fcc9c4681673eb",
+        "targets.json": "8dc1cb0f9e0234ccf887474d77641da9355396cd8eda58821f2406196d6bfbd5",
+        "requests.json": "db77a2fdcc667e19e007c77003c5bb2b53915ec61ab48c2f4104e12f2b378f03"
+      }
+    },
+    {
+      "id": "translation-latency-reproduction",
+      "summary": {
+        "referenceVersion": "1.33.3",
+        "contentSha256": "bfe7e3e640bf90bb6b1103b0fe2e097068a751ca182beadc0bba25a8e38cda4c",
+        "fixtureSha256": "e41cbc1704fb4247233b6e55727cd83122a9e8edceff83b2a4368e32350164d8",
+        "browser": "156.0.8078.4",
+        "customOpenAIEndpointConfirmed": true,
+        "richMode": false,
+        "commercialCredentialsUsed": false,
+        "requests": [
+          {
+            "path": "/v1/chat/completions",
+            "stream": false,
+            "model": "fixture-model",
+            "fields": [
+              "model",
+              "temperature",
+              "messages"
+            ],
+            "messages": [
+              {
+                "role": "system",
+                "characters": 296,
+                "hasMarkup": false
+              },
+              {
+                "role": "user",
+                "characters": 100,
+                "hasMarkup": false
+              }
+            ]
+          },
+          {
+            "path": "/v1/chat/completions",
+            "stream": false,
+            "model": "fixture-model",
+            "fields": [
+              "model",
+              "temperature",
+              "messages"
+            ],
+            "messages": [
+              {
+                "role": "system",
+                "characters": 296,
+                "hasMarkup": false
+              },
+              {
+                "role": "user",
+                "characters": 254,
+                "hasMarkup": false
+              }
+            ]
+          }
+        ],
+        "state": {
+          "source": "Machine translation helps readers understand ",
+          "targets": [
+            {
+              "text": "本地模拟译文：Machine translation helps readers understand different languages and new ideas. This complete paragraph is independent test text for observing translation requests and formatted output.",
+              "links": 0,
+              "bold": 0
+            }
+          ],
+          "originalLinks": 1
+        },
+        "limitations": [
+          "Provider is a deterministic local fixture. Timings do not measure a commercial model. REA is passive; Playwright configured the extension and triggered translation. External hostname resolution blocked; packaged defaults are pinned."
+        ],
+        "status": "passed"
+      },
+      "reaEvidenceId": "ev_64eb997c68ff1668080cdab1f0a0ac145d546e05bb20e26fd55bd6f12aa2b25b",
+      "artifacts": {
+        "summary.json": "f1633e843167d240fbd3ca43c60cecc41208be6b94e0263364619d6c32ac1c2f",
+        "page-evidence.json": "6c7ab978e92bb32da904356b5300f7a4aef3b73189adf04baddfc80761f4a78b",
+        "targets.json": "c38677ccf4d5701d5b6e4f2f06c81e919a010c8a5f99d74b889d3bd6fa528902",
+        "requests.json": "e4f71c2537fdf1c7d9f87b26642568f1649669a06b8319e10d1873a665b22233"
+      }
+    },
+    {
+      "id": "translation-latency-rich",
+      "summary": {
+        "referenceVersion": "1.33.3",
+        "contentSha256": "bfe7e3e640bf90bb6b1103b0fe2e097068a751ca182beadc0bba25a8e38cda4c",
+        "fixtureSha256": "e41cbc1704fb4247233b6e55727cd83122a9e8edceff83b2a4368e32350164d8",
+        "browser": "156.0.8078.4",
+        "customOpenAIEndpointConfirmed": true,
+        "richMode": true,
+        "commercialCredentialsUsed": false,
+        "requests": [
+          {
+            "path": "/v1/chat/completions",
+            "stream": false,
+            "model": "fixture-model",
+            "fields": [
+              "model",
+              "temperature",
+              "messages"
+            ],
+            "messages": [
+              {
+                "role": "system",
+                "characters": 296,
+                "hasMarkup": false
+              },
+              {
+                "role": "user",
+                "characters": 100,
+                "hasMarkup": false
+              }
+            ]
+          },
+          {
+            "path": "/v1/chat/completions",
+            "stream": false,
+            "model": "fixture-model",
+            "fields": [
+              "model",
+              "temperature",
+              "messages"
+            ],
+            "messages": [
+              {
+                "role": "system",
+                "characters": 296,
+                "hasMarkup": false
+              },
+              {
+                "role": "user",
+                "characters": 273,
+                "hasMarkup": true
+              }
+            ]
+          }
+        ],
+        "state": {
+          "source": "Machine translation helps readers understand ",
+          "targets": [
+            {
+              "text": "本地模拟译文：Machine translation helps readers understand different languages and new ideas. This complete paragraph is independent test text for observing translation requests and formatted output.",
+              "links": 1,
+              "bold": 1
+            }
+          ],
+          "originalLinks": 1
+        },
+        "limitations": [
+          "Provider is a deterministic local fixture. Timings do not measure a commercial model. REA is passive; Playwright configured the extension and triggered translation. External hostname resolution blocked; packaged defaults are pinned."
+        ],
+        "status": "passed"
+      },
+      "reaEvidenceId": "ev_9f8e8046a47ce79a4236cef74719dec23b37a1fae932e9234fbc0fca0116bb52",
+      "artifacts": {
+        "summary.json": "651d4fb6f911f96630742d1c4b5b73ea9684ee4e7d82616d99a87746763d1f78",
+        "page-evidence.json": "48a688e9f8ddbb17f0bcf8da1315abbd1d2ed0beacdb8a388af07ca04381bccf",
+        "targets.json": "e893d2d1bbcb2ab45929f1ad9ba5e599272665e6d427461cbc35e03cfac2e55f",
+        "requests.json": "b3564bba7f8997436e794bc32076b8ec952b0660c1f10ec034b3055ca2339485"
+      }
+    }
+  ],
+  "scope": "Deterministic loopback transport and rendering inspection only; not a model speed or quality measurement. REA passive evidence and fixture endpoint logs are distinct sources."
+}
