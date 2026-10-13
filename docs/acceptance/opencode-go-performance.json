@@ -2,7 +2,7 @@
   "schema": 1,
   "suite": "opencode-go-live-performance",
   "status": "completed-with-provider-failures",
-  "testedAt": "2026-10-13T01:30:39.055147+00:00",
+  "testedAt": "2026-10-13T01:46:28.390873+00:00",
   "testedSourceCommit": "e8e94a4",
   "implementationSha256": "4182cb1dd5704db46ad9e54c605be56e02070aee64c13cefba890c0bc950bdda",
   "configuration": {
@@ -142,6 +142,83 @@
           "error": "provider_http_400"
         }
       ]
+    },
+    {
+      "schema": 1,
+      "startedAt": "2026-10-13T01:32:33.979Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Machine_translation",
+      "sample": {
+        "paragraphs": 16,
+        "words": 977,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687"
+      },
+      "sourceLanguage": "en",
+      "targetLanguage": "zh-CN",
+      "method": "Sequential identical plain-text requests; stream=false, max_tokens=6000, no application cache. Includes endpoint routing and generation; excludes browser rendering. One run per model; upstream caching and load are uncontrolled. Item/Chinese checks do not certify semantic completeness.",
+      "runs": [
+        {
+          "model": "opencode-go/deepseek-v4.1-flash",
+          "startedAt": "2026-10-13T01:32:33.979Z",
+          "reasoningEffort": "low",
+          "jsonMode": true,
+          "httpStatus": 200,
+          "completeMs": 77055,
+          "usage": {
+            "promptTokens": 1674,
+            "completionTokens": 6000,
+            "reasoningTokens": 4969,
+            "cachedTokens": 0
+          },
+          "finishReason": "length",
+          "status": "failed",
+          "elapsedMs": 77055,
+          "error": "Invalid or incomplete translation"
+        }
+      ],
+      "settings": {
+        "maxTokens": 6000,
+        "timeoutSeconds": 90
+      }
+    },
+    {
+      "schema": 1,
+      "startedAt": "2026-10-13T01:34:52.727Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Machine_translation",
+      "sample": {
+        "paragraphs": 16,
+        "words": 977,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687"
+      },
+      "sourceLanguage": "en",
+      "targetLanguage": "zh-CN",
+      "method": "Sequential identical plain-text requests; stream=false, max_tokens=12000, no application cache. Includes endpoint routing and generation; excludes browser rendering. One run per model; upstream caching and load are uncontrolled. Item/Chinese checks do not certify semantic completeness.",
+      "runs": [
+        {
+          "model": "opencode-go/deepseek-v4.1-flash",
+          "startedAt": "2026-10-13T01:34:52.727Z",
+          "reasoningEffort": "low",
+          "jsonMode": true,
+          "httpStatus": 200,
+          "completeMs": 54235,
+          "usage": {
+            "promptTokens": 1674,
+            "completionTokens": 8717,
+            "reasoningTokens": 7125,
+            "cachedTokens": 1664
+          },
+          "finishReason": "stop",
+          "chineseParagraphs": 16,
+          "characters": 2432,
+          "status": "passed",
+          "outputSha256": "21e17f7016f3d28d1435f070d76e3e1d973a662cfee05bc76eaed99498723e34"
+        }
+      ],
+      "settings": {
+        "maxTokens": 12000,
+        "timeoutSeconds": 180
+      },
+      "runnerModification": "Temporary copy of scripts/benchmark-models.mjs; max_tokens and its method description changed from 6000 to 12000; core module import resolved to the same unchanged implementation.",
+      "runnerSha256": "2cadce41e0324cdc89406a20075d62e767733e7671e440471baabc4c4069ccbf"
     }
   ],
   "pageRuns": [
@@ -345,10 +422,169 @@
         "error": "Agent changed the order of protected markup or terminology."
       },
       "error": "Translation failed: Agent changed the order of protected markup or terminology."
+    },
+    {
+      "schema": 1,
+      "status": "failed",
+      "startedAt": "2026-10-13T01:38:09.294Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Machine_translation",
+      "sourceLanguage": "en",
+      "targetLanguage": "zh-CN",
+      "provider": "Configured OpenAI-compatible endpoint",
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "settings": {
+        "batchSize": 4,
+        "concurrency": 4,
+        "timeout": 90,
+        "reasoningEffort": "low",
+        "cache": false
+      },
+      "method": "Real public page in a clean Chromium extension profile. Select approximately 1,000 words in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. One uncached run.",
+      "requests": [],
+      "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "4182cb1dd5704db46ad9e54c605be56e02070aee64c13cefba890c0bc950bdda",
+        "bundleSha256": "483096e53ba11c6f64b1ec861589ce24abe06fbf0433417f2edd6a7789750a2a"
+      },
+      "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+      "browser": "156.0.8078.4",
+      "contentMode": "Original public page markup",
+      "sample": {
+        "words": 977,
+        "paragraphs": 16,
+        "characters": 6683,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "progress": {
+        "done": 13,
+        "events": [
+          {
+            "paragraphs": 4,
+            "ms": 62997
+          },
+          {
+            "paragraphs": 5,
+            "ms": 77482
+          },
+          {
+            "paragraphs": 6,
+            "ms": 105444
+          },
+          {
+            "paragraphs": 10,
+            "ms": 129991
+          },
+          {
+            "paragraphs": 13,
+            "ms": 154337
+          }
+        ],
+        "elapsedMs": 167819
+      },
+      "extensionState": {
+        "ok": true,
+        "active": true,
+        "completed": 13,
+        "failed": 3,
+        "error": "Translation timed out. Reduce batch size or increase the timeout."
+      },
+      "error": "Translation failed: Translation timed out. Reduce batch size or increase the timeout."
+    },
+    {
+      "schema": 1,
+      "status": "passed",
+      "startedAt": "2026-10-13T01:41:25.399Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Machine_translation",
+      "sourceLanguage": "en",
+      "targetLanguage": "zh-CN",
+      "provider": "Configured OpenAI-compatible endpoint",
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "settings": {
+        "batchSize": 4,
+        "concurrency": 4,
+        "timeout": 210,
+        "reasoningEffort": "low",
+        "cache": false
+      },
+      "method": "Real public page in a clean Chromium extension profile. Select approximately 1,000 words in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. One uncached run.",
+      "requests": [],
+      "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "4182cb1dd5704db46ad9e54c605be56e02070aee64c13cefba890c0bc950bdda",
+        "bundleSha256": "483096e53ba11c6f64b1ec861589ce24abe06fbf0433417f2edd6a7789750a2a"
+      },
+      "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+      "browser": "156.0.8078.4",
+      "contentMode": "Original public page markup",
+      "sample": {
+        "words": 977,
+        "paragraphs": 16,
+        "characters": 6683,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "progress": {
+        "done": 16,
+        "events": [
+          {
+            "paragraphs": 4,
+            "ms": 58354
+          },
+          {
+            "paragraphs": 5,
+            "ms": 85016
+          },
+          {
+            "paragraphs": 6,
+            "ms": 129075
+          },
+          {
+            "paragraphs": 10,
+            "ms": 152249
+          },
+          {
+            "paragraphs": 12,
+            "ms": 197057
+          },
+          {
+            "paragraphs": 16,
+            "ms": 241634
+          }
+        ],
+        "elapsedMs": 241774
+      },
+      "extensionState": {
+        "ok": true,
+        "active": true,
+        "completed": 16,
+        "failed": 0,
+        "error": ""
+      },
+      "firstTranslationMs": 58354,
+      "completeMs": 241634,
+      "wordsPerSecond": 4.04,
+      "preservation": {
+        "links": 70,
+        "linksPreserved": true,
+        "formattingPreserved": true
+      },
+      "output": {
+        "translatedParagraphs": 16,
+        "chineseParagraphs": 16,
+        "characters": 2353,
+        "sha256": "f9937684c7b48a91c5cf5b48b56672360a9b1ba7854020fe7fc11d7e1acea1f9"
+      },
+      "restored": true,
+      "finishedAt": "2026-10-13T01:45:31.667Z"
     }
   ],
   "deepseek": {
-    "status": "awaiting-workspace-region-update",
+    "status": "region-access-restored-complete-page-measured",
     "models": [
       "opencode-go/deepseek-v4.1-flash",
       "opencode-go/deepseek-flash"
@@ -356,17 +592,31 @@
     "initialHttpStatus": 400,
     "requirement": "Provider requires Global regions in workspace Privacy settings.",
     "globalChangeRequestedByUser": true,
-    "globalChangeVerified": false,
-    "controlPlaneAttempt": "Console request returned HTTP 403; Mac Chrome and Safari AppleScript automation timed out. No successful settings mutation is claimed.",
-    "relatedUpstreamIssue": "https://github.com/anomalyco/opencode/issues/50155"
+    "globalChangeVerified": true,
+    "controlPlaneAttempt": "Before the user saved Global, the automated console request returned HTTP 403 and Mac Chrome/Safari automation timed out; no automated settings mutation was performed.",
+    "relatedUpstreamIssue": "https://github.com/anomalyco/opencode/issues/50155",
+    "globalChangeVerification": "User confirmed saving Global in the logged-in console; subsequent DeepSeek inference returned HTTP 200. The console setting was not read back by automation.",
+    "retestedModel": "opencode-go/deepseek-v4.1-flash",
+    "postGlobalHttpStatus": 200,
+    "aliasRetested": false,
+    "pageRetest": "The 90-second per-request timeout run failed with 13/16 paragraphs. A fresh profile using the product default 210-second request timeout completed all 16 in 241634 ms; first output 58354 ms, 70 links and formatting retained, exact source DOM restored. No production settings were changed.",
+    "qualityReview": {
+      "scope": "Assistant reviewed the 16 source/translation pairs from the passing page run; qualitative review, not a formal translation-quality evaluation.",
+      "structuralCompleteness": "16/16 Chinese paragraphs; no missing whole paragraphs.",
+      "findings": [
+        "Paragraph 5 retains several English names and Braille, has awkward word order and mismatched parentheses.",
+        "Paragraph 10 attaches the 1960s date ambiguously to Xerox usage, although the source dates that usage to 1978."
+      ],
+      "qualityAccepted": false
+    }
   },
   "limitations": [
     "Same 977-word, 16-paragraph English-to-Chinese sample as the prior report.",
     "One request or page run per configuration; failures are not completed-translation timings.",
-    "Application cache disabled; reported provider cached prompt tokens were zero in these API runs.",
+    "Application cache disabled. The expanded DeepSeek API run reported 1,664 cached prompt tokens; other recorded API runs reported zero. Upstream load and caching are uncontrolled.",
     "API requests run sequentially through Linux Magpie; browser runs use Mac Chromium through a private SSH loopback tunnel to that same gateway.",
     "Correct item IDs and Chinese presence do not certify semantic translation completeness.",
-    "All four original-format webpage runs failed; plain-text results must not be reported as successful webpage timings.",
+    "The first four models failed original-format page tests. DeepSeek failed with 90-second request timeout and passed structural checks with 210 seconds; plain-text timings are not page timings. Passing structural checks do not mean translation quality is accepted.",
     "Product code is unchanged; existing source-bound acceptance was reverified, not rerun."
   ]
 }
