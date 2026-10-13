@@ -1,3 +1,4 @@
+import {alignMissingReferences} from './reference-alignment.mjs';
 import {targetDescription} from './translation-language.mjs';
 // Match the renderer's native tag contract before accepting or repairing a result.
 export function domLayout(text) {
@@ -57,7 +58,7 @@ export function treeRepairMarkup(text) {
         seen.add(part.ref);
       }
     }
-    if(seen.size!==layout.size)return null;
+    if(seen.size!==layout.size){value=alignMissingReferences(value,layout,seen);if(!value)return null;}
     const render=id=>value[id]===null?`<ot${id}/>`:(id==='root'?'':`<ot${id}>`)+value[id].map(part=>typeof part==='string'?part:render(part.ref)).join('')+(id==='root'?'':`</ot${id}>`);
     return render('root');
   }};

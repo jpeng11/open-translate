@@ -261,3 +261,16 @@ test('scroll jumps replace unsent prefetch with the current reading position',as
  expect(next.some(item=>item.text.includes('Jump paragraph 100:'))).toBe(true);
  await command(page,'page.restore');await page.close();
 });
+
+test('an omitted tree leaf is linked only when its exact translated phrase has a unique position',async()=>{
+ for(const ambiguous of [false,true]){
+  const page=await context.newPage();await page.goto(origin+'/page');
+  await page.evaluate(ambiguous=>document.body.innerHTML='<p id="aligned">Read <a href="https://example.com/aligned" title="Preserved">this guide</a> '+(ambiguous?'again ':'')+'carefully.</p>',ambiguous);
+  const original=await page.locator('#aligned').innerHTML();
+  translationOverride=(_text,payload)=>payload.repair===2?{nodes:{root:[ambiguous?'ce guide et ce guide':'Lisez ce guide attentivement.'],'0':['ce guide']}}:'Lisez ce guide attentivement.';
+  await command(page,'page.start');
+  if(ambiguous){await expect.poll(async()=>(await command(page,'page.status')).failed).toBe(1);await expect(page.locator('[data-ot-target]')).toHaveCount(0);}
+  else{await expect(page.locator('#aligned [data-ot-target] a')).toHaveText('ce guide');await expect(page.locator('#aligned [data-ot-target] a')).toHaveAttribute('href','https://example.com/aligned');await expect(page.locator('#aligned [data-ot-target]')).toHaveText('Lisez ce guide attentivement.');}
+  await command(page,'page.restore');expect(await page.locator('#aligned').innerHTML()).toBe(original);await page.close();
+ }
+});
