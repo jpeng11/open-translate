@@ -96,3 +96,25 @@ test('short articles submit offscreen paragraphs within the concurrency bound wi
  expect(await page.evaluate(()=>scrollY)).toBe(0);
  await command(page,'page.restore');await expect(page.locator('[data-ot-target]')).toHaveCount(0);await page.close();
 });
+test('numeric citations keep safe nested formatting locally using one marker',async()=>{
+ const page=await context.newPage();await page.goto(origin+'/page');
+ await page.evaluate(()=>{
+  document.body.innerHTML='<p id="citation">Read <sup><span title="Reference"><a href="https://example.com/reference" onclick="window.unsafe=true">[12]</a><a href="javascript:alert(1)">[13]</a></span></sup> and <b>new ideas</b>.</p>';
+  window.originalCitation=document.querySelector('sup');
+ });
+ const before=await page.locator('#citation').innerHTML();
+ await command(page,'page.start');
+ const target=page.locator('#citation [data-ot-target]');
+ await expect(target).toHaveText('Translated Read [12][13] and new ideas.');
+ const input=JSON.parse(requests[0].value.messages.at(-1).content).items[0].text;
+ expect(input).toBe('Read {0} and {1}new ideas{2}.');
+ await expect(target.locator('sup span[title="Reference"] a')).toHaveCount(2);
+ await expect(target.locator('a').first()).toHaveAttribute('href','https://example.com/reference');
+ expect(await target.locator('a').first().getAttribute('onclick')).toBeNull();
+ expect(await target.locator('a').last().getAttribute('href')).toBeNull();
+ await expect(target.locator('b')).toHaveText('new ideas');
+ await command(page,'page.restore');
+ expect(await page.locator('#citation').innerHTML()).toBe(before);
+ expect(await page.evaluate(()=>window.originalCitation===document.querySelector('sup'))).toBe(true);
+ await page.close();
+});

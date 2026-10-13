@@ -19,6 +19,20 @@ function safeClone(element) {
   }
   return clone;
 }
+// Reference numbers and punctuation need no translation. Keep their entire
+// sanitized inline tree locally, instead of asking the model to copy every
+// nested span boundary. Use the same element/attribute policy as normal text.
+function literalInline(node) {
+  if(node.nodeType===3)return document.createTextNode(node.textContent);
+  const result=document.createDocumentFragment();
+  if(node.nodeType!==1 || own(node) || ignored(node))return result;
+  if(node.tagName==='BR')return document.createElement('br');
+  if(['CODE','KBD','SAMP'].includes(node.tagName)){
+    const copy=document.createElement(node.localName);copy.textContent=node.textContent;return copy;
+  }
+  const copy=INLINE.has(node.tagName)?safeClone(node):result;
+  copy.append(...Array.from(node.childNodes,literalInline));return copy;
+}
 export function serialize(element) {
   const markers=[];
   const put=value=>{const token='{'+markers.length+'}';markers.push(value);return token;};
@@ -28,6 +42,7 @@ export function serialize(element) {
     if(node.tagName==='BR')return put({type:'atom',node:document.createElement('br')});
     if(['CODE','KBD','SAMP'].includes(node.tagName)) {const copy=document.createElement(node.localName);copy.textContent=node.textContent;return put({type:'atom',node:copy});}
     if(!INLINE.has(node.tagName))return Array.from(node.childNodes,walk).join('');
+    if(!/[\p{L}]/u.test(node.textContent || ''))return put({type:'atom',node:literalInline(node)});
     const open=put({type:'open',node:safeClone(node),source:node});
     const inner=Array.from(node.childNodes,walk).join('');
     return open+inner+put({type:'close',source:node});
