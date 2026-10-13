@@ -5,7 +5,7 @@ import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
 import {zipSync,strToU8,unzipSync,strFromU8} from 'fflate';
 import {PDFDocument,StandardFonts} from 'pdf-lib';
-let server,origin,context,worker,id,profile,requests=[],delay=0,bad=false,providerActive=0,providerPeak=0,translationOverride=null;
+let server,origin,context,worker,id,profile,requests=[],delay=0,bad=false,badResponses=0,providerActive=0,providerPeak=0,translationOverride=null;
 const html=`<!doctype html><html><head><title>Translation fixture</title></head><body><main><p id="plain">Hello world.</p><p id="inline">Read <a href="https://example.com" id="link">this link</a> and <strong>bold words</strong> {0}.</p><p id="code">Use <code>npm install</code> today.</p><pre id="pre">Do not translate this code</pre><textarea id="input">Hello input</textarea><input type="password" value="private"><p translate="no">Leave original</p><div id="dynamic"></div><div id="shadow"></div></main></body></html>`;
 async function settings(extra={}){await worker.evaluate(async settings=>{await chrome.storage.local.set({settings});}, {provider:'openai',apiUrl:origin+'/v1',model:'fixture',apiKey:'private-test-key',source:'auto',target:'fr',inputTarget:'es',mode:'bilingual',style:'underline',batchSize:4,concurrency:1,timeout:10,jsonMode:true,glossary:[],rules:[],cache:false,...extra});}
 async function command(page,type,extra={}){const tabId=await worker.evaluate(async url=>(await chrome.tabs.query({})).find(t=>t.url===url)?.id,page.url());return worker.evaluate(async({tabId,type,extra})=>chrome.tabs.sendMessage(tabId,{type,...extra}),{tabId,type,extra});}
@@ -13,11 +13,11 @@ async function app(hash='home'){const page=await context.newPage();await page.go
 async function fileUpload(page,input,name,content,mimeType='application/octet-stream'){await page.locator(input).setInputFiles({name,mimeType,buffer:Buffer.from(content)});}
 async function downloaded(page,button){const result=page.waitForEvent('download');await page.locator(button).click();return readFile(await (await result).path());}
 test.beforeAll(async()=>{
- server=createServer(async(req,res)=>{res.setHeader('Access-Control-Allow-Origin','*');res.setHeader('Access-Control-Allow-Headers','*');if(req.method==='OPTIONS'){res.end();return;}if(req.url==='/page'){res.setHeader('Content-Type','text/html');res.end(html);return;}if(req.method==='GET'){res.writeHead(404);res.end();return;}let body='';for await(const chunk of req)body+=chunk; if(req.url==='/v1/audio/transcriptions'){res.setHeader('Content-Type','application/json');res.end(JSON.stringify({text:'Hello audio'}));return;}const value=JSON.parse(body);requests.push({path:req.url,authorization:req.headers.authorization,value});providerPeak=Math.max(providerPeak,++providerActive);res.once('finish',()=>providerActive--);if(delay)await new Promise(r=>setTimeout(r,delay));res.setHeader('Content-Type','application/json');if(bad){res.end(JSON.stringify({choices:[{message:{content:'bad JSON'}}]}));return;}const input=JSON.parse(value.messages.at(-1).content);const translations=input.items.map(item=>({id:item.id,text:translationOverride?translationOverride(item.text,input):'Translated '+item.text})).reverse();res.end(JSON.stringify({choices:[{finish_reason:'stop',message:{content:JSON.stringify({translations})}}]}));});
+ server=createServer(async(req,res)=>{res.setHeader('Access-Control-Allow-Origin','*');res.setHeader('Access-Control-Allow-Headers','*');if(req.method==='OPTIONS'){res.end();return;}if(req.url==='/page'){res.setHeader('Content-Type','text/html');res.end(html);return;}if(req.method==='GET'){res.writeHead(404);res.end();return;}let body='';for await(const chunk of req)body+=chunk; if(req.url==='/v1/audio/transcriptions'){res.setHeader('Content-Type','application/json');res.end(JSON.stringify({text:'Hello audio'}));return;}const value=JSON.parse(body);requests.push({path:req.url,authorization:req.headers.authorization,value});providerPeak=Math.max(providerPeak,++providerActive);res.once('finish',()=>providerActive--);if(delay)await new Promise(r=>setTimeout(r,delay));res.setHeader('Content-Type','application/json');if(bad || badResponses>0){badResponses=Math.max(0,badResponses-1);res.end(JSON.stringify({choices:[{message:{content:'bad JSON'}}]}));return;}const input=JSON.parse(value.messages.at(-1).content);const translations=input.items.map(item=>({id:item.id,text:translationOverride?translationOverride(item.text,input):'Translated '+item.text})).reverse();res.end(JSON.stringify({choices:[{finish_reason:'stop',message:{content:JSON.stringify({translations})}}]}));});
  await new Promise(r=>server.listen(0,'127.0.0.1',r));origin=`http://127.0.0.1:${server.address().port}`;profile=await mkdtemp(join(tmpdir(),'open-translate-browser-'));context=await chromium.launchPersistentContext(profile,{channel:'chromium',headless:true,ignoreDefaultArgs:['--disable-extensions'],args:['--no-sandbox',`--disable-extensions-except=${resolve('dist/chrome')}`,`--load-extension=${resolve('dist/chrome')}`]});worker=context.serviceWorkers()[0] || await context.waitForEvent('serviceworker');id=worker.url().split('/')[2];await settings();
 });
 test.afterAll(async()=>{await context?.close();await new Promise(r=>server?.close(r));await rm(profile,{recursive:true,force:true});});
-test.beforeEach(async()=>{requests=[];delay=0;bad=false;translationOverride=null;await settings();});
+test.beforeEach(async()=>{requests=[];delay=0;bad=false;badResponses=0;translationOverride=null;await settings();});
 test('MV3 worker translates pages, preserves inline markup, restores original nodes, observes changes',async()=>{
  const page=await context.newPage();await page.goto(origin+'/page');await page.evaluate(()=>{document.querySelector('#link').addEventListener('click',event=>{event.preventDefault();window.linkClicked=true;});document.querySelector('#shadow').attachShadow({mode:'open'}).innerHTML='<p>Shadow paragraph</p>';});
  expect((await command(page,'page.start')).ok).toBe(true);await expect(page.locator('#plain [data-ot-target]')).toHaveText('Translated Hello world.');await expect(page.locator('#inline [data-ot-target]')).toHaveText('Translated Read this link and bold words {0}.');await expect(page.locator('#inline [data-ot-target] a')).toHaveAttribute('href','https://example.com/');await expect(page.locator('#code [data-ot-target] code')).toHaveText('npm install');await expect(page.locator('#pre [data-ot-target]')).toHaveCount(0);await expect(page.locator('textarea [data-ot-target]')).toHaveCount(0);await expect(page.locator('#shadow [data-ot-target]')).toHaveText('Translated Shadow paragraph');
@@ -188,4 +188,17 @@ test('restoring while format recovery is pending cannot reinsert translated DOM'
  await command(page,'page.restore');await page.waitForTimeout(400);
  await expect(page.locator('[data-ot-target]')).toHaveCount(0);
  expect(await page.locator('#cancel-recovery').innerHTML()).toBe(original);await page.close();
+});
+
+
+test('malformed completed JSON is recovered without dropping plain or formatted paragraphs',async()=>{
+ const page=await context.newPage();await page.goto(origin+'/page');
+ await page.evaluate(()=>document.body.innerHTML='<p id="json-repair">Read <a href="https://example.com/json">this guide</a>.</p><p>Plain paragraph after malformed JSON.</p>');
+ badResponses=1;translationOverride=text=>'Réparé '+text;
+ await command(page,'page.start');await expect(page.locator('[data-ot-target]')).toHaveCount(2);
+ const recovered=requests.map(r=>JSON.parse(r.value.messages.at(-1).content)).filter(p=>p.repair);
+ expect(recovered).toHaveLength(2);expect(recovered.map(p=>p.items[0].id).sort()).toEqual([0,1]);
+ expect(recovered.every(p=>p.items.length===1 && p.items[0].draft==='')).toBe(true);
+ await expect(page.locator('#json-repair [data-ot-target] a')).toHaveAttribute('href','https://example.com/json');
+ expect((await command(page,'page.status')).failed).toBe(0);await command(page,'page.restore');await page.close();
 });

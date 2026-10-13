@@ -181,7 +181,8 @@ async function directEntries(items,messages,settings,fetcher,signal) {
   const value=await responseJson(await fetcher(endpoint(settings.apiUrl),{method:'POST',headers,body:JSON.stringify(body),signal,credentials:'omit',redirect:'error'}));
   const choice=value.choices?.[0];
   if(!choice || ['length','content_filter','tool_calls','function_call'].includes(choice.finish_reason) || choice.message?.refusal || choice.message?.tool_calls?.length || choice.message?.function_call) fail('invalid_agent_response','Agent did not return a completed translation.');
-  return orderedResult(parseJson(choice.message?.content),items.map(i=>i.id));
+  try{return orderedResult(parseJson(choice.message?.content),items.map(i=>i.id));}
+  catch(error){if(error instanceof TranslationError)error.repairableOutput=true;throw error;}
 }
 export async function translateBatch(raw, settings, fetcher=fetch) {
   const job=validateJob(raw); const output=job.text_list.map(text=>({text,detected_source_lang:job.source_lang}));
@@ -191,16 +192,21 @@ export async function translateBatch(raw, settings, fetcher=fetch) {
   const controller=new AbortController(); const timer=setTimeout(()=>controller.abort(),settings.timeout*1000);
   try {
     const items=protectedItems.map(i=>({id:i.id,text:i.protected.text}));
-    let entries;
+    let entries;const failed=[];
     if(settings.provider==='bridge') {
       const url=new URL(settings.bridgeUrl); // The configured URL is exact, including its private token.
       const value=await bridgeJson(await fetcher(url.href,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...job,text_list:items.map(i=>i.text)}),signal:controller.signal,credentials:'omit',redirect:'error'}));
       if(!Array.isArray(value.translations)||value.translations.length!==items.length) fail('invalid_translation_batch','Bridge returned an incorrect item count.');
       entries=value.translations.map((item,index)=>({...item,id:items[index].id}));
     } else {
-      entries=await directEntries(items,translationPrompt(job,items),settings,fetcher,controller.signal);
+      try{entries=await directEntries(items,translationPrompt(job,items),settings,fetcher,controller.signal);}
+      catch(error){
+        if(!error.repairableOutput)throw error;
+        // Completed model output with bad JSON/IDs cannot be assigned safely.
+        // Re-request each original independently; do not guess partial matches.
+        entries=[];failed.push(...protectedItems.map(original=>({original,entry:{text:''}})));
+      }
     }
-    const failed=[];
     const accept=(original,entry)=>{
       const language=entry.detected_source_lang || job.source_lang;
       if(!/^[a-z][a-z0-9-]{0,34}$/i.test(language)) fail('invalid_translation_batch','Agent returned an invalid language code.');
@@ -211,7 +217,7 @@ export async function translateBatch(raw, settings, fetcher=fetch) {
       try{accept(original,entry);}
       catch(error){
         // Only recover validated, extension-owned DOM markup. Transport errors,
-        // refusals and arbitrary malformed source/response schemas still fail.
+        // refusals and malformed source markup still fail.
         if(settings.provider!=='openai' || error.code!=='placeholder_mismatch' || !domLayout(original.text))throw error;
         failed.push({original,entry});
       }
@@ -221,11 +227,14 @@ export async function translateBatch(raw, settings, fetcher=fetch) {
     for(const {original,entry} of failed){
       let draft=entry.text;
       for(let attempt=1;attempt<=2;attempt++){
-        const [repaired]=await directEntries([{id:original.id}],formatRepairPrompt(job,original,draft,attempt),settings,fetcher,controller.signal);
-        try{accept(original,repaired);break;}
+        let repaired;
+        try{
+          [repaired]=await directEntries([{id:original.id}],formatRepairPrompt(job,original,draft,attempt),settings,fetcher,controller.signal);
+          accept(original,repaired);break;
+        }
         catch(error){
-          if(error.code!=='placeholder_mismatch' || attempt===2)throw error;
-          draft=repaired.text;
+          if((error.code!=='placeholder_mismatch' && !error.repairableOutput) || attempt===2)throw error;
+          draft=repaired?.text || '';
         }
       }
     }

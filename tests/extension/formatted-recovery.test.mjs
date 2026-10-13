@@ -59,7 +59,7 @@ test('repair still rejects duplicate, missing or invented IDs instead of guessin
   let calls=0;
   await assert.rejects(translateBatch(job(['<ot0>Hello</ot0>']),settings,async(_url,init)=>{
    calls++;return reply(input(init).repair?entries:[{id:0,text:'Bonjour'}]);
-  }),e=>e.code==='invalid_translation_batch');assert.equal(calls,2);
+  }),e=>e.code==='invalid_translation_batch');assert.equal(calls,3);
  }
 });
 
@@ -92,4 +92,28 @@ test('repair stays inside the engine concurrency limit across simultaneous jobs'
   const engine=createEngine();const result=await Promise.all(Array.from({length:3},(_,i)=>engine.translate(job([`<ot0>Hello ${i}</ot0>`]),{...settings,concurrency:2})));
   assert.equal(peak,2);assert.equal(calls,6);assert.ok(result.every(r=>r.translations[0].text.includes('<ot0>Hello')));
  }finally{globalThis.fetch=previous;}
+});
+
+
+test('completed malformed JSON is retried per original item with no inferred partial output',async()=>{
+ const seen=[];
+ const result=await translateBatch(job(['<ot0>First</ot0>','Plain second']),settings,async(_url,init)=>{
+  const p=input(init);seen.push(p);
+  if(!p.repair)return new Response(JSON.stringify({choices:[{finish_reason:'stop',message:{content:'{"translations":[{"id":0,"text":unquoted}]}'} }]}));
+  assert.equal(p.items.length,1);assert.equal(p.items[0].draft,'');
+  return reply([{id:p.items[0].id,text:p.items[0].id===0?'<ot0>Premier</ot0>':'Deuxième'}]);
+ });
+ assert.deepEqual(seen.map(p=>p.items.map(i=>i.id)),[[0,1],[0],[1]]);
+ assert.deepEqual(result.translations.map(i=>i.text),['<ot0>Premier</ot0>','Deuxième']);
+});
+
+test('transport errors, truncation and refusals during repair do not consume another retry',async()=>{
+ for(const kind of ['http','truncated','refusal','tools']){
+  let calls=0;
+  await assert.rejects(translateBatch(job(['<ot0>Hello</ot0>']),settings,async(_url,init)=>{
+   calls++;if(!input(init).repair)return reply([{id:0,text:'Bonjour'}]);
+   if(kind==='http')return new Response('private response',{status:429});
+   return new Response(JSON.stringify({choices:[{finish_reason:kind==='truncated'?'length':'stop',message:{content:'{}',...(kind==='refusal'?{refusal:'no'}:kind==='tools'?{tool_calls:[{id:'call'}]}:{})}}]}));
+  }),e=>e.code==='invalid_agent_response'||e.code==='provider_http_429');assert.equal(calls,2);
+ }
 });
