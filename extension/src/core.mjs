@@ -1,5 +1,5 @@
 import {targetDescription,wrongTargetScript} from './translation-language.mjs';
-import {domLayout,sameDomLayout,formatRepairPrompt,htmlRepairMarkup,htmlRepairPrompt} from './formatted-recovery.mjs';
+import {domLayout,sameDomLayout,formatRepairPrompt,treeRepairMarkup,treeRepairPrompt} from './formatted-recovery.mjs';
 import {normalizeScreenRegion} from './screen-region.mjs';
 export const DEFAULTS = Object.freeze({
   provider: 'bridge', bridgeUrl: 'http://127.0.0.1:8765/translate', apiUrl: 'http://127.0.0.1:1234/v1',
@@ -170,7 +170,7 @@ export async function bridgeJson(response) {
   const code=value?.error?.code;if(Object.hasOwn(messages,code))fail(code,messages[code]);
   fail('provider_http_'+response.status,`Translation service returned HTTP ${response.status}. Check URL, model, credentials and quota.`);
 }
-async function directEntries(items,messages,settings,fetcher,signal) {
+async function directEntries(items,messages,settings,fetcher,signal,decode=value=>value) {
   const headers={'Content-Type':'application/json'}; if(settings.apiKey)headers.Authorization='Bearer '+settings.apiKey;
   const body={model:settings.model,messages,stream:false};
   if(settings.jsonMode)body.response_format={type:'json_object'};
@@ -182,7 +182,7 @@ async function directEntries(items,messages,settings,fetcher,signal) {
   const value=await responseJson(await fetcher(endpoint(settings.apiUrl),{method:'POST',headers,body:JSON.stringify(body),signal,credentials:'omit',redirect:'error'}));
   const choice=value.choices?.[0];
   if(!choice || ['length','content_filter','tool_calls','function_call'].includes(choice.finish_reason) || choice.message?.refusal || choice.message?.tool_calls?.length || choice.message?.function_call) fail('invalid_agent_response','Agent did not return a completed translation.');
-  try{return orderedResult(parseJson(choice.message?.content),items.map(i=>i.id));}
+  try{return orderedResult(decode(parseJson(choice.message?.content)),items.map(i=>i.id));}
   catch(error){if(error instanceof TranslationError)error.repairableOutput=true;throw error;}
 }
 export async function translateBatch(raw, settings, fetcher=fetch) {
@@ -234,15 +234,17 @@ export async function translateBatch(raw, settings, fetcher=fetch) {
       for(let attempt=1;attempt<=2;attempt++){
         let repaired;
         try{
-          const markup=attempt===2?htmlRepairMarkup(original.protected.text):null;
-          const messages=markup?htmlRepairPrompt(job,original,markup):formatRepairPrompt(job,original,draft,attempt);
-          [repaired]=await directEntries([{id:original.id}],messages,settings,fetcher,controller.signal);
-          if(markup){const decoded=markup.restore(repaired.text);if(decoded===null)fail('placeholder_mismatch','Agent changed recovery HTML structure.');repaired={...repaired,text:decoded};}
+          const markup=attempt===2?treeRepairMarkup(original.protected.text):null;
+          const messages=markup?treeRepairPrompt(job,original,markup):formatRepairPrompt(job,original,draft,attempt);
+          [repaired]=await directEntries([{id:original.id}],messages,settings,fetcher,controller.signal,value=>{
+            if(!markup||!Array.isArray(value?.translations))return value;
+            return {...value,translations:value.translations.map(item=>({...item,text:markup.restore(item?.nodes)}))};
+          });
           accept(original,repaired);break;
         }
         catch(error){
           if((!['placeholder_mismatch','target_language_mismatch'].includes(error.code) && !error.repairableOutput) || attempt===2)throw error;
-          // A second attempt must not keep repeating an invalid draft.
+          // Restart from source after the first failed repair.
           draft='';
         }
       }

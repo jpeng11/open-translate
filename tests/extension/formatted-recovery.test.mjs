@@ -36,7 +36,7 @@ test('repair attempts stop after two invalid results and never accept missing ma
  const attempts=[];
  await assert.rejects(translateBatch(job(['<ot0>Hello</ot0>']),settings,async(_url,init)=>{
   attempts.push(input(init).repair || 0);return reply([{id:0,text:'Bonjour sans balises'}]);
- }),e=>e.code==='placeholder_mismatch');
+ }),e=>e.code==='invalid_translation_batch');
  assert.deepEqual(attempts,[0,1,2]);
 });
 
@@ -47,8 +47,8 @@ test('a second repair starts fresh without resubmitting good paragraphs',async()
   if(!p.repair)return reply([{id:0,text:'Bon'},{id:1,text:'Un'},{id:2,text:'Deux'}]);
   const item=p.items[0];
   if(item.id===1&&p.repair===1)return reply([{id:1,text:'<ot>Un</ot>'}]);
-  if(item.id===1){assert.equal(item.draft,'');assert.equal(item.text,'<span id="ot0">One</span>');assert.ok(JSON.parse(init.body).messages[0].content.includes('one contiguous phrase'));}
-  return reply([{id:item.id,text:item.id===1?'<span id="ot0">Un</span>':'<ot0>Deux</ot0>'}]);
+  if(item.id===1){assert.equal(item.draft,'');assert.equal(item.text,'<ot0>One</ot0>');assert.deepEqual(item.nodes,{root:[{ref:'0'}],'0':['One']});}
+  return reply([item.id===1?{id:item.id,nodes:{root:[{ref:'0'}],'0':['Un']}}:{id:item.id,text:'<ot0>Deux</ot0>'}]);
  });
  assert.deepEqual(seen,[[0,1,2],[1],[1],[2]]);
  assert.deepEqual(result.translations.map(x=>x.text),['Bon','<ot0>Un</ot0>','<ot0>Deux</ot0>']);
@@ -138,18 +138,19 @@ test('wrong target scripts remain errors after bounded repairs; short proper nam
  assert.equal(result.translations[0].text,'<ot0>東京</ot0>');
 });
 
-test('final HTML recovery rejects duplication, changed parents and executable markup',async()=>{
- const source='<ot0>Outer <ot1>inner</ot1></ot0><ot2>Sibling</ot2><ot3/>';
- for(const malformed of [
-  '<span id="ot0">Extérieur <span id="ot1">intérieur</span></span><span id="ot2">Autre</span><span id="ot2">Répété</span><br id="ot3"/>',
-  '<span id="ot0">Extérieur</span><span id="ot1">intérieur</span><span id="ot2">Autre</span><br id="ot3"/>',
-  '<span id="ot0" onclick="alert(1)">Extérieur <span id="ot1">intérieur</span></span><span id="ot2">Autre</span><br id="ot3"/>',
-  '<span id="ot0">Extérieur <span id="ot1">intérieur</span></span><span id="ot2">Autre</span><br id="ot3"/><script>alert(1)</script>',
-  '<span id="ot0">Extérieur <span id="ot1">intérieur</span></span><span id="ot2">Autre</span><br id="ot3"/></span>',
- ]){
-  let calls=0;await assert.rejects(translateBatch(job([source]),settings,async(_url,init)=>{calls++;return reply([{id:0,text:input(init).repair===2?malformed:'Balises perdues'}]);}),e=>e.code==='placeholder_mismatch');assert.equal(calls,3);
+test('final tree recovery rejects duplication, reparenting, cycles, missing nodes and HTML',async()=>{
+ const source='<ot0>Read <ot1>guide</ot1></ot0><ot2/>',valid={root:[{ref:'0'},{ref:'2'}],'0':['Lisez ',{ref:'1'}],'1':['le guide'],'2':null};
+ for(const change of [n=>n.root.push({ref:'0'}),n=>{n.root.push({ref:'1'});n['0']=['Lisez'];},n=>n['1'].push({ref:'0'}),n=>delete n['1'],n=>n['1']=['<script>bad</script>'],n=>n['2']=[],n=>n.extra=[]]){
+  const nodes=structuredClone(valid);change(nodes);let calls=0;
+  await assert.rejects(translateBatch(job([source]),settings,async(_url,init)=>{calls++;return reply([input(init).repair===2?{id:0,nodes}:{id:0,text:'Balises perdues'}]);}),e=>e.code==='invalid_translation_batch');assert.equal(calls,3);
  }
- let calls=0;
- const result=await translateBatch(job([source]),settings,async(_url,init)=>{calls++;return reply([{id:0,text:input(init).repair===2?'<span id="ot2">Autre</span><span id="ot0">Extérieur <span id="ot1">intérieur</span></span><br id="ot3"/>':'Balises perdues'}]);});
- assert.equal(calls,3);assert.equal(result.translations[0].text,'<ot2>Autre</ot2><ot0>Extérieur <ot1>intérieur</ot1></ot0><ot3/>');
+ const nodes=structuredClone(valid);nodes.root.reverse();
+ const result=await translateBatch(job([source]),settings,async(_url,init)=>reply([input(init).repair===2?{id:0,nodes}:{id:0,text:'Balises perdues'}]));
+ assert.equal(result.translations[0].text,'<ot2/><ot0>Lisez <ot1>le guide</ot1></ot0>');
+});
+
+test('full-context tree recovery reorders sibling phrases and adds target grammar',async()=>{
+ const source='I <ot0>like</ot0> <ot1>tea</ot1>.';
+ const result=await translateBatch({source_lang:'en',target_lang:'ja',text_list:[source]},settings,async(_url,init)=>reply([input(init).repair===2?{id:0,nodes:{root:['私は',{ref:'1'},'が',{ref:'0'},'。'],'0':['好きです'],'1':['お茶']}}:{id:0,text:'私はお茶が好きです。'}]));
+ assert.equal(result.translations[0].text,'私は<ot1>お茶</ot1>が<ot0>好きです</ot0>。');
 });

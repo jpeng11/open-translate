@@ -13,7 +13,7 @@ async function app(hash='home'){const page=await context.newPage();await page.go
 async function fileUpload(page,input,name,content,mimeType='application/octet-stream'){await page.locator(input).setInputFiles({name,mimeType,buffer:Buffer.from(content)});}
 async function downloaded(page,button){const result=page.waitForEvent('download');await page.locator(button).click();return readFile(await (await result).path());}
 test.beforeAll(async()=>{
- server=createServer(async(req,res)=>{res.setHeader('Access-Control-Allow-Origin','*');res.setHeader('Access-Control-Allow-Headers','*');if(req.method==='OPTIONS'){res.end();return;}if(req.url==='/page'){res.setHeader('Content-Type','text/html');res.end(html);return;}if(req.method==='GET'){res.writeHead(404);res.end();return;}let body='';for await(const chunk of req)body+=chunk; if(req.url==='/v1/audio/transcriptions'){res.setHeader('Content-Type','application/json');res.end(JSON.stringify({text:'Hello audio'}));return;}const value=JSON.parse(body);requests.push({path:req.url,authorization:req.headers.authorization,value});providerPeak=Math.max(providerPeak,++providerActive);res.once('finish',()=>providerActive--);if(delay)await new Promise(r=>setTimeout(r,delay));res.setHeader('Content-Type','application/json');if(bad || badResponses>0){badResponses=Math.max(0,badResponses-1);res.end(JSON.stringify({choices:[{message:{content:'bad JSON'}}]}));return;}const input=JSON.parse(value.messages.at(-1).content);const translations=input.items.map(item=>({id:item.id,text:translationOverride?translationOverride(item.text,input):'Translated '+item.text})).reverse();res.end(JSON.stringify({choices:[{finish_reason:'stop',message:{content:JSON.stringify({translations})}}]}));});
+ server=createServer(async(req,res)=>{res.setHeader('Access-Control-Allow-Origin','*');res.setHeader('Access-Control-Allow-Headers','*');if(req.method==='OPTIONS'){res.end();return;}if(req.url==='/page'){res.setHeader('Content-Type','text/html');res.end(html);return;}if(req.method==='GET'){res.writeHead(404);res.end();return;}let body='';for await(const chunk of req)body+=chunk; if(req.url==='/v1/audio/transcriptions'){res.setHeader('Content-Type','application/json');res.end(JSON.stringify({text:'Hello audio'}));return;}const value=JSON.parse(body);requests.push({path:req.url,authorization:req.headers.authorization,value});providerPeak=Math.max(providerPeak,++providerActive);res.once('finish',()=>providerActive--);if(delay)await new Promise(r=>setTimeout(r,delay));res.setHeader('Content-Type','application/json');if(bad || badResponses>0){badResponses=Math.max(0,badResponses-1);res.end(JSON.stringify({choices:[{message:{content:'bad JSON'}}]}));return;}const input=JSON.parse(value.messages.at(-1).content);const translations=input.items.map(item=>{const result=translationOverride?translationOverride(item.text,input):'Translated '+item.text;return {id:item.id,...(typeof result==='string'?{text:result}:result)};}).reverse();res.end(JSON.stringify({choices:[{finish_reason:'stop',message:{content:JSON.stringify({translations})}}]}));});
  await new Promise(r=>server.listen(0,'127.0.0.1',r));origin=`http://127.0.0.1:${server.address().port}`;profile=await mkdtemp(join(tmpdir(),'open-translate-browser-'));context=await chromium.launchPersistentContext(profile,{channel:'chromium',headless:true,ignoreDefaultArgs:['--disable-extensions'],args:['--no-sandbox',`--disable-extensions-except=${resolve('dist/chrome')}`,`--load-extension=${resolve('dist/chrome')}`]});worker=context.serviceWorkers()[0] || await context.waitForEvent('serviceworker');id=worker.url().split('/')[2];await settings();
 });
 test.afterAll(async()=>{await context?.close();await new Promise(r=>server?.close(r));await rm(profile,{recursive:true,force:true});});
@@ -212,4 +212,21 @@ test('wrong-language long prose is repaired before it can appear as a completed 
  expect(requests).toHaveLength(2);expect(requests.every(r=>r.value.messages[0].content.includes('Japanese (ja)'))).toBe(true);
  expect(JSON.parse(requests[1].value.messages.at(-1).content).items[0].draft).toBe('');
  expect((await command(page,'page.status')).failed).toBe(0);await command(page,'page.restore');await page.close();
+});
+
+test('final full-context tree recovery preserves nested nodes and exact restoration',async()=>{
+ const page=await context.newPage();await page.goto(origin+'/page');
+ await page.evaluate(()=>document.body.innerHTML='<p id="html-recovery">Read <a href="https://example.com/kept" title="Original link">this <strong>guide</strong></a>.<sup>[2]</sup></p>');
+ const original=await page.locator('#html-recovery').innerHTML();
+ translationOverride=(text,payload)=>payload.repair===2?{nodes:Object.fromEntries(Object.entries(payload.items[0].nodes).map(([id,parts])=>[id,parts===null?null:parts.map(part=>typeof part==='string'?part.replace('guide','guide traduit'):part)]))}:'Traduit sans balises';
+ await command(page,'page.start');const translated=page.locator('#html-recovery > [data-ot-target]');
+ await expect(translated).toHaveCount(1);await expect(translated.locator('a strong')).toHaveText('guide traduit');
+ await expect(translated.locator('a')).toHaveAttribute('href','https://example.com/kept');
+ await expect(translated.locator('a')).toHaveAttribute('title','Original link');
+ await expect(translated.locator('[id^="ot"],br')).toHaveCount(0);
+ expect(requests.map(r=>JSON.parse(r.value.messages.at(-1).content).repair||0)).toEqual([0,1,2]);
+ const finalInput=JSON.parse(requests[2].value.messages.at(-1).content);
+ expect(Object.keys(finalInput.items[0].nodes).length).toBeGreaterThan(3);expect(finalInput.items[0].draft).toBe('');
+ expect((await command(page,'page.status')).failed).toBe(0);
+ await command(page,'page.restore');expect(await page.locator('#html-recovery').innerHTML()).toBe(original);await page.close();
 });
