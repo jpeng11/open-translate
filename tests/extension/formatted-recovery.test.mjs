@@ -40,15 +40,15 @@ test('repair attempts stop after two invalid results and never accept missing ma
  assert.deepEqual(attempts,[0,1,2]);
 });
 
-test('a second repair uses the latest failed draft and can recover without resubmitting good paragraphs',async()=>{
+test('a second repair starts fresh without resubmitting good paragraphs',async()=>{
  const seen=[];
  const result=await translateBatch(job(['Good','<ot0>One</ot0>','<ot0>Two</ot0>']),settings,async(_url,init)=>{
   const p=input(init);seen.push(p.items.map(x=>x.id));
   if(!p.repair)return reply([{id:0,text:'Bon'},{id:1,text:'Un'},{id:2,text:'Deux'}]);
   const item=p.items[0];
   if(item.id===1&&p.repair===1)return reply([{id:1,text:'<ot>Un</ot>'}]);
-  if(item.id===1)assert.equal(item.draft,'<ot>Un</ot>');
-  return reply([{id:item.id,text:item.id===1?'<ot0>Un</ot0>':'<ot0>Deux</ot0>'}]);
+  if(item.id===1){assert.equal(item.draft,'');assert.equal(item.text,'<span id="ot0">One</span>');assert.ok(JSON.parse(init.body).messages[0].content.includes('one contiguous phrase'));}
+  return reply([{id:item.id,text:item.id===1?'<span id="ot0">Un</span>':'<ot0>Deux</ot0>'}]);
  });
  assert.deepEqual(seen,[[0,1,2],[1],[1],[2]]);
  assert.deepEqual(result.translations.map(x=>x.text),['Bon','<ot0>Un</ot0>','<ot0>Deux</ot0>']);
@@ -136,4 +136,20 @@ test('wrong target scripts remain errors after bounded repairs; short proper nam
  }
  const result=await translateBatch({source_lang:'en',target_lang:'ja',text_list:['<ot0>Tokyo</ot0>']},settings,async()=>reply([{id:0,text:'<ot0>東京</ot0>'}]));
  assert.equal(result.translations[0].text,'<ot0>東京</ot0>');
+});
+
+test('final HTML recovery rejects duplication, changed parents and executable markup',async()=>{
+ const source='<ot0>Outer <ot1>inner</ot1></ot0><ot2>Sibling</ot2><ot3/>';
+ for(const malformed of [
+  '<span id="ot0">Extérieur <span id="ot1">intérieur</span></span><span id="ot2">Autre</span><span id="ot2">Répété</span><br id="ot3"/>',
+  '<span id="ot0">Extérieur</span><span id="ot1">intérieur</span><span id="ot2">Autre</span><br id="ot3"/>',
+  '<span id="ot0" onclick="alert(1)">Extérieur <span id="ot1">intérieur</span></span><span id="ot2">Autre</span><br id="ot3"/>',
+  '<span id="ot0">Extérieur <span id="ot1">intérieur</span></span><span id="ot2">Autre</span><br id="ot3"/><script>alert(1)</script>',
+  '<span id="ot0">Extérieur <span id="ot1">intérieur</span></span><span id="ot2">Autre</span><br id="ot3"/></span>',
+ ]){
+  let calls=0;await assert.rejects(translateBatch(job([source]),settings,async(_url,init)=>{calls++;return reply([{id:0,text:input(init).repair===2?malformed:'Balises perdues'}]);}),e=>e.code==='placeholder_mismatch');assert.equal(calls,3);
+ }
+ let calls=0;
+ const result=await translateBatch(job([source]),settings,async(_url,init)=>{calls++;return reply([{id:0,text:input(init).repair===2?'<span id="ot2">Autre</span><span id="ot0">Extérieur <span id="ot1">intérieur</span></span><br id="ot3"/>':'Balises perdues'}]);});
+ assert.equal(calls,3);assert.equal(result.translations[0].text,'<ot2>Autre</ot2><ot0>Extérieur <ot1>intérieur</ot1></ot0><ot3/>');
 });

@@ -1,5 +1,5 @@
 import {targetDescription,wrongTargetScript} from './translation-language.mjs';
-import {domLayout,sameDomLayout,formatRepairPrompt} from './formatted-recovery.mjs';
+import {domLayout,sameDomLayout,formatRepairPrompt,htmlRepairMarkup,htmlRepairPrompt} from './formatted-recovery.mjs';
 import {normalizeScreenRegion} from './screen-region.mjs';
 export const DEFAULTS = Object.freeze({
   provider: 'bridge', bridgeUrl: 'http://127.0.0.1:8765/translate', apiUrl: 'http://127.0.0.1:1234/v1',
@@ -234,12 +234,16 @@ export async function translateBatch(raw, settings, fetcher=fetch) {
       for(let attempt=1;attempt<=2;attempt++){
         let repaired;
         try{
-          [repaired]=await directEntries([{id:original.id}],formatRepairPrompt(job,original,draft,attempt),settings,fetcher,controller.signal);
+          const markup=attempt===2?htmlRepairMarkup(original.protected.text):null;
+          const messages=markup?htmlRepairPrompt(job,original,markup):formatRepairPrompt(job,original,draft,attempt);
+          [repaired]=await directEntries([{id:original.id}],messages,settings,fetcher,controller.signal);
+          if(markup){const decoded=markup.restore(repaired.text);if(decoded===null)fail('placeholder_mismatch','Agent changed recovery HTML structure.');repaired={...repaired,text:decoded};}
           accept(original,repaired);break;
         }
         catch(error){
           if((!['placeholder_mismatch','target_language_mismatch'].includes(error.code) && !error.repairableOutput) || attempt===2)throw error;
-          draft=repaired && !wrongTargetScript(original.text,repaired.text,job.source_lang,job.target_lang)?repaired.text:'';
+          // A second attempt must not keep repeating an invalid draft.
+          draft='';
         }
       }
     }
