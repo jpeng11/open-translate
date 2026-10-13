@@ -1,0 +1,1755 @@
+{
+  "schema": 1,
+  "suite": "deepseek-five-second-qualification",
+  "status": "passed",
+  "createdAt": "2026-10-13T03:06:00.059075+00:00",
+  "model": "opencode-go/deepseek-v4.1-flash",
+  "targetCompleteMs": 5000,
+  "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+  "runs": [
+    {
+      "status": "failed",
+      "startedAt": "2026-10-13T02:42:39.470Z",
+      "sample": {
+        "words": 977,
+        "paragraphs": 16,
+        "characters": 6683,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "settings": {
+        "batchSize": 4,
+        "concurrency": 4,
+        "timeout": 45,
+        "reasoningEffort": "none",
+        "cache": false
+      },
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "a7a559b9bf1c5a345158f8cf45a21292d4b4b4722d79a2efdabff3524c4167c5",
+        "bundleSha256": "e50ff9a35482f14fbc8becbfd5cbd11bb0cf7f0c013532473c0231aebcc8ffaa"
+      },
+      "error": "Translation failed: Agent changed the order of protected markup or terminology.",
+      "progress": {
+        "done": 8,
+        "events": [
+          {
+            "paragraphs": 4,
+            "ms": 3344
+          },
+          {
+            "paragraphs": 8,
+            "ms": 3972
+          }
+        ],
+        "elapsedMs": 4129
+      },
+      "id": "deepseek-no-thinking-1",
+      "reportSha256": "4451d58cd012256f3b84f0f31877d065d26964e0599b2eb5376681f25dac4d0f",
+      "transport": "Direct Chromium extension → Magpie, without recording relay."
+    },
+    {
+      "status": "failed",
+      "startedAt": "2026-10-13T02:43:41.374Z",
+      "sample": {
+        "words": 977,
+        "paragraphs": 16,
+        "characters": 6683,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "settings": {
+        "batchSize": 4,
+        "concurrency": 4,
+        "timeout": 45,
+        "reasoningEffort": "none",
+        "cache": false
+      },
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "a7a559b9bf1c5a345158f8cf45a21292d4b4b4722d79a2efdabff3524c4167c5",
+        "bundleSha256": "e50ff9a35482f14fbc8becbfd5cbd11bb0cf7f0c013532473c0231aebcc8ffaa"
+      },
+      "error": "Translation failed: Agent changed the order of protected markup or terminology.",
+      "progress": {
+        "done": 4,
+        "events": [
+          {
+            "paragraphs": 4,
+            "ms": 4270
+          }
+        ],
+        "elapsedMs": 4390
+      },
+      "id": "deepseek-trace-1",
+      "reportSha256": "1911323b4e1a14b3f4fd4b748a91dcb708584b559baea683fdd9b99887de6f22",
+      "transport": "Isolated recording relay forwards body unchanged to Magpie; headers carry the private key only upstream.",
+      "traceSha256": "0ec78c9394cf8d703d56dd562b20de6860a18eaf0b3ec824931d96486b4d836e",
+      "requests": [
+        {
+          "id": 0,
+          "startedAt": "2026-10-13T02:43:43.777Z",
+          "elapsedMs": 4154,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 549,
+            "completion_tokens": 396,
+            "total_tokens": 945,
+            "prompt_tokens_details": {
+              "cached_tokens": 512
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 1,
+          "startedAt": "2026-10-13T02:43:43.786Z",
+          "elapsedMs": null,
+          "httpStatus": null,
+          "model": null,
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": null,
+          "usage": null,
+          "error": "AbortError"
+        },
+        {
+          "id": 2,
+          "startedAt": "2026-10-13T02:43:43.792Z",
+          "elapsedMs": 4197,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 593,
+            "completion_tokens": 436,
+            "total_tokens": 1029,
+            "prompt_tokens_details": {
+              "cached_tokens": 512
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 3,
+          "startedAt": "2026-10-13T02:43:43.793Z",
+          "elapsedMs": null,
+          "httpStatus": null,
+          "model": null,
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": null,
+          "usage": null,
+          "error": "AbortError"
+        }
+      ]
+    },
+    {
+      "status": "failed",
+      "startedAt": "2026-10-13T02:47:54.376Z",
+      "sample": {
+        "words": 977,
+        "paragraphs": 16,
+        "characters": 6683,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "settings": {
+        "batchSize": 4,
+        "concurrency": 4,
+        "timeout": 45,
+        "reasoningEffort": "none",
+        "cache": false
+      },
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "631ecc2a7d4545bea852c7b925bc4180f434d28e8e6f821287d1420707b029d3",
+        "bundleSha256": "5ae12a8a18d77f27f1ef7c18700cded749eb2e0d8a55f8420f81458268f72594"
+      },
+      "error": "Translation failed: Agent changed protected markup or terminology.",
+      "progress": {
+        "done": 4,
+        "events": [
+          {
+            "paragraphs": 4,
+            "ms": 4068
+          }
+        ],
+        "elapsedMs": 4386
+      },
+      "id": "deepseek-structural-1",
+      "reportSha256": "135582c3728289aee41d79ec8712342ac55b046e395fafa45443dedf5f531abd",
+      "transport": "Isolated recording relay forwards body unchanged to Magpie; headers carry the private key only upstream.",
+      "traceSha256": "7bc1768503338519ba08cd2ea5961752854bc754df9f11ad13b41fc4eab2d5e7",
+      "requests": [
+        {
+          "id": 0,
+          "startedAt": "2026-10-13T02:47:56.860Z",
+          "elapsedMs": 4198,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 559,
+            "completion_tokens": 388,
+            "total_tokens": 947,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 1,
+          "startedAt": "2026-10-13T02:47:56.872Z",
+          "elapsedMs": null,
+          "httpStatus": null,
+          "model": null,
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": null,
+          "usage": null,
+          "error": "AbortError"
+        },
+        {
+          "id": 2,
+          "startedAt": "2026-10-13T02:47:56.877Z",
+          "elapsedMs": null,
+          "httpStatus": null,
+          "model": null,
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": null,
+          "usage": null,
+          "error": "AbortError"
+        },
+        {
+          "id": 3,
+          "startedAt": "2026-10-13T02:47:56.879Z",
+          "elapsedMs": 3993,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 473,
+            "completion_tokens": 286,
+            "total_tokens": 759,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "status": "passed",
+      "startedAt": "2026-10-13T02:51:14.070Z",
+      "sample": {
+        "words": 977,
+        "paragraphs": 16,
+        "characters": 6683,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "settings": {
+        "batchSize": 4,
+        "concurrency": 4,
+        "timeout": 45,
+        "reasoningEffort": "none",
+        "cache": false
+      },
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "1c6b824987276f62900b350cc5f6a6c09d6427a6504237bbabb0a9d0e7cf6aa2",
+        "bundleSha256": "167081a42b146a47154d2c66280430108861333efe6e593fff9df54fd3091641"
+      },
+      "firstTranslationMs": 8747,
+      "completeMs": 11632,
+      "progress": {
+        "done": 16,
+        "events": [
+          {
+            "paragraphs": 4,
+            "ms": 8747
+          },
+          {
+            "paragraphs": 8,
+            "ms": 11608
+          },
+          {
+            "paragraphs": 12,
+            "ms": 11628
+          },
+          {
+            "paragraphs": 16,
+            "ms": 11632
+          }
+        ],
+        "elapsedMs": 11839
+      },
+      "preservation": {
+        "links": 70,
+        "comparison": "Exact per-paragraph multisets; complete sibling phrases may move with translated word order. Renderer independently enforces marker uniqueness, pairing and original parent relationships.",
+        "linksPreserved": true,
+        "formattingPreserved": true
+      },
+      "restored": true,
+      "output": {
+        "translatedParagraphs": 16,
+        "chineseParagraphs": 16,
+        "characters": 2309,
+        "sha256": "a5d01a29bf5c0124ea78cb8cb40f49405b1ce287abd97e0869dcb88add2f4ba6"
+      },
+      "id": "deepseek-paired-1",
+      "reportSha256": "9110b38652844178749e2f3724cbe1e3dd7d073dbc3883140a1637d8466be3f8",
+      "transport": "Isolated recording relay forwards body unchanged to Magpie; headers carry the private key only upstream.",
+      "traceSha256": "81a8a4bf43e10fb9ff3732f138882db6408e2a52bf74446b098a5e728cdd1da7",
+      "requests": [
+        {
+          "id": 0,
+          "startedAt": "2026-10-13T02:51:16.769Z",
+          "elapsedMs": 11554,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 609,
+            "completion_tokens": 437,
+            "total_tokens": 1046,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 1,
+          "startedAt": "2026-10-13T02:51:16.777Z",
+          "elapsedMs": 11546,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 754,
+            "completion_tokens": 572,
+            "total_tokens": 1326,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 2,
+          "startedAt": "2026-10-13T02:51:16.783Z",
+          "elapsedMs": 11542,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 633,
+            "completion_tokens": 457,
+            "total_tokens": 1090,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 3,
+          "startedAt": "2026-10-13T02:51:16.784Z",
+          "elapsedMs": 8679,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 497,
+            "completion_tokens": 312,
+            "total_tokens": 809,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "status": "passed",
+      "startedAt": "2026-10-13T02:52:51.226Z",
+      "sample": {
+        "words": 977,
+        "paragraphs": 16,
+        "characters": 6683,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "settings": {
+        "batchSize": 2,
+        "concurrency": 8,
+        "timeout": 45,
+        "reasoningEffort": "none",
+        "cache": false
+      },
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "e6bf24645bc4c38b6b0a60c487a70f08c6fa96be196fcfc2c5310989bc4216d6",
+        "bundleSha256": "02852bf1e89403cbdbf248b7bbbe76eaa6f88efb70a8c102b5c11c5d102d04ff"
+      },
+      "firstTranslationMs": 3253,
+      "completeMs": 5722,
+      "progress": {
+        "done": 16,
+        "events": [
+          {
+            "paragraphs": 2,
+            "ms": 3253
+          },
+          {
+            "paragraphs": 4,
+            "ms": 3359
+          },
+          {
+            "paragraphs": 6,
+            "ms": 3651
+          },
+          {
+            "paragraphs": 8,
+            "ms": 3729
+          },
+          {
+            "paragraphs": 10,
+            "ms": 3905
+          },
+          {
+            "paragraphs": 12,
+            "ms": 4343
+          },
+          {
+            "paragraphs": 14,
+            "ms": 5479
+          },
+          {
+            "paragraphs": 16,
+            "ms": 5722
+          }
+        ],
+        "elapsedMs": 5957
+      },
+      "preservation": {
+        "links": 70,
+        "comparison": "Exact per-paragraph multisets; complete sibling phrases may move with translated word order. Renderer independently enforces marker uniqueness, pairing and original parent relationships.",
+        "linksPreserved": true,
+        "formattingPreserved": true
+      },
+      "restored": true,
+      "output": {
+        "translatedParagraphs": 16,
+        "chineseParagraphs": 16,
+        "characters": 2297,
+        "sha256": "33afd43bc01a3e62bf5a3161d361c0039ba21e3bb22c575ff5ad09b68f18d0ea"
+      },
+      "id": "deepseek-paired-2x8",
+      "reportSha256": "52ad3dc60a744fa88e611059e09256b302890f5922e918836174407195ce89cb",
+      "transport": "Isolated recording relay forwards body unchanged to Magpie; headers carry the private key only upstream.",
+      "traceSha256": "a63311306d26c6d26d1899902116b1f1ce2850abfd5abba8d7caa17a46b63cdf",
+      "requests": [
+        {
+          "id": 0,
+          "startedAt": "2026-10-13T02:52:53.570Z",
+          "elapsedMs": 3179,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 375,
+            "completion_tokens": 212,
+            "total_tokens": 587,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 1,
+          "startedAt": "2026-10-13T02:52:53.578Z",
+          "elapsedMs": 3281,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 384,
+            "completion_tokens": 232,
+            "total_tokens": 616,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 2,
+          "startedAt": "2026-10-13T02:52:53.584Z",
+          "elapsedMs": 4254,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 532,
+            "completion_tokens": 368,
+            "total_tokens": 900,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 3,
+          "startedAt": "2026-10-13T02:52:53.585Z",
+          "elapsedMs": 3820,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 372,
+            "completion_tokens": 212,
+            "total_tokens": 584,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0,
+              "cache_creation_input_tokens": 0,
+              "cache_write_tokens": 0
+            },
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 4,
+          "startedAt": "2026-10-13T02:52:53.587Z",
+          "elapsedMs": 3562,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 422,
+            "completion_tokens": 258,
+            "total_tokens": 680,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 5,
+          "startedAt": "2026-10-13T02:52:53.589Z",
+          "elapsedMs": 3638,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 361,
+            "completion_tokens": 199,
+            "total_tokens": 560,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0,
+              "cache_creation_input_tokens": 0,
+              "cache_write_tokens": 0
+            },
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 6,
+          "startedAt": "2026-10-13T02:52:56.753Z",
+          "elapsedMs": 2221,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 351,
+            "completion_tokens": 192,
+            "total_tokens": 543,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 7,
+          "startedAt": "2026-10-13T02:52:56.861Z",
+          "elapsedMs": 2358,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 296,
+            "completion_tokens": 123,
+            "total_tokens": 419,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "status": "passed",
+      "startedAt": "2026-10-13T02:54:32.705Z",
+      "sample": {
+        "words": 977,
+        "paragraphs": 16,
+        "characters": 6683,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "settings": {
+        "batchSize": 3,
+        "concurrency": 6,
+        "timeout": 45,
+        "reasoningEffort": "none",
+        "cache": false
+      },
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "e6bf24645bc4c38b6b0a60c487a70f08c6fa96be196fcfc2c5310989bc4216d6",
+        "bundleSha256": "02852bf1e89403cbdbf248b7bbbe76eaa6f88efb70a8c102b5c11c5d102d04ff"
+      },
+      "firstTranslationMs": 2083,
+      "completeMs": 5347,
+      "progress": {
+        "done": 16,
+        "events": [
+          {
+            "paragraphs": 1,
+            "ms": 2083
+          },
+          {
+            "paragraphs": 4,
+            "ms": 3054
+          },
+          {
+            "paragraphs": 7,
+            "ms": 3157
+          },
+          {
+            "paragraphs": 10,
+            "ms": 3538
+          },
+          {
+            "paragraphs": 13,
+            "ms": 5044
+          },
+          {
+            "paragraphs": 16,
+            "ms": 5347
+          }
+        ],
+        "elapsedMs": 5430
+      },
+      "preservation": {
+        "links": 70,
+        "comparison": "Exact per-paragraph multisets; complete sibling phrases may move with translated word order. Renderer independently enforces marker uniqueness, pairing and original parent relationships.",
+        "linksPreserved": true,
+        "formattingPreserved": true
+      },
+      "restored": true,
+      "output": {
+        "translatedParagraphs": 16,
+        "chineseParagraphs": 16,
+        "characters": 2260,
+        "sha256": "461d3ed7f4c3ff3c6ffc7292e780c0b6ec0967b4ffaa8f5458cf43528ec44d95"
+      },
+      "id": "deepseek-paired-3x6",
+      "reportSha256": "219ab5f1764095e0434ce4c3fb76c1deec7a8e4bcbf58bbead26ef92780b8513",
+      "transport": "Isolated recording relay forwards body unchanged to Magpie; headers carry the private key only upstream.",
+      "traceSha256": "5aabe872b2b2e742a5f4b1b45bc2448d9f24fe57d3414578983f79f2d78966a8",
+      "requests": [
+        {
+          "id": 0,
+          "startedAt": "2026-10-13T02:54:35.112Z",
+          "elapsedMs": 3090,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 452,
+            "completion_tokens": 283,
+            "total_tokens": 735,
+            "prompt_tokens_details": {
+              "cached_tokens": 256
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 1,
+          "startedAt": "2026-10-13T02:54:35.125Z",
+          "elapsedMs": 4959,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 689,
+            "completion_tokens": 532,
+            "total_tokens": 1221,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 2,
+          "startedAt": "2026-10-13T02:54:35.132Z",
+          "elapsedMs": 3449,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 423,
+            "completion_tokens": 259,
+            "total_tokens": 682,
+            "prompt_tokens_details": {
+              "cached_tokens": 256
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 3,
+          "startedAt": "2026-10-13T02:54:35.133Z",
+          "elapsedMs": 5253,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 560,
+            "completion_tokens": 404,
+            "total_tokens": 964,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 4,
+          "startedAt": "2026-10-13T02:54:35.135Z",
+          "elapsedMs": 2964,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 433,
+            "completion_tokens": 252,
+            "total_tokens": 685,
+            "prompt_tokens_details": {
+              "cached_tokens": 384
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 5,
+          "startedAt": "2026-10-13T02:54:35.137Z",
+          "elapsedMs": 1986,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 214,
+            "completion_tokens": 60,
+            "total_tokens": 274,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0,
+              "cache_creation_input_tokens": 0,
+              "cache_write_tokens": 0
+            },
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "status": "failed",
+      "startedAt": "2026-10-13T02:57:18.030Z",
+      "sample": {
+        "words": 977,
+        "paragraphs": 16,
+        "characters": 6683,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "settings": {
+        "batchSize": 3,
+        "concurrency": 6,
+        "timeout": 45,
+        "reasoningEffort": "none",
+        "cache": false
+      },
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "0b61b941a84dd831d2d993815d99dabe552e2f918d09289059cd6348593c8fa8",
+        "bundleSha256": "a84c921a5f11c2b65b21790c6a979d5109baf7ace3fff3379b0afcc06f5cb402"
+      },
+      "error": "Translation failed: Agent changed protected markup or terminology.",
+      "progress": {
+        "done": 8,
+        "events": [
+          {
+            "paragraphs": 3,
+            "ms": 3343
+          },
+          {
+            "paragraphs": 6,
+            "ms": 3833
+          },
+          {
+            "paragraphs": 8,
+            "ms": 3855
+          }
+        ],
+        "elapsedMs": 3902
+      },
+      "id": "deepseek-balanced-3x6",
+      "reportSha256": "0974e3973faab382dc459c79f497c46c5a8747af66543de0b4a25ebf1ebfc9db",
+      "transport": "Isolated recording relay forwards body unchanged to Magpie; headers carry the private key only upstream.",
+      "traceSha256": "a04401bf8c83dc9fa921853dc0b86d9776e3e3b2432ffb7169cea79d51a9fe35",
+      "requests": [
+        {
+          "id": 0,
+          "startedAt": "2026-10-13T02:57:20.563Z",
+          "elapsedMs": 3753,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 468,
+            "completion_tokens": 294,
+            "total_tokens": 762,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0,
+              "cache_creation_input_tokens": 0,
+              "cache_write_tokens": 0
+            },
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 1,
+          "startedAt": "2026-10-13T02:57:20.571Z",
+          "elapsedMs": 3802,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 375,
+            "completion_tokens": 201,
+            "total_tokens": 576,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0,
+              "cache_creation_input_tokens": 0,
+              "cache_write_tokens": 0
+            },
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 2,
+          "startedAt": "2026-10-13T02:57:20.577Z",
+          "elapsedMs": null,
+          "httpStatus": null,
+          "model": null,
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": null,
+          "usage": null,
+          "error": "AbortError"
+        },
+        {
+          "id": 3,
+          "startedAt": "2026-10-13T02:57:20.578Z",
+          "elapsedMs": null,
+          "httpStatus": null,
+          "model": null,
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": null,
+          "usage": null,
+          "error": "AbortError"
+        },
+        {
+          "id": 4,
+          "startedAt": "2026-10-13T02:57:20.579Z",
+          "elapsedMs": 3250,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 454,
+            "completion_tokens": 272,
+            "total_tokens": 726,
+            "prompt_tokens_details": {
+              "cached_tokens": 256
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 5,
+          "startedAt": "2026-10-13T02:57:20.581Z",
+          "elapsedMs": 3737,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": null,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 506,
+            "completion_tokens": 338,
+            "total_tokens": 844,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0,
+              "cache_creation_input_tokens": 0,
+              "cache_write_tokens": 0
+            },
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "status": "passed",
+      "startedAt": "2026-10-13T02:58:53.356Z",
+      "sample": {
+        "words": 977,
+        "paragraphs": 16,
+        "characters": 6683,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "settings": {
+        "batchSize": 3,
+        "concurrency": 6,
+        "timeout": 45,
+        "reasoningEffort": "none",
+        "cache": false
+      },
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+        "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
+      },
+      "firstTranslationMs": 3516,
+      "completeMs": 3799,
+      "progress": {
+        "done": 16,
+        "events": [
+          {
+            "paragraphs": 2,
+            "ms": 3516
+          },
+          {
+            "paragraphs": 5,
+            "ms": 3533
+          },
+          {
+            "paragraphs": 8,
+            "ms": 3568
+          },
+          {
+            "paragraphs": 11,
+            "ms": 3670
+          },
+          {
+            "paragraphs": 13,
+            "ms": 3732
+          },
+          {
+            "paragraphs": 16,
+            "ms": 3799
+          }
+        ],
+        "elapsedMs": 3880
+      },
+      "preservation": {
+        "links": 70,
+        "comparison": "Exact per-paragraph multisets; complete sibling phrases may move with translated word order. Renderer independently enforces marker uniqueness, pairing and original parent relationships.",
+        "linksPreserved": true,
+        "formattingPreserved": true
+      },
+      "restored": true,
+      "output": {
+        "translatedParagraphs": 16,
+        "chineseParagraphs": 16,
+        "characters": 2262,
+        "sha256": "5c308c63ceb638d13e4384b8d373a2691523ba89d8dbe2eb1f9345e4dc7f1591"
+      },
+      "id": "deepseek-balanced-temp0",
+      "reportSha256": "c05819d6bc0be83093dde09abe63b57bf66a1132a5bfa393dcb8634ef3322ccd",
+      "transport": "Isolated recording relay forwards body unchanged to Magpie; headers carry the private key only upstream.",
+      "traceSha256": "ce9e8621cfc66f2751c968345aeba2ad3a0fe225c471430b95a32e03aab82156",
+      "requests": [
+        {
+          "id": 0,
+          "startedAt": "2026-10-13T02:58:56.004Z",
+          "elapsedMs": 3676,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": 0,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 457,
+            "completion_tokens": 294,
+            "total_tokens": 751,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0,
+              "cache_creation_input_tokens": 0,
+              "cache_write_tokens": 0
+            },
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 1,
+          "startedAt": "2026-10-13T02:58:56.012Z",
+          "elapsedMs": 3450,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": 0,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 364,
+            "completion_tokens": 207,
+            "total_tokens": 571,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0,
+              "cache_creation_input_tokens": 0,
+              "cache_write_tokens": 0
+            },
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 2,
+          "startedAt": "2026-10-13T02:58:56.017Z",
+          "elapsedMs": 3466,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": 0,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 493,
+            "completion_tokens": 327,
+            "total_tokens": 820,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0,
+              "cache_creation_input_tokens": 0,
+              "cache_write_tokens": 0
+            },
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 3,
+          "startedAt": "2026-10-13T02:58:56.018Z",
+          "elapsedMs": 3599,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": 0,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 475,
+            "completion_tokens": 343,
+            "total_tokens": 818,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 4,
+          "startedAt": "2026-10-13T02:58:56.020Z",
+          "elapsedMs": 3500,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": 0,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 443,
+            "completion_tokens": 273,
+            "total_tokens": 716,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 5,
+          "startedAt": "2026-10-13T02:58:56.021Z",
+          "elapsedMs": 3726,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": 0,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 495,
+            "completion_tokens": 338,
+            "total_tokens": 833,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0,
+              "cache_creation_input_tokens": 0,
+              "cache_write_tokens": 0
+            },
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "status": "passed",
+      "startedAt": "2026-10-13T02:59:40.669Z",
+      "sample": {
+        "words": 977,
+        "paragraphs": 16,
+        "characters": 6683,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "settings": {
+        "batchSize": 3,
+        "concurrency": 6,
+        "timeout": 45,
+        "reasoningEffort": "none",
+        "cache": false
+      },
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+        "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
+      },
+      "firstTranslationMs": 3080,
+      "completeMs": 4327,
+      "progress": {
+        "done": 16,
+        "events": [
+          {
+            "paragraphs": 2,
+            "ms": 3080
+          },
+          {
+            "paragraphs": 5,
+            "ms": 3366
+          },
+          {
+            "paragraphs": 8,
+            "ms": 3620
+          },
+          {
+            "paragraphs": 10,
+            "ms": 3841
+          },
+          {
+            "paragraphs": 13,
+            "ms": 4274
+          },
+          {
+            "paragraphs": 16,
+            "ms": 4327
+          }
+        ],
+        "elapsedMs": 4406
+      },
+      "preservation": {
+        "links": 70,
+        "comparison": "Exact per-paragraph multisets; complete sibling phrases may move with translated word order. Renderer independently enforces marker uniqueness, pairing and original parent relationships.",
+        "linksPreserved": true,
+        "formattingPreserved": true
+      },
+      "restored": true,
+      "output": {
+        "translatedParagraphs": 16,
+        "chineseParagraphs": 16,
+        "characters": 2251,
+        "sha256": "47f7b0842d77d98a43cc65f53e04f7f44ec2d0dbbd873e516821469e5e948872"
+      },
+      "id": "deepseek-balanced-repeat-2",
+      "reportSha256": "75ebfebbf811eae61aa33a2f716a8ae156f295cb8fd834695f69b304713a0f21",
+      "transport": "Isolated recording relay forwards body unchanged to Magpie; headers carry the private key only upstream.",
+      "traceSha256": "9b4a80e6ce69b7ffbbdf573a209861045028aa5be49a6bc1035a8e70ec903a7f",
+      "requests": [
+        {
+          "id": 0,
+          "startedAt": "2026-10-13T02:59:43.193Z",
+          "elapsedMs": 3762,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": 0,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 457,
+            "completion_tokens": 297,
+            "total_tokens": 754,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 384,
+              "cache_creation_input_tokens": 0,
+              "cache_write_tokens": 0
+            },
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 1,
+          "startedAt": "2026-10-13T02:59:43.201Z",
+          "elapsedMs": 2985,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": 0,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 364,
+            "completion_tokens": 209,
+            "total_tokens": 573,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 256,
+              "cache_creation_input_tokens": 0,
+              "cache_write_tokens": 0
+            },
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 2,
+          "startedAt": "2026-10-13T02:59:43.206Z",
+          "elapsedMs": 4236,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": 0,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 493,
+            "completion_tokens": 328,
+            "total_tokens": 821,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 384,
+              "cache_creation_input_tokens": 0,
+              "cache_write_tokens": 0
+            },
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 3,
+          "startedAt": "2026-10-13T02:59:43.208Z",
+          "elapsedMs": 3526,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": 0,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 475,
+            "completion_tokens": 343,
+            "total_tokens": 818,
+            "prompt_tokens_details": {
+              "cached_tokens": 384
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 4,
+          "startedAt": "2026-10-13T02:59:43.209Z",
+          "elapsedMs": 3276,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": 0,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 443,
+            "completion_tokens": 270,
+            "total_tokens": 713,
+            "prompt_tokens_details": {
+              "cached_tokens": 384
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            }
+          },
+          "error": null
+        },
+        {
+          "id": 5,
+          "startedAt": "2026-10-13T02:59:43.211Z",
+          "elapsedMs": 4181,
+          "httpStatus": 200,
+          "model": "deepseek-v4.1-flash",
+          "thinking": {
+            "type": "disabled"
+          },
+          "temperature": 0,
+          "finishReason": "stop",
+          "usage": {
+            "prompt_tokens": 495,
+            "completion_tokens": 341,
+            "total_tokens": 836,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 384,
+              "cache_creation_input_tokens": 0,
+              "cache_write_tokens": 0
+            },
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "status": "passed",
+      "startedAt": "2026-10-13T02:59:48.128Z",
+      "sample": {
+        "words": 977,
+        "paragraphs": 16,
+        "characters": 6683,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "settings": {
+        "batchSize": 3,
+        "concurrency": 6,
+        "timeout": 45,
+        "reasoningEffort": "none",
+        "cache": false
+      },
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+        "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
+      },
+      "firstTranslationMs": 3274,
+      "completeMs": 3822,
+      "progress": {
+        "done": 16,
+        "events": [
+          {
+            "paragraphs": 2,
+            "ms": 3274
+          },
+          {
+            "paragraphs": 5,
+            "ms": 3503
+          },
+          {
+            "paragraphs": 8,
+            "ms": 3514
+          },
+          {
+            "paragraphs": 10,
+            "ms": 3647
+          },
+          {
+            "paragraphs": 13,
+            "ms": 3772
+          },
+          {
+            "paragraphs": 16,
+            "ms": 3822
+          }
+        ],
+        "elapsedMs": 3879
+      },
+      "preservation": {
+        "links": 70,
+        "comparison": "Exact per-paragraph multisets; complete sibling phrases may move with translated word order. Renderer independently enforces marker uniqueness, pairing and original parent relationships.",
+        "linksPreserved": true,
+        "formattingPreserved": true
+      },
+      "restored": true,
+      "output": {
+        "translatedParagraphs": 16,
+        "chineseParagraphs": 16,
+        "characters": 2248,
+        "sha256": "fb17da881d7a8ffd624bb32ae3dd6bca39985542dad05850242b130fe5882038"
+      },
+      "id": "deepseek-balanced-direct-3",
+      "reportSha256": "e8b180d9cc305ecc19326bff23617121c50bb80993c00e10ab01f72c549fca3d",
+      "transport": "Direct Chromium extension → Magpie, without recording relay."
+    }
+  ],
+  "method": "977 English words, 16 paragraphs, original Wikipedia markup, Simplified Chinese. Clean Chromium profile and extension cache disabled for every run. Timer starts at page.start and ends when all 16 paragraphs have rendered. Includes model calls, scheduling and rendering, excludes browser/page load. Qualification repeats are sequential with no other model benchmark running.",
+  "scope": "Browser structural completeness plus one manual source/translation review; not a service-level guarantee or a claim that all models/pages finish within five seconds.",
+  "selectedSettings": {
+    "batchSize": 3,
+    "concurrency": 6,
+    "reasoningEffort": "none",
+    "actualDeepSeekBody": {
+      "thinking": {
+        "type": "disabled"
+      },
+      "temperature": 0
+    },
+    "jsonMode": true
+  },
+  "qualificationIds": [
+    "deepseek-balanced-temp0",
+    "deepseek-balanced-repeat-2",
+    "deepseek-balanced-direct-3"
+  ],
+  "limitations": [
+    "Direct repeat does not expose upstream usage; its caching status is unknown.",
+    "Traced repeat 2 reports prompt cache hits; initial qualifying run reports zero prompt cache hits. No application translation cache was used.",
+    "Earlier failing iterations are retained and are never counted as completed translations.",
+    "Reference commercial provider speed was not measured; previous Mac/AGY timing is historical and not a controlled speedup baseline.",
+    "Translated sibling phrase order is allowed to change. Exact marker multiplicity, tag pairs, original parent relationships, per-paragraph link/format multisets and source restoration are still required."
+  ],
+  "qualification": {
+    "attempts": 3,
+    "passed": 3,
+    "completeMs": [
+      3799,
+      4327,
+      3822
+    ],
+    "medianMs": 3822,
+    "meanMs": 3983,
+    "minMs": 3799,
+    "maxMs": 4327
+  },
+  "manualReview": {
+    "sampleRun": "deepseek-balanced-temp0",
+    "reviewedParagraphs": 16,
+    "result": "No whole-paragraph omissions found in the inspected source/translation pairs; central facts, dates and citations retained. Minor literal phrasing remains, particularly paragraphs 10–12. Proper names and the quoted English idiom are sometimes retained in English. This is one review, not exhaustive semantic quality certification."
+  }
+}

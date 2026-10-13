@@ -2,56 +2,56 @@
   "schema": 1,
   "suite": "regression",
   "status": "passed",
-  "testedAt": "2026-10-13T01:05:12.116Z",
-  "implementationSha256": "4182cb1dd5704db46ad9e54c605be56e02070aee64c13cefba890c0bc950bdda",
-  "verificationSha256": "a1489000f6777d07ce01f7f3faad47ad599e576b41e2083a53f3414d2f84b0cd",
+  "testedAt": "2026-10-13T03:14:03.057Z",
+  "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+  "verificationSha256": "77a693dd15e83d7af2ae9d10941bfd6ad9401450a9d50a550056eeb8c3922a6b",
   "buildEvidence": {
     "schema": 1,
     "browser": "chrome",
-    "implementationSha256": "4182cb1dd5704db46ad9e54c605be56e02070aee64c13cefba890c0bc950bdda",
-    "bundleSha256": "09e733c50b6166d967f7d1eb9a7e8060ad02c399efbd8b5c035e7bff42050cef"
+    "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+    "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
   },
   "results": [
     {
       "id": "node",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 843,
-      "logSha256": "dc3d6663f4c19ccad0f1e53ada82e9392c438f9155e57ac6f592b301537a19d7"
+      "durationMs": 874,
+      "logSha256": "ef56cbc50a4d02f8fdfd632b7b2c134b8b116cea2b5375c4b24a94735d2d42e0"
     },
     {
       "id": "python",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 2189,
-      "logSha256": "4bf173566f38d2888f781f0aedd6a56dd439d2c000ff8a254e58feae18d7062b"
+      "durationMs": 2132,
+      "logSha256": "0f0d874d55bd77e241db59a4db390544d03df716732c2f9a3d84257c557634d1"
     },
     {
       "id": "build",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 11462,
-      "logSha256": "2e40c19f734ec4e440db36ed89837603052f7073da7e6711985e6751ebcdb008"
+      "durationMs": 11309,
+      "logSha256": "5cf1b293eb0bffa8d7cfc02eee27e03f6d5ad76a1a31c578c46288f43bd1ef28"
     },
     {
       "id": "chromium",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 115081,
-      "logSha256": "87d9570c74b7687496e99fbc9c56328a3f4e3e6b9746e6deacdc17ba07a1b7e9"
+      "durationMs": 117111,
+      "logSha256": "bcff320e6fd16e1fd6efc69e496e32b3ff6b95165ccbe63dda75a2a2a64b1979"
     },
     {
       "id": "firefox",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 3143,
+      "durationMs": 3083,
       "logSha256": "924f41693f955e6f50bdbb54b8b9f51359d73f7e68128ac828ee5e74350eeb13"
     }
   ],
   "browser": {
-    "startTime": "2026-10-13T01:03:14.303Z",
-    "duration": 114349.658,
-    "expected": 52,
+    "startTime": "2026-10-13T03:12:03.296Z",
+    "duration": 116369.168,
+    "expected": 58,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0,
@@ -223,6 +223,36 @@
       },
       {
         "title": "page scan fills initial batches, respects concurrency and discards parallel results after restore",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "short articles submit offscreen paragraphs within the concurrency bound without scrolling",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "numeric citations keep safe nested formatting locally using one marker",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "translated sibling phrases may move while keeping their link identities",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "crossed, duplicated, missing and reparented markers never produce page output",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "literal marker-looking source text cannot become a formatting instruction",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "balanced six-request batches render every paragraph at its original node",
         "file": "extension.spec.mjs",
         "status": "passed"
       },

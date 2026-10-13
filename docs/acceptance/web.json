@@ -1,13 +1,13 @@
 {
   "schema": 1,
   "kind": "web-acceptance",
-  "createdAt": "2026-10-13T01:04:50.951Z",
-  "implementationSha256": "4182cb1dd5704db46ad9e54c605be56e02070aee64c13cefba890c0bc950bdda",
+  "createdAt": "2026-10-13T03:15:04.622Z",
+  "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
   "buildEvidence": {
     "schema": 1,
     "browser": "chrome",
-    "implementationSha256": "4182cb1dd5704db46ad9e54c605be56e02070aee64c13cefba890c0bc950bdda",
-    "bundleSha256": "09e733c50b6166d967f7d1eb9a7e8060ad02c399efbd8b5c035e7bff42050cef"
+    "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+    "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
   },
   "binding": "verified",
   "harnessSha256": "225036dc4decd956daf923d5029784ab08ceed00db74d13b61fcc5905c8eb926",
@@ -26,7 +26,7 @@
     {
       "id": "wikipedia",
       "url": "https://en.wikipedia.org/wiki/Machine_translation",
-      "observedAt": "2026-10-13T01:04:50.951Z",
+      "observedAt": "2026-10-13T03:15:04.622Z",
       "status": "passed",
       "httpStatus": 200,
       "finalUrl": "https://en.wikipedia.org/wiki/Machine_translation",
@@ -57,12 +57,12 @@
     {
       "id": "mdn",
       "url": "https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API",
-      "observedAt": "2026-10-13T01:04:55.355Z",
+      "observedAt": "2026-10-13T03:15:08.944Z",
       "status": "passed",
       "httpStatus": 200,
       "finalUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API",
-      "responseSha256": "0d4976d3878193bc7a78c45d4ac28ded3a44aa5ce2217b9bf5e8491bddf130d4",
-      "responseBytes": 202445,
+      "responseSha256": "e6147fb486e7998864a38de11fa22ec6144c682fea40a731b42471172c374960",
+      "responseBytes": 202447,
       "sample": {
         "paragraphCount": 8,
         "eligibleParagraphs": 76,
@@ -88,12 +88,12 @@
     {
       "id": "github",
       "url": "https://github.com/microsoft/TypeScript",
-      "observedAt": "2026-10-13T01:05:01.191Z",
+      "observedAt": "2026-10-13T03:15:14.588Z",
       "status": "passed",
       "httpStatus": 200,
       "finalUrl": "https://github.com/microsoft/TypeScript",
-      "responseSha256": "982433b95a38162bca21e9478da42cd282872484fcde133b88abe77faa7928ff",
-      "responseBytes": 321527,
+      "responseSha256": "75fd91ae89547f39a85f2620ff7fc8cc8530cff56fcf36e1882b02f2d2119abc",
+      "responseBytes": 321523,
       "sample": {
         "paragraphCount": 3,
         "eligibleParagraphs": 3,
@@ -119,7 +119,7 @@
     {
       "id": "w3c",
       "url": "https://www.w3.org/TR/WCAG22/",
-      "observedAt": "2026-10-13T01:05:05.028Z",
+      "observedAt": "2026-10-13T03:15:18.291Z",
       "status": "passed",
       "httpStatus": 200,
       "finalUrl": "https://www.w3.org/TR/WCAG22/",
@@ -150,7 +150,7 @@
     {
       "id": "whatwg",
       "url": "https://html.spec.whatwg.org/multipage/introduction.html",
-      "observedAt": "2026-10-13T01:05:09.889Z",
+      "observedAt": "2026-10-13T03:15:22.893Z",
       "status": "passed",
       "httpStatus": 200,
       "finalUrl": "https://html.spec.whatwg.org/multipage/introduction.html",
@@ -183,7 +183,7 @@
     {
       "name": "long-page-beyond-5000",
       "status": "passed",
-      "observedAt": "2026-10-13T01:05:13.225Z",
+      "observedAt": "2026-10-13T03:15:26.184Z",
       "details": {
         "paragraphs": 5105,
         "lastParagraph": 5104,
@@ -194,7 +194,7 @@
     {
       "name": "large-dynamic-batch-and-frames",
       "status": "passed",
-      "observedAt": "2026-10-13T01:05:14.133Z",
+      "observedAt": "2026-10-13T03:15:27.362Z",
       "details": {
         "insertedParagraphs": 300,
         "sampled": [
@@ -209,8 +209,8 @@
     }
   ],
   "provider": {
-    "requests": 406,
-    "characters": 285628
+    "requests": 409,
+    "characters": 145815
   },
   "status": "passed"
 }

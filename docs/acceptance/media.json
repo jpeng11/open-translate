@@ -1,24 +1,24 @@
 {
   "schema": 1,
   "suite": "media",
-  "testedAt": "2026-10-13T01:06:07.067Z",
-  "implementationSha256": "4182cb1dd5704db46ad9e54c605be56e02070aee64c13cefba890c0bc950bdda",
+  "testedAt": "2026-10-13T03:14:03.057Z",
+  "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
   "buildEvidence": {
     "schema": 1,
     "browser": "chrome",
-    "implementationSha256": "4182cb1dd5704db46ad9e54c605be56e02070aee64c13cefba890c0bc950bdda",
-    "bundleSha256": "09e733c50b6166d967f7d1eb9a7e8060ad02c399efbd8b5c035e7bff42050cef"
+    "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+    "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
   },
   "testInputsSha256": "a285661b985873128793c1fb12f9f246b4282e1f6c6f95b406d21dcd84fff600",
   "status": "passed",
   "evidenceSource": {
     "node": {
       "path": "dist/acceptance/regression/node.log",
-      "sha256": "dc3d6663f4c19ccad0f1e53ada82e9392c438f9155e57ac6f592b301537a19d7"
+      "sha256": "ef56cbc50a4d02f8fdfd632b7b2c134b8b116cea2b5375c4b24a94735d2d42e0"
     },
     "browser": {
       "path": "dist/acceptance/regression/playwright.json",
-      "sha256": "fad04e9974b6ca5d72644d9dca966815e668eede0be3669c27b4259ff46be02e"
+      "sha256": "7e17e826340aef66bb3e84b87511a6d82ef8d1fa0aaeda4a913f7af90079f5b1"
     },
     "method": "Media observations selected from the completed shared regression, without rerunning acceptance."
   },
@@ -251,7 +251,7 @@
       "evidence": {
         "runner": "playwright",
         "name": "live AudioWorklet automatically emits complete low-latency WAV chunks",
-        "durationMs": 3657
+        "durationMs": 3700
       }
     },
     {
@@ -260,7 +260,7 @@
       "evidence": {
         "runner": "playwright",
         "name": "downloaded French OCR initializes safely and repeats from offline model cache",
-        "durationMs": 1660
+        "durationMs": 1694
       }
     },
     {
@@ -269,7 +269,7 @@
       "evidence": {
         "runner": "playwright",
         "name": "dynamic open-shadow captions translate and supplied sidecar timing survives",
-        "durationMs": 2213
+        "durationMs": 2109
       }
     },
     {
@@ -278,7 +278,7 @@
       "evidence": {
         "runner": "playwright",
         "name": "screen subtitle fallback captures visible text locally and releases sharing tracks",
-        "durationMs": 3186
+        "durationMs": 3256
       }
     },
     {
@@ -287,7 +287,7 @@
       "evidence": {
         "runner": "playwright",
         "name": "screen OCR preset and preview drag select the intended region and persist",
-        "durationMs": 4100
+        "durationMs": 4137
       }
     },
     {
@@ -296,7 +296,7 @@
       "evidence": {
         "runner": "playwright",
         "name": "CJK and mixed-language OCR translate colored images and preserve detailed backgrounds on export",
-        "durationMs": 3899
+        "durationMs": 4016
       }
     },
     {
@@ -305,7 +305,7 @@
       "evidence": {
         "runner": "playwright",
         "name": "live permission decline, silent AudioWorklet input and browser-ended sharing recover cleanly",
-        "durationMs": 5949
+        "durationMs": 5979
       }
     },
     {
@@ -314,7 +314,7 @@
       "evidence": {
         "runner": "playwright",
         "name": "native overlapping multiline RTL captions toggle, reselect tracks and follow fullscreen",
-        "durationMs": 2248
+        "durationMs": 2306
       }
     },
     {
@@ -323,7 +323,7 @@
       "evidence": {
         "runner": "playwright",
         "name": "screen OCR retries failed translation, maps letterboxed preview drag and stops on capture end",
-        "durationMs": 5950
+        "durationMs": 5329
       }
     }
   ],
