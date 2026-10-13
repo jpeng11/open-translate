@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {DEFAULTS,endpoint,validateSettings,validateJob,protect,translateBatch,publicSettings,batches} from '../../extension/src/core.mjs';
+import {DEFAULTS,endpoint,validateSettings,validateJob,protect,translateBatch,publicSettings,batches,balancedPageBatches} from '../../extension/src/core.mjs';
 const settings={...DEFAULTS,provider:'openai',model:'test-model',apiKey:'private-key'};
 const envelope=value=>new Response(JSON.stringify({choices:[{finish_reason:'stop',message:{content:JSON.stringify(value)}}]}));
 test('endpoints preserve prefixes and queries and reject embedded credentials',()=>{
@@ -13,6 +13,8 @@ test('strict input and configuration validation',()=>{
  assert.throws(()=>validateJob({source_lang:'fr',target_lang:'auto',text_list:['Bonjour']}));
  assert.throws(()=>validateJob({source_lang:'fr',target_lang:'en',text_list:[3]}));
  assert.throws(()=>validateSettings({...settings,concurrency:100}));
+ assert.throws(()=>validateSettings({...settings,concurrency:9}));
+ assert.equal(validateSettings({...settings,concurrency:8}).concurrency,8);
  assert.throws(()=>validateSettings({...settings,reasoningEffort:'unsupported'}));
  assert.throws(()=>validateSettings({...settings,glossary:[{source:'',target:'x'}]}));
  assert.equal(validateSettings(settings).provider,'openai');
@@ -67,7 +69,7 @@ test('explicit DeepSeek no-reasoning uses its thinking switch without a conflict
  for(const model of ['deepseek-v4.1-flash','opencode-go/deepseek-v4.1-flash','deepseek-v4-pro','deepseek-flash']){
   await translateBatch(job,{...settings,model,reasoningEffort:'none'},async(_url,init)=>{
    const body=JSON.parse(init.body);
-   assert.deepEqual(body.thinking,{type:'disabled'});assert.equal(body.reasoning_effort,undefined);
+   assert.deepEqual(body.thinking,{type:'disabled'});assert.equal(body.reasoning_effort,undefined);assert.equal(body.temperature,0);
    return envelope({translations:[{id:0,text:'你好'}]});
   });
  }
@@ -87,6 +89,16 @@ test('empty batches avoid provider calls and batching bounds requests',async()=>
  assert.deepEqual((await translateBatch({source_lang:'en',target_lang:'fr',text_list:['',' ']},settings,()=>{throw Error('called');})).translations.map(i=>i.text),['',' ']);
  assert.deepEqual(batches(['a','b','c'],2),[['a','b'],['c']]);
  assert.deepEqual(batches(['aaa','bbb'],5,5),[['aaa'],['bbb']]);
+});
+test('bounded page batches spread large paragraphs without losing their identities',()=>{
+ const items=[1000,900,800,100,90,80].map((n,id)=>({id,text:'x'.repeat(n)}));
+ const grouped=balancedPageBatches(items,3,2),total=group=>group.reduce((n,x)=>n+x.text.length,0);
+ assert.ok(Math.max(...grouped.map(total))<Math.max(...batches(items,3).map(total)));
+ assert.deepEqual(grouped.flat().map(x=>x.id).sort(),items.map(x=>x.id));
+ assert.ok(grouped.every(group=>group.length<=3 && group.every((item,i)=>!i||group[i-1].id<item.id)));
+ assert.deepEqual(balancedPageBatches(items,3,1),batches(items,3));
+ assert.deepEqual(balancedPageBatches(items,1,2),batches(items,1));
+ assert.ok(balancedPageBatches(items,3,4,1100).every(group=>total(group)<=1100));
 });
 test('bridge preserves its native placeholder contract without redundant opaque wrapping',async()=>{
  const config={...DEFAULTS,bridgeUrl:'http://127.0.0.1:8765/translate?token=private'};

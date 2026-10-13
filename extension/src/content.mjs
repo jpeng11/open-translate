@@ -1,5 +1,6 @@
 import {candidates,serialize,insertTranslation,restoreElement,sourceNodes,own,unwrapSegments,PAGE_STYLE} from './dom.mjs';
 import {pageRule} from './site-adapters.mjs';
+import {balancedPageBatches} from './core.mjs';
 import {CaptionReader,CaptionOverlay,captionRoots,installSubtitleSidecar} from './captions.mjs';
 const api=globalThis.browser || chrome;
 let config={},active=false,epoch=0,processing=0,drainScheduled=false,scanTimer,viewportTimer,hovered,input,lastSelection='',captionOn=false,captionLast='';
@@ -69,9 +70,14 @@ function scheduleDrain() {
   queueMicrotask(()=>{drainScheduled=false;drain();});
 }
 function drain() {
+  let planned=[];
+  if(!processing && queue.size<=32){
+    const items=[...queue].map(element=>({element,text:serialize(element).text}));
+    if(items.reduce((sum,item)=>sum+item.text.length,0)<=12000)planned=balancedPageBatches(items,config.batchSize || 4,config.concurrency || 1).map(group=>group.map(item=>item.element));
+  }
   while(active && queue.size && processing<(config.concurrency || 1)) {
     const currentEpoch=epoch;
-    const pending=[];let chars=0;for(const element of queue){const length=serialize(element).text.length;if(pending.length && (pending.length>=(config.batchSize || 4) || chars+length>12000))break;pending.push(element);chars+=length;}pending.forEach(el=>queue.delete(el));
+    const pending=planned.shift() || [];if(!pending.length){let chars=0;for(const element of queue){const length=serialize(element).text.length;if(pending.length && (pending.length>=(config.batchSize || 4) || chars+length>12000))break;pending.push(element);chars+=length;}}pending.forEach(el=>queue.delete(el));
     const work=pending.filter(el=>el.isConnected).map(element=>{const serialized=serialize(element);const state={element,serialized,text:serialized.text,status:'pending'};states.set(element,state);return state;});
     if(!work.length)continue;
     processing++;
