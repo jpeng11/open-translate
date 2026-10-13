@@ -1,0 +1,761 @@
+{
+  "schema": 1,
+  "suite": "translation-performance",
+  "status": "completed-with-provider-failures",
+  "testedAt": "2026-10-13",
+  "finalImplementationCommit": "af7c38c",
+  "target": {
+    "words": 1000,
+    "fullTranslationMs": 2000,
+    "met": false
+  },
+  "apiComparisons": [
+    {
+      "schema": 1,
+      "startedAt": "2026-10-13T00:48:01.463Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Machine_translation",
+      "sample": {
+        "paragraphs": 16,
+        "words": 977,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687"
+      },
+      "method": "Sequential single requests of the identical complete plain-text sample; Chat Completions, stream=false; no extension cache. HTTP round-trip through local Magpie includes provider routing and generation, excludes browser rendering. One run/model; models and provider routes differ. Low reasoning requested where supported; not guaranteed by upstream.",
+      "runs": [
+        {
+          "model": "qoder/qfmodel",
+          "startedAt": "2026-10-13T00:48:01.464Z",
+          "httpStatus": 200,
+          "completeMs": 28688,
+          "returnedModel": "qfmodel",
+          "usage": {
+            "completion_tokens": 1595,
+            "completion_tokens_details": {
+              "reasoning_tokens": 53
+            },
+            "prompt_tokens": 1778,
+            "prompt_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "total_tokens": 3373
+          },
+          "finishReason": "stop",
+          "status": "failed",
+          "elapsedMs": 28688,
+          "error": "Agent returned invalid JSON.",
+          "reasoningEffort": "low",
+          "jsonMode": false,
+          "maxTokens": 6000
+        },
+        {
+          "model": "zcode/GLM-5.3-Flash",
+          "startedAt": "2026-10-13T00:48:30.160Z",
+          "httpStatus": 502,
+          "errorCode": null,
+          "status": "failed",
+          "elapsedMs": 7527,
+          "error": "HTTP 502",
+          "reasoningEffort": "low",
+          "jsonMode": false,
+          "maxTokens": 6000
+        },
+        {
+          "model": "qoder/dfmodel",
+          "startedAt": "2026-10-13T00:48:37.691Z",
+          "httpStatus": 200,
+          "completeMs": 18597,
+          "returnedModel": "dfmodel",
+          "usage": {
+            "completion_tokens": 3335,
+            "completion_tokens_details": {
+              "reasoning_tokens": 1843
+            },
+            "prompt_tokens": 1674,
+            "prompt_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "total_tokens": 5009
+          },
+          "finishReason": "stop",
+          "chineseParagraphs": 16,
+          "characters": 2279,
+          "status": "passed",
+          "outputSha256": "09fa5c5f12e70c1a3cabdabccb820f23d9ce604514e98aee28b3688c5896a8e5",
+          "reasoningEffort": "low",
+          "jsonMode": false,
+          "maxTokens": 6000
+        },
+        {
+          "model": "qoder/qmodel",
+          "startedAt": "2026-10-13T00:48:56.292Z",
+          "httpStatus": 200,
+          "completeMs": 51905,
+          "returnedModel": "qmodel",
+          "usage": {
+            "completion_tokens": 5942,
+            "completion_tokens_details": {
+              "reasoning_tokens": 4094
+            },
+            "prompt_tokens": 1752,
+            "prompt_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "total_tokens": 7694
+          },
+          "finishReason": "stop",
+          "chineseParagraphs": 16,
+          "characters": 2203,
+          "status": "passed",
+          "outputSha256": "f9a43113003380b31805116e43c0df18fd774bc3a3c5a747b417c0bb9925d799",
+          "reasoningEffort": "model default",
+          "jsonMode": false,
+          "maxTokens": 6000
+        }
+      ]
+    },
+    {
+      "schema": 1,
+      "startedAt": "2026-10-13T00:50:02.550Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Machine_translation",
+      "sample": {
+        "paragraphs": 16,
+        "words": 977,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687"
+      },
+      "method": "Sequential single requests of the identical complete plain-text sample; Chat Completions, stream=false; no extension cache. HTTP round-trip through local Magpie includes provider routing and generation, excludes browser rendering. One run/model; models and provider routes differ. reasoning_effort=none and JSON mode requested; upstream may ignore or clamp these options.",
+      "runs": [
+        {
+          "model": "qoder/dfmodel",
+          "startedAt": "2026-10-13T00:50:02.551Z",
+          "reasoningEffort": "none",
+          "jsonMode": true,
+          "httpStatus": 200,
+          "completeMs": 26269,
+          "returnedModel": "dfmodel",
+          "usage": {
+            "completion_tokens": 5276,
+            "completion_tokens_details": {
+              "reasoning_tokens": 3727
+            },
+            "prompt_tokens": 1674,
+            "prompt_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 1536
+            },
+            "total_tokens": 6950
+          },
+          "finishReason": "stop",
+          "chineseParagraphs": 16,
+          "characters": 2351,
+          "status": "passed",
+          "outputSha256": "763b1ed5cac4572894d55e113287a662caab6d3b366f061cefe59573e39df001",
+          "maxTokens": 6000
+        },
+        {
+          "model": "qoder/qfmodel",
+          "startedAt": "2026-10-13T00:50:28.831Z",
+          "reasoningEffort": "none",
+          "jsonMode": true,
+          "httpStatus": 200,
+          "completeMs": 24628,
+          "returnedModel": "qfmodel",
+          "usage": {
+            "completion_tokens": 1598,
+            "completion_tokens_details": {
+              "reasoning_tokens": 49
+            },
+            "prompt_tokens": 1778,
+            "prompt_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 1772
+            },
+            "total_tokens": 3376
+          },
+          "finishReason": "stop",
+          "status": "failed",
+          "elapsedMs": 24630,
+          "error": "Agent returned invalid JSON.",
+          "maxTokens": 6000
+        },
+        {
+          "model": "qoder/gfmodel",
+          "startedAt": "2026-10-13T00:50:53.462Z",
+          "reasoningEffort": "none",
+          "jsonMode": true,
+          "httpStatus": 200,
+          "completeMs": 26153,
+          "returnedModel": "gfmodel",
+          "usage": {
+            "completion_tokens": 1632,
+            "completion_tokens_details": {
+              "reasoning_tokens": 31
+            },
+            "prompt_tokens": 1659,
+            "prompt_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "total_tokens": 3291
+          },
+          "finishReason": "stop",
+          "chineseParagraphs": 16,
+          "characters": 2478,
+          "status": "passed",
+          "outputSha256": "724dfd937809e61efea030b167f9be0ee5be5d309552c57790f8aa905c0f0241",
+          "maxTokens": 6000
+        },
+        {
+          "model": "grok/grok-4.7-build-fast",
+          "startedAt": "2026-10-13T00:51:19.619Z",
+          "reasoningEffort": "none",
+          "jsonMode": true,
+          "httpStatus": 200,
+          "completeMs": 39024,
+          "returnedModel": "grok-4.7-build-fast",
+          "usage": {
+            "completion_tokens": 3905,
+            "completion_tokens_details": {
+              "reasoning_tokens": 2242
+            },
+            "prompt_tokens": 2924,
+            "prompt_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "total_tokens": 6829
+          },
+          "finishReason": "stop",
+          "chineseParagraphs": 16,
+          "characters": 2358,
+          "status": "passed",
+          "outputSha256": "3c74ad53862e7f3443f9f2dca0ecfa35d2a0f874d834cb5007634c2c98be6454",
+          "maxTokens": 6000
+        }
+      ]
+    },
+    {
+      "schema": 1,
+      "startedAt": "2026-10-13T00:52:28.316Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Machine_translation",
+      "sample": {
+        "paragraphs": 16,
+        "words": 977,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687"
+      },
+      "method": "Sequential single requests of the identical complete plain-text sample; Chat Completions, stream=false; no extension cache. HTTP round-trip through local Magpie includes provider routing and generation, excludes browser rendering. One run/model; models and provider routes differ. reasoning_effort=low and JSON mode requested; upstream may ignore or clamp these options.",
+      "runs": [
+        {
+          "model": "codex/gpt-6-luna",
+          "startedAt": "2026-10-13T00:52:28.317Z",
+          "reasoningEffort": "low",
+          "jsonMode": true,
+          "httpStatus": 200,
+          "completeMs": 13404,
+          "returnedModel": "gpt-6-luna",
+          "usage": {
+            "completion_tokens": 1790,
+            "completion_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "prompt_tokens": 5143,
+            "prompt_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 2816
+            },
+            "total_tokens": 6933
+          },
+          "finishReason": "stop",
+          "chineseParagraphs": 16,
+          "characters": 2219,
+          "status": "passed",
+          "outputSha256": "9a25efa0fc9cf63e70a2c62c5735552a60700c59a80801c6687abd7bb3920977",
+          "maxTokens": 6000
+        }
+      ]
+    }
+  ],
+  "pageRuns": [
+    {
+      "schema": 1,
+      "status": "passed",
+      "startedAt": "2026-10-13T00:30:54.909Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Machine_translation",
+      "sourceLanguage": "en",
+      "targetLanguage": "zh-CN",
+      "provider": "Mac local bridge → signed-in AGY CLI",
+      "model": "gemini-3.8-flash-low",
+      "settings": {
+        "batchSize": 4,
+        "concurrency": 1,
+        "timeout": 210,
+        "cache": false
+      },
+      "method": "Real public page in a clean Chromium extension profile. Select approximately 1,000 words in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. One uncached run.",
+      "requests": [],
+      "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "3bb0aa1c4750d9c65c81cf6b1cfed3768b06339b127e2980eb8dd63510e3de2f",
+        "bundleSha256": "c8fb43329934afe8461ed682cfea8747ece97842b02695e56671d628a57362ef"
+      },
+      "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+      "browser": "156.0.8078.4",
+      "contentMode": "Original public page markup",
+      "sample": {
+        "words": 977,
+        "paragraphs": 16,
+        "characters": 6683,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "progress": {
+        "done": 16,
+        "events": [
+          {
+            "paragraphs": 1,
+            "ms": 5259
+          },
+          {
+            "paragraphs": 5,
+            "ms": 18071
+          },
+          {
+            "paragraphs": 6,
+            "ms": 24538
+          },
+          {
+            "paragraphs": 10,
+            "ms": 31221
+          },
+          {
+            "paragraphs": 13,
+            "ms": 39787
+          },
+          {
+            "paragraphs": 16,
+            "ms": 45419
+          }
+        ],
+        "elapsedMs": 45660
+      },
+      "extensionState": {
+        "ok": true,
+        "active": true,
+        "completed": 16,
+        "failed": 0,
+        "error": ""
+      },
+      "firstTranslationMs": 5259,
+      "completeMs": 45419,
+      "wordsPerSecond": 21.51,
+      "preservation": {
+        "links": 70,
+        "linksPreserved": true,
+        "formattingPreserved": true
+      },
+      "output": {
+        "translatedParagraphs": 16,
+        "chineseParagraphs": 16,
+        "characters": 2510,
+        "sha256": "497b42b2055f3a64a225d7d6c799fe55abfbb519999830ee275e6af52fe705a4"
+      },
+      "restored": true,
+      "finishedAt": "2026-10-13T00:31:44.918Z"
+    },
+    {
+      "schema": 1,
+      "status": "passed",
+      "startedAt": "2026-10-13T00:44:29.822Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Machine_translation",
+      "sourceLanguage": "en",
+      "targetLanguage": "zh-CN",
+      "provider": "Mac local bridge → signed-in AGY CLI",
+      "model": "gemini-3.8-flash-low",
+      "settings": {
+        "batchSize": 4,
+        "concurrency": 4,
+        "timeout": 210,
+        "cache": false
+      },
+      "method": "Real public page in a clean Chromium extension profile. Select approximately 1,000 words in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. One uncached run.",
+      "requests": [],
+      "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "87b571b53ad440d27264b85bb68e75cd2c88ddf9351a326bc37df67fc8e5eec7",
+        "bundleSha256": "41ae594b0c8a89ee5c4bc6b456b90cacc474a4b7ba1ce5b06a342012d6398ca7"
+      },
+      "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+      "browser": "156.0.8078.4",
+      "contentMode": "Original public page markup",
+      "sample": {
+        "words": 977,
+        "paragraphs": 16,
+        "characters": 6683,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "progress": {
+        "done": 16,
+        "events": [
+          {
+            "paragraphs": 1,
+            "ms": 9155
+          },
+          {
+            "paragraphs": 5,
+            "ms": 13973
+          },
+          {
+            "paragraphs": 9,
+            "ms": 20226
+          },
+          {
+            "paragraphs": 13,
+            "ms": 26698
+          },
+          {
+            "paragraphs": 15,
+            "ms": 27413
+          },
+          {
+            "paragraphs": 16,
+            "ms": 31502
+          }
+        ],
+        "elapsedMs": 31554
+      },
+      "extensionState": {
+        "ok": true,
+        "active": true,
+        "completed": 16,
+        "failed": 0,
+        "error": ""
+      },
+      "firstTranslationMs": 9155,
+      "completeMs": 31502,
+      "wordsPerSecond": 31.01,
+      "preservation": {
+        "links": 70,
+        "linksPreserved": true,
+        "formattingPreserved": true
+      },
+      "output": {
+        "translatedParagraphs": 16,
+        "chineseParagraphs": 16,
+        "characters": 2542,
+        "sha256": "d876cff750379b509d53e2c33f0ee024f17a623c18d2ba1809b7e62bf6ad8cda"
+      },
+      "restored": true,
+      "finishedAt": "2026-10-13T00:45:05.624Z"
+    },
+    {
+      "schema": 1,
+      "status": "passed",
+      "startedAt": "2026-10-13T00:51:46.450Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Machine_translation",
+      "sourceLanguage": "en",
+      "targetLanguage": "zh-CN",
+      "provider": "Configured OpenAI-compatible endpoint",
+      "model": "qoder/dfmodel",
+      "settings": {
+        "batchSize": 4,
+        "concurrency": 4,
+        "timeout": 90,
+        "cache": false
+      },
+      "method": "Real public page in a clean Chromium extension profile. Select approximately 1,000 words in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. One uncached run.",
+      "requests": [],
+      "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "87b571b53ad440d27264b85bb68e75cd2c88ddf9351a326bc37df67fc8e5eec7",
+        "bundleSha256": "41ae594b0c8a89ee5c4bc6b456b90cacc474a4b7ba1ce5b06a342012d6398ca7"
+      },
+      "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+      "browser": "156.0.8078.4",
+      "contentMode": "Original public page markup",
+      "sample": {
+        "words": 977,
+        "paragraphs": 16,
+        "characters": 6683,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "progress": {
+        "done": 16,
+        "events": [
+          {
+            "paragraphs": 4,
+            "ms": 32285
+          },
+          {
+            "paragraphs": 5,
+            "ms": 74861
+          },
+          {
+            "paragraphs": 6,
+            "ms": 102467
+          },
+          {
+            "paragraphs": 10,
+            "ms": 113766
+          },
+          {
+            "paragraphs": 13,
+            "ms": 119655
+          },
+          {
+            "paragraphs": 16,
+            "ms": 136227
+          }
+        ],
+        "elapsedMs": 136244
+      },
+      "extensionState": {
+        "ok": true,
+        "active": true,
+        "completed": 16,
+        "failed": 0,
+        "error": ""
+      },
+      "firstTranslationMs": 32285,
+      "completeMs": 136227,
+      "wordsPerSecond": 7.17,
+      "preservation": {
+        "links": 70,
+        "linksPreserved": true,
+        "formattingPreserved": true
+      },
+      "output": {
+        "translatedParagraphs": 16,
+        "chineseParagraphs": 16,
+        "characters": 2307,
+        "sha256": "c1707c8f03ec068cafb1bf5216ac0d9fd04566fa5a363a0682fbf80307744bef"
+      },
+      "restored": true,
+      "finishedAt": "2026-10-13T00:54:07.163Z"
+    },
+    {
+      "schema": 1,
+      "status": "passed",
+      "startedAt": "2026-10-13T00:55:41.871Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Machine_translation",
+      "sourceLanguage": "en",
+      "targetLanguage": "zh-CN",
+      "provider": "Configured OpenAI-compatible endpoint",
+      "model": "codex/gpt-6-luna",
+      "settings": {
+        "batchSize": 4,
+        "concurrency": 4,
+        "timeout": 90,
+        "reasoningEffort": "low",
+        "cache": false
+      },
+      "method": "Real public page in a clean Chromium extension profile. Select approximately 1,000 words in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. One uncached run.",
+      "requests": [],
+      "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "4182cb1dd5704db46ad9e54c605be56e02070aee64c13cefba890c0bc950bdda",
+        "bundleSha256": "483096e53ba11c6f64b1ec861589ce24abe06fbf0433417f2edd6a7789750a2a"
+      },
+      "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+      "browser": "156.0.8078.4",
+      "contentMode": "Original public page markup",
+      "sample": {
+        "words": 977,
+        "paragraphs": 16,
+        "characters": 6683,
+        "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "progress": {
+        "done": 16,
+        "events": [
+          {
+            "paragraphs": 1,
+            "ms": 9919
+          },
+          {
+            "paragraphs": 5,
+            "ms": 68175
+          },
+          {
+            "paragraphs": 9,
+            "ms": 87715
+          },
+          {
+            "paragraphs": 13,
+            "ms": 88135
+          },
+          {
+            "paragraphs": 16,
+            "ms": 92661
+          }
+        ],
+        "elapsedMs": 92834
+      },
+      "extensionState": {
+        "ok": true,
+        "active": true,
+        "completed": 16,
+        "failed": 0,
+        "error": ""
+      },
+      "firstTranslationMs": 9919,
+      "completeMs": 92661,
+      "wordsPerSecond": 10.54,
+      "preservation": {
+        "links": 70,
+        "linksPreserved": true,
+        "formattingPreserved": true
+      },
+      "output": {
+        "translatedParagraphs": 16,
+        "chineseParagraphs": 16,
+        "characters": 2309,
+        "sha256": "717062485a5bd4190aa7df666dd20f0aa3ba93ac252c345d1144db0485c37f11"
+      },
+      "restored": true,
+      "finishedAt": "2026-10-13T00:57:20.009Z"
+    }
+  ],
+  "revertedExperiment": {
+    "commit": "f6ce5b4",
+    "revertCommit": "af7c38c",
+    "markerOverhead": {
+      "sampleSha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687",
+      "paragraphs": 16,
+      "sourceCharacters": 6683,
+      "serializedCharacters": 8003,
+      "markers": 362,
+      "oldProtectedCharacters": 20673,
+      "compactProtectedCharacters": 11985,
+      "charactersSaved": 8688,
+      "reductionPercent": 42.03,
+      "note": "Counts UTF-16 characters in protected item text, not model tokens or JSON envelope. Identical original page DOM and sample; deterministic representative nonce lengths."
+    },
+    "runs": [
+      {
+        "schema": 1,
+        "status": "failed",
+        "startedAt": "2026-10-13T01:00:28.569Z",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Machine_translation",
+        "sourceLanguage": "en",
+        "targetLanguage": "zh-CN",
+        "provider": "Configured OpenAI-compatible endpoint",
+        "model": "codex/gpt-6-luna",
+        "settings": {
+          "batchSize": 4,
+          "concurrency": 4,
+          "timeout": 90,
+          "reasoningEffort": "low",
+          "cache": false
+        },
+        "method": "Real public page in a clean Chromium extension profile. Select approximately 1,000 words in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. One uncached run.",
+        "requests": [],
+        "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+        "buildEvidence": {
+          "schema": 1,
+          "browser": "chrome",
+          "implementationSha256": "69ae23f41e63cd3bfb5d381d7d71b56a491a02a991a7094a01e8045ee09952be",
+          "bundleSha256": "257484f1a7330daecc8e0ba1a08161f05fbd6fee99c642b40328c69b7cddf58d"
+        },
+        "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+        "browser": "156.0.8078.4",
+        "contentMode": "Original public page markup",
+        "sample": {
+          "words": 977,
+          "paragraphs": 16,
+          "characters": 6683,
+          "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687",
+          "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+        },
+        "progress": {
+          "done": 0,
+          "events": [],
+          "elapsedMs": 9055
+        },
+        "extensionState": {
+          "ok": true,
+          "active": true,
+          "completed": 0,
+          "failed": 1,
+          "error": "Agent changed the order of protected markup or terminology."
+        },
+        "error": "Translation failed: Agent changed the order of protected markup or terminology."
+      },
+      {
+        "schema": 1,
+        "status": "failed",
+        "startedAt": "2026-10-13T01:01:32.654Z",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Machine_translation",
+        "sourceLanguage": "en",
+        "targetLanguage": "zh-CN",
+        "provider": "Configured OpenAI-compatible endpoint",
+        "model": "codex/gpt-6-luna",
+        "settings": {
+          "batchSize": 4,
+          "concurrency": 4,
+          "timeout": 90,
+          "reasoningEffort": "low",
+          "cache": false
+        },
+        "method": "Real public page in a clean Chromium extension profile. Select approximately 1,000 words in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. One uncached run.",
+        "requests": [],
+        "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+        "buildEvidence": {
+          "schema": 1,
+          "browser": "chrome",
+          "implementationSha256": "69ae23f41e63cd3bfb5d381d7d71b56a491a02a991a7094a01e8045ee09952be",
+          "bundleSha256": "257484f1a7330daecc8e0ba1a08161f05fbd6fee99c642b40328c69b7cddf58d"
+        },
+        "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+        "browser": "156.0.8078.4",
+        "contentMode": "Original public page markup",
+        "sample": {
+          "words": 977,
+          "paragraphs": 16,
+          "characters": 6683,
+          "sha256": "1c01880567d17c11212b63ab4cddc32fb933115073620bbc8729f7d6e37bf687",
+          "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+        },
+        "progress": {
+          "done": 1,
+          "events": [
+            {
+              "paragraphs": 1,
+              "ms": 6083
+            }
+          ],
+          "elapsedMs": 13478
+        },
+        "extensionState": {
+          "ok": true,
+          "active": true,
+          "completed": 1,
+          "failed": 4,
+          "error": "Agent changed the order of protected markup or terminology."
+        },
+        "error": "Translation failed: Agent changed the order of protected markup or terminology."
+      }
+    ],
+    "decision": "Reverted after both full-page runs failed protected-marker validation; none counted as successful speed results."
+  },
+  "limitations": [
+    "One public article: 977 English words in 16 complete paragraphs, en to zh-CN.",
+    "Each configuration is a single measurement, not p50/p95, a concurrency load test or an isolated causal comparison.",
+    "API comparisons run on Linux through local Magpie; browser comparisons run on the Mac with a private loopback SSH tunnel to Magpie. AGY is local to the Mac.",
+    "Application cache disabled; provider-side prompt caching and shared routing load are uncontrolled and token usage is recorded.",
+    "Plain API checks validate IDs and Chinese presence; they do not certify every semantic detail. Web checks additionally validate all 70 links, supported formatting and exact restoration.",
+    "Model labels are Magpie request/response identifiers; underlying upstream identity is not independently verified.",
+    "Reverted short markers reduced text characters but both live runs failed; no successful latency is claimed."
+  ]
+}

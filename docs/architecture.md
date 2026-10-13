@@ -54,6 +54,8 @@ Malformed requests return 400/413/415. Auth failures return 401/403. Upstream pr
 {"error":{"code":"placeholder_mismatch","message":"Agent changed protected markup; retry with a more reliable model"}}
 ```
 
+The standalone extension can optionally send `reasoning_effort` to its direct OpenAI-compatible endpoint. The default omits it; model support varies. This setting is part of the cache key and is not sent through the Python bridge.
+
 The OpenAI-compatible backend performs no automatic provider retries. AGY allows one fresh-session recovery per failed call for malformed output or operational-tool events. Rich-text calls contain at most 32 text fragments; all chunks and retries share the original job deadline. Completed chunks are not repeated when a later chunk retries; authentication and quota failures are not retried. Provider billing remains the endpoint's responsibility.
 
 ## Agent-facing API

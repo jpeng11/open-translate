@@ -2,55 +2,55 @@
   "schema": 1,
   "suite": "regression",
   "status": "passed",
-  "testedAt": "2026-10-13T00:45:59.391Z",
-  "implementationSha256": "87b571b53ad440d27264b85bb68e75cd2c88ddf9351a326bc37df67fc8e5eec7",
-  "verificationSha256": "62f2ce97a4ff70ebf716dda72ce877351f9663b965d7570638797d28a2fbdc50",
+  "testedAt": "2026-10-13T01:05:12.116Z",
+  "implementationSha256": "4182cb1dd5704db46ad9e54c605be56e02070aee64c13cefba890c0bc950bdda",
+  "verificationSha256": "a1489000f6777d07ce01f7f3faad47ad599e576b41e2083a53f3414d2f84b0cd",
   "buildEvidence": {
     "schema": 1,
     "browser": "chrome",
-    "implementationSha256": "87b571b53ad440d27264b85bb68e75cd2c88ddf9351a326bc37df67fc8e5eec7",
-    "bundleSha256": "497f33a918eb3dad193eea2655caabccf53efed8863abd0911fd046d273905e0"
+    "implementationSha256": "4182cb1dd5704db46ad9e54c605be56e02070aee64c13cefba890c0bc950bdda",
+    "bundleSha256": "09e733c50b6166d967f7d1eb9a7e8060ad02c399efbd8b5c035e7bff42050cef"
   },
   "results": [
     {
       "id": "node",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 806,
-      "logSha256": "a506950d89f06a7c566f281f251dd3ec78d442f94c970d85583cfd9320c59c6b"
+      "durationMs": 843,
+      "logSha256": "dc3d6663f4c19ccad0f1e53ada82e9392c438f9155e57ac6f592b301537a19d7"
     },
     {
       "id": "python",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 2007,
-      "logSha256": "7879567b1a956f028b2513614c78cd4f34e88fa1ea3b34bb414782b221f224a2"
+      "durationMs": 2189,
+      "logSha256": "4bf173566f38d2888f781f0aedd6a56dd439d2c000ff8a254e58feae18d7062b"
     },
     {
       "id": "build",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 11451,
-      "logSha256": "2a7a8008dc402b836a52a107677447c55c6d5defd64f0cbd37ab4683ec5adc15"
+      "durationMs": 11462,
+      "logSha256": "2e40c19f734ec4e440db36ed89837603052f7073da7e6711985e6751ebcdb008"
     },
     {
       "id": "chromium",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 113559,
-      "logSha256": "17b69a74859d4d620b27f6db2d497c7b359e4f9b03514fdbd88168a33bcadd98"
+      "durationMs": 115081,
+      "logSha256": "87d9570c74b7687496e99fbc9c56328a3f4e3e6b9746e6deacdc17ba07a1b7e9"
     },
     {
       "id": "firefox",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 3238,
+      "durationMs": 3143,
       "logSha256": "924f41693f955e6f50bdbb54b8b9f51359d73f7e68128ac828ee5e74350eeb13"
     }
   ],
   "browser": {
-    "startTime": "2026-10-13T00:44:03.019Z",
-    "duration": 112827.894,
+    "startTime": "2026-10-13T01:03:14.303Z",
+    "duration": 114349.658,
     "expected": 52,
     "skipped": 0,
     "unexpected": 0,

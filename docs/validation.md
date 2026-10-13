@@ -4,6 +4,14 @@ Acceptance date: 2026-10-12. The current product follows the [accepted behavior 
 
 The full functional acceptance at commit `775d87e` used implementation SHA-256 `959eda573d5da737ad0daa5926ca4631e011958af8310004a12033ee92b2b2df`. The Linux Chromium bundle is `2e9f0a1031df4b235bcc5be95cfe7d46058c01132d5d95118871b7f716a90452`; the Mac bundle is `176e45849b428105e5b7ec09e54d9f012c9b9129639dcb6d6d9ee8b5b38f0b7d`. They contain the same implementation inputs; platform-produced bundle bytes differ and are separately recorded.
 
+## Magpie comparison and reasoning control (2026-10-13)
+
+The final code at `af7c38c` retains bounded concurrent scheduling and adds an optional reasoning setting to direct endpoints, translated into all six UI languages. The setting defaults to no override, stays out of webpage settings and bridge jobs, and separates cached results. The tested implementation is byte-for-byte equivalent to `8e13c49`; the subsequent compact-marker experiment was reverted after two live formatting failures.
+
+The final full regression passed 72 Node tests, 46 Python tests, 52 Chromium cases and actual Firefox MV3 acceptance. Refreshed public-site, document and media evidence also passes `npm run acceptance:verify`. Current implementation SHA-256 is `4182cb1dd5704db46ad9e54c605be56e02070aee64c13cefba890c0bc950bdda`. The document and media case counts are subsets of the complete regression, not additional runs. Safari runtime remains delegated separately.
+
+Seven Magpie model/route configurations were measured with the same 977-word sample. The fastest successful whole plain-text request was `codex/gpt-6-luna` at 13.404 seconds; its actual original-format page took 92.661 seconds. `qoder/dfmodel` completed the original page in 136.227 seconds. Both retained 16 paragraphs, 70 links, formatting and exact restoration. AGY with concurrency four remains the fastest passing whole-page observation at 31.502 seconds. None meets the 1–2 second target. See the [performance methods and results](translation-performance.md) and [complete measurement record](acceptance/translation-performance.json), including failed routes, invalid JSON, requested reasoning and provider token usage.
+
 ## Scheduling and regression refresh (2026-10-13)
 
 At `ae2b2a2`, page scans fill batches before dispatch and run independent requests up to the configured concurrency. Document, text and subtitle translation also use that limit while retaining item order and cancellation behavior. The default remains one; bridge concurrency must be raised separately before using concurrent AGY requests.

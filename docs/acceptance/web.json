@@ -1,13 +1,13 @@
 {
   "schema": 1,
   "kind": "web-acceptance",
-  "createdAt": "2026-10-13T00:49:16.363Z",
-  "implementationSha256": "87b571b53ad440d27264b85bb68e75cd2c88ddf9351a326bc37df67fc8e5eec7",
+  "createdAt": "2026-10-13T01:04:50.951Z",
+  "implementationSha256": "4182cb1dd5704db46ad9e54c605be56e02070aee64c13cefba890c0bc950bdda",
   "buildEvidence": {
     "schema": 1,
     "browser": "chrome",
-    "implementationSha256": "87b571b53ad440d27264b85bb68e75cd2c88ddf9351a326bc37df67fc8e5eec7",
-    "bundleSha256": "497f33a918eb3dad193eea2655caabccf53efed8863abd0911fd046d273905e0"
+    "implementationSha256": "4182cb1dd5704db46ad9e54c605be56e02070aee64c13cefba890c0bc950bdda",
+    "bundleSha256": "09e733c50b6166d967f7d1eb9a7e8060ad02c399efbd8b5c035e7bff42050cef"
   },
   "binding": "verified",
   "harnessSha256": "225036dc4decd956daf923d5029784ab08ceed00db74d13b61fcc5905c8eb926",
@@ -26,7 +26,7 @@
     {
       "id": "wikipedia",
       "url": "https://en.wikipedia.org/wiki/Machine_translation",
-      "observedAt": "2026-10-13T00:49:16.363Z",
+      "observedAt": "2026-10-13T01:04:50.951Z",
       "status": "passed",
       "httpStatus": 200,
       "finalUrl": "https://en.wikipedia.org/wiki/Machine_translation",
@@ -57,7 +57,7 @@
     {
       "id": "mdn",
       "url": "https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API",
-      "observedAt": "2026-10-13T00:49:20.689Z",
+      "observedAt": "2026-10-13T01:04:55.355Z",
       "status": "passed",
       "httpStatus": 200,
       "finalUrl": "https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API",
@@ -88,12 +88,12 @@
     {
       "id": "github",
       "url": "https://github.com/microsoft/TypeScript",
-      "observedAt": "2026-10-13T00:49:26.273Z",
+      "observedAt": "2026-10-13T01:05:01.191Z",
       "status": "passed",
       "httpStatus": 200,
       "finalUrl": "https://github.com/microsoft/TypeScript",
-      "responseSha256": "8f1e68905299d4bf029455df5ae71f024fcf1aec9fc1553e1b4c282bc8e1d437",
-      "responseBytes": 321523,
+      "responseSha256": "982433b95a38162bca21e9478da42cd282872484fcde133b88abe77faa7928ff",
+      "responseBytes": 321527,
       "sample": {
         "paragraphCount": 3,
         "eligibleParagraphs": 3,
@@ -119,7 +119,7 @@
     {
       "id": "w3c",
       "url": "https://www.w3.org/TR/WCAG22/",
-      "observedAt": "2026-10-13T00:49:29.958Z",
+      "observedAt": "2026-10-13T01:05:05.028Z",
       "status": "passed",
       "httpStatus": 200,
       "finalUrl": "https://www.w3.org/TR/WCAG22/",
@@ -150,7 +150,7 @@
     {
       "id": "whatwg",
       "url": "https://html.spec.whatwg.org/multipage/introduction.html",
-      "observedAt": "2026-10-13T00:49:34.269Z",
+      "observedAt": "2026-10-13T01:05:09.889Z",
       "status": "passed",
       "httpStatus": 200,
       "finalUrl": "https://html.spec.whatwg.org/multipage/introduction.html",
@@ -183,7 +183,7 @@
     {
       "name": "long-page-beyond-5000",
       "status": "passed",
-      "observedAt": "2026-10-13T00:49:37.797Z",
+      "observedAt": "2026-10-13T01:05:13.225Z",
       "details": {
         "paragraphs": 5105,
         "lastParagraph": 5104,
@@ -194,7 +194,7 @@
     {
       "name": "large-dynamic-batch-and-frames",
       "status": "passed",
-      "observedAt": "2026-10-13T00:49:38.722Z",
+      "observedAt": "2026-10-13T01:05:14.133Z",
       "details": {
         "insertedParagraphs": 300,
         "sampled": [
@@ -209,8 +209,8 @@
     }
   ],
   "provider": {
-    "requests": 407,
-    "characters": 285619
+    "requests": 406,
+    "characters": 285628
   },
   "status": "passed"
 }
