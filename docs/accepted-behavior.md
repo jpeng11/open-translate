@@ -24,6 +24,8 @@ These are three incomplete reference observations, not confirmed vendor bugs or 
 
 Translated sibling phrases may change order to follow the target language's grammar. Each original link and formatting token must still occur exactly once, with its original attributes, pair and parent relationship. Crossed tags, omitted or duplicated markers, and moving a child outside its original formatting parent are rejected. Checks compare per-paragraph link and formatting multisets rather than requiring translated words to retain source-language order. This clarifies preservation; it does not permit dropping formatting to obtain faster timings.
 
+For OpenAI-compatible endpoints, a paragraph that fails native-format validation can receive up to two automatic repair attempts. Repairs retain the full source paragraph and failed draft as context, reuse valid results from other paragraphs, and share the original batch timeout and concurrency slot. Repaired output must pass the same preservation checks. Provider refusals, invalid response schemas and repairs that still fail validation remain explicit errors; unverified text is not rendered as a successful translation.
+
 ## Independent visual identity
 
 The interface uses our original open-globe mark, ink sidebar, teal actions, warm paper surfaces, numbered workspace tools and linear popup task list. Light/dark palettes share spacing, typography, controls, focus states and status handling. The reference popup's pink palette, proportions, control arrangement and imitation-specific CSS have been removed. Product copy is our own; there are no vendor logos, copied interface assets or proprietary runtime bundles.
