@@ -230,3 +230,34 @@ test('final full-context tree recovery preserves nested nodes and exact restorat
  expect((await command(page,'page.status')).failed).toBe(0);
  await command(page,'page.restore');expect(await page.locator('#html-recovery').innerHTML()).toBe(original);await page.close();
 });
+
+test('long-page prefetch fills configured concurrency but stops before submitting the entire page',async()=>{
+ await settings({batchSize:3,concurrency:6});delay=180;providerPeak=0;
+ const page=await context.newPage();await page.goto(origin+'/page');
+ await page.evaluate(()=>{document.body.innerHTML=Array.from({length:120},(_,i)=>`<p style="min-height:400px">Long paragraph ${i}: reading material with <a href="https://example.com/${i}">a preserved link</a>.</p>`).join('');});
+ await command(page,'page.start');await expect.poll(()=>page.locator('[data-ot-target]').count()).toBeGreaterThanOrEqual(18);
+ expect(providerPeak).toBe(6);await page.waitForTimeout(800);
+ const count=await page.locator('[data-ot-target]').count();expect(count).toBeLessThanOrEqual(36);expect(count).toBeLessThan(120);expect(await page.evaluate(()=>scrollY)).toBe(0);
+ await page.locator('p').nth(100).scrollIntoViewIfNeeded();await expect(page.locator('p').nth(100).locator('[data-ot-target]')).toHaveCount(1);
+ await command(page,'page.restore');await expect(page.locator('[data-ot-target]')).toHaveCount(0);await page.close();
+});
+
+test('restoring a long page stops unsent prefetch and stale results',async()=>{
+ await settings({batchSize:3,concurrency:6});delay=350;
+ const page=await context.newPage();await page.goto(origin+'/page');
+ await page.evaluate(()=>{document.body.innerHTML=Array.from({length:120},(_,i)=>`<p style="min-height:400px">Pending long paragraph ${i} with enough text for translation.</p>`).join('');});
+ await command(page,'page.start');await expect.poll(()=>requests.length).toBe(6);
+ await command(page,'page.restore');await page.waitForTimeout(650);expect(requests).toHaveLength(6);await expect(page.locator('[data-ot-target]')).toHaveCount(0);await page.close();
+});
+
+test('scroll jumps replace unsent prefetch with the current reading position',async()=>{
+ await settings({batchSize:3,concurrency:6});delay=800;
+ const page=await context.newPage();await page.goto(origin+'/page');
+ await page.evaluate(()=>{document.body.innerHTML=Array.from({length:120},(_,i)=>`<p style="min-height:400px">Jump paragraph ${i}: reading content for translation.</p>`).join('');});
+ await command(page,'page.start');await expect.poll(()=>requests.length).toBe(6);
+ await page.locator('p').nth(100).scrollIntoViewIfNeeded();
+ await expect(page.locator('p').nth(100).locator('[data-ot-target]')).toHaveCount(1);
+ const next=JSON.parse(requests[6].value.messages.at(-1).content).items;
+ expect(next.some(item=>item.text.includes('Jump paragraph 100:'))).toBe(true);
+ await command(page,'page.restore');await page.close();
+});

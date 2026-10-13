@@ -1,6 +1,7 @@
 import {candidates,serialize,insertTranslation,restoreElement,sourceNodes,own,unwrapSegments,PAGE_STYLE} from './dom.mjs';
 import {pageRule} from './site-adapters.mjs';
 import {balancedPageBatches} from './core.mjs';
+import {readingWindow,viewportOrder} from './page-window.mjs';
 import {CaptionReader,CaptionOverlay,captionRoots,installSubtitleSidecar} from './captions.mjs';
 const api=globalThis.browser || chrome;
 let config={},active=false,epoch=0,processing=0,drainScheduled=false,scanTimer,viewportTimer,hovered,input,lastSelection='',captionOn=false,captionLast='';
@@ -24,7 +25,7 @@ function notification(text,result=false) {
   }
 }
 function report(){notification(`Translated ${completed} paragraphs${failed?`; ${failed} failed. Restore and retry after checking your agent.`:''}`);}
-const visibility=new IntersectionObserver(entries=>{for(const entry of entries)if(entry.isIntersecting){visibility.unobserve(entry.target);enqueue(entry.target);}},{rootMargin:'600px 0px'});
+const visibility=new IntersectionObserver(entries=>{if(entries.some(entry=>entry.isIntersecting))viewportChanged();},{rootMargin:'600px 0px'});
 function enqueue(element) {if(!active || !element.isConnected)return;const state=states.get(element);if(state?.status==='pending'||state?.status==='done'||state?.status==='error')return;queue.add(element);scheduleDrain();}
 function viewportChanged(){if(active && !viewportTimer)viewportTimer=setTimeout(()=>{viewportTimer=undefined;if(active)scan();},120);}
 addEventListener('resize',viewportChanged,{passive:true});
@@ -49,19 +50,24 @@ function scan() {
       const current=serialize(element).text;
       if(current!==state.text){restoreElement(element);states.delete(element);}
     }
+    const wanted=new Set();
     for(const root of roots) {
       const eligible=candidates(root,pageRule(config,location.href));
-      // A short article can fill all configured batches immediately. Larger
-      // documents retain viewport loading instead of submitting the whole site.
-      const eager=eligible.length<=32 && eligible.reduce((sum,el)=>sum+sourceNodes(el).reduce((n,node)=>n+(node.textContent?.length || 0),0),0)<=12000;
-      for(const element of eligible)if(!states.has(element)) {
-        const box=element.getBoundingClientRect();
-        if(eager || box.bottom>-600 && box.top<innerHeight+600)enqueue(element);else visibility.observe(element);
+      const measured=eligible.map(element=>({element,...bounds(element),characters:sourceNodes(element).reduce((sum,node)=>sum+(node.textContent?.length || 0),0)}));
+      const eager=eligible.length<=32 && measured.reduce((sum,item)=>sum+item.characters,0)<=12000;
+      const window=new Set(readingWindow(measured,{height:innerHeight,batchSize:config.batchSize,concurrency:config.concurrency,eager}).map(item=>item.element));
+      for(const element of eligible){
+        if(window.has(element)){wanted.add(element);visibility.unobserve(element);if(!states.has(element))enqueue(element);}
+        else if(!states.has(element))visibility.observe(element);
       }
       for(const element of root.querySelectorAll('*'))if(element.shadowRoot)addRoot(element.shadowRoot);
     }
+    // A jump in reading position retires unsent prefetch work. Active requests
+    // remain bounded by the engine and keep their original result guards.
+    for(const element of queue)if(!wanted.has(element))queue.delete(element);
   }catch(error){notification(error.message);}
 }
+function bounds(element){const {top,bottom}=element.getBoundingClientRect();return {top,bottom};}
 function scheduleDrain() {
   if(drainScheduled)return;
   drainScheduled=true;
@@ -70,6 +76,8 @@ function scheduleDrain() {
   queueMicrotask(()=>{drainScheduled=false;drain();});
 }
 function drain() {
+  const ordered=viewportOrder([...queue].filter(element=>element.isConnected).map(element=>({element,...bounds(element)})),innerHeight);
+  queue.clear();for(const item of ordered)queue.add(item.element);
   let planned=[];
   if(!processing && queue.size<=32){
     const items=[...queue].map(element=>({element,text:serialize(element).text}));
