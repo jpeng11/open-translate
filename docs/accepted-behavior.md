@@ -24,7 +24,7 @@ These are three incomplete reference observations, not confirmed vendor bugs or 
 
 ## Independent visual identity
 
-The interface uses our geometric paired-bracket mark, ink sidebar, teal actions, warm paper surfaces, numbered workspace tools and linear popup task list. Light/dark palettes share spacing, typography, controls, focus states and status handling. The reference popup's pink palette, proportions, control arrangement and imitation-specific CSS have been removed. Product copy is our own; there are no vendor logos, copied interface assets or proprietary runtime bundles.
+The interface uses our original open-globe mark, ink sidebar, teal actions, warm paper surfaces, numbered workspace tools and linear popup task list. Light/dark palettes share spacing, typography, controls, focus states and status handling. The reference popup's pink palette, proportions, control arrangement and imitation-specific CSS have been removed. Product copy is our own; there are no vendor logos, copied interface assets or proprietary runtime bundles.
 
 Rare UI navigation, progress and orb components retain their separate attribution and license. Research references remain in technical documentation for transparent provenance. These concrete design choices establish our own identity; they are not a legal opinion about similarity or trademark clearance.
 

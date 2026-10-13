@@ -154,7 +154,7 @@ That command assumes URL/model environment variables are already set. Arbitrary 
 
 - One agent call per nonempty batch, with up to 32 input items and 20,000 input characters. Empty/whitespace-only strings are preserved locally.
 - Each item has a stable integer ID. Returned items can be reordered; missing, duplicate and unknown IDs are rejected.
-- Inline HTML tags and numeric placeholders are masked before sending text to the agent. Lost, duplicated or malformed protected tokens fail the batch instead of rendering damaged markup.
+- The OpenAI backend masks inline tags and numeric placeholders and rejects changed tokens. AGY keeps those tokens and extension glossary markers locally, translates identified text fragments with paragraph context, and restores the original structure itself. Missing, duplicate or unknown fragment IDs still reject the result. Internal calls contain at most 32 fragments and share one job timeout; only a failed chunk is retried once.
 - No additional translation cache is written to disk. The extension may use its own cache.
 - Bridge access requires a query token or `Authorization: Bearer` header. The query form works with the extension's Custom API URL field.
 - Access logs are disabled, and upstream error bodies are not echoed to clients. The startup URL contains the bridge token; keep it private.

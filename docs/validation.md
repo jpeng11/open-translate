@@ -4,6 +4,12 @@ Acceptance date: 2026-10-12. The current product follows the [accepted behavior 
 
 The full functional acceptance at commit `775d87e` used implementation SHA-256 `959eda573d5da737ad0daa5926ca4631e011958af8310004a12033ee92b2b2df`. The Linux Chromium bundle is `2e9f0a1031df4b235bcc5be95cfe7d46058c01132d5d95118871b7f716a90452`; the Mac bundle is `176e45849b428105e5b7ec09e54d9f012c9b9129639dcb6d6d9ee8b5b38f0b7d`. They contain the same implementation inputs; platform-produced bundle bytes differ and are separately recorded.
 
+## AGY rich-text fix (2026-10-13)
+
+The active Mac bridge uses AGY CLI 1.3.2 with `--model gemini-3.8-flash-low`. The previous 977-word Wikipedia benchmark failed when the model changed formatting markers. AGY now translates context-linked text fragments and reconstructs formatting locally; strict item validation still rejects incomplete results. The 66 Node and 46 Python tests pass, including seven new fragment regressions.
+
+Two uncached actual Chromium → bridge → AGY runs translated all 16 paragraphs of the same 977-word sample, retaining all 70 links and supported formatting, and restoring the exact source DOM. The isolated bridge finished in 57.952 seconds (first result 6.386 seconds); after restarting the actual bridge with its existing model, token and speech settings, it finished in 45.419 seconds (first result 5.259 seconds). These remain far above the requested 1–2 second full-page target. [Source-bound reports](acceptance/agy-formatting.json) record the Python bridge hash separately from the unchanged extension build hash. Earlier broad regression reports remain historical.
+
 ## Logo update
 
 The subsequent logo-only update replaces the original bracket mark with an open globe, adds tab favicons, and updates the README images and sharing artwork. All four browser packages built successfully. All five existing UI/localization tests passed, covering light/dark themes, narrow layouts and six languages. Manifest PNG dimensions and bytes match the source artwork in every package; both favicon formats and the in-page mark decode successfully. Updated screenshots were visually reviewed. See the [current UI evidence](acceptance/ui.json) and [artwork source and export instructions](visual-identity.md).

@@ -10,17 +10,17 @@ The content script discovers visible leaf paragraphs, preserves inline markup us
 
 The service worker owns credentials and validates sender contexts. Content scripts receive only reading preferences. A Chrome offscreen document owns an actual dedicated engine worker; the worker performs long provider and speech requests, with heartbeat messages keeping reply channels available. A bounded queue, in-flight deduplication, memory cache and optional IndexedDB cache are shared across tabs. Changing settings clears the cache. Site rules select content and translation languages; the configured endpoint cannot be overridden by webpage messages.
 
-The workspace parses documents with local DOM/ZIP libraries. PDF.js extracts text and renders one page on demand; scanned pages use Tesseract. PDF-lib exports rasterized originals and translated overlays. OCR workers, WebAssembly and three language models ship inside the package. SRT/VTT/ASS import/export retains timing; preview uses native text tracks. Live capture uses explicit browser permissions, independent 15-second MediaRecorder chunks and the configured transcription endpoint.
+The workspace parses documents with local DOM/ZIP libraries. PDF.js extracts text and renders one page on demand; scanned pages use Tesseract. PDF-lib retains vector original pages in bilingual exports and builds translated pages from page backgrounds plus searchable text. OCR workers, WebAssembly and three language models ship inside the package. SRT/VTT/ASS import/export retains timing; preview uses native text tracks. Live capture uses explicit browser permissions, independent 2–5 second PCM WAV chunks, speech-pause detection and the configured transcription endpoint.
 
 ## Optional bridge request flow
 
 1. The extension selects text, preserves inline DOM content using placeholders, and sends a JSON batch to `POST /translate`.
 2. The local HTTP server checks its access token, browser origin, body size and request schema.
 3. The adapter skips blank items and gives each remaining item its original zero-based index as an ID.
-4. Numeric placeholders and inline tags are replaced with per-request opaque markers. The original-to-marker map remains in memory.
+4. For the OpenAI bridge backend, numeric placeholders and inline tags are replaced with opaque markers. AGY rich-text jobs instead keep tags, numeric placeholders and extension glossary tokens entirely in local memory. The CLI receives identified text fragments with read-only paragraph context; it does not copy formatting tokens.
 5. The OpenAI backend sends a nonstreaming Chat Completions request to the configured endpoint. The AGY backend sends the same translation instructions and job JSON through the CLI stdin protocol. The system prompt describes the translation contract; the user message carries source language, target language and items as JSON data.
 6. The endpoint response must contain a JSON translation object in `choices[0].message.content`; AGY returns it in the terminal event's `structured_output`. The bridge validates count, IDs, language codes, nonempty output and preservation of protected tokens.
-7. It restores protected markup, orders results by the original request, and returns the extension's response schema. The extension handles final rendering.
+7. It restores protected markup, orders results by the original request, and returns the extension's response schema. AGY fragment results are checked for exact IDs, nonempty text and absence of introduced formatting, then assembled into the original structure with boundary whitespace retained. Incomplete chunks never produce a partial success. The extension handles final rendering.
 
 ## Extension-facing API
 
@@ -54,7 +54,7 @@ Malformed requests return 400/413/415. Auth failures return 401/403. Upstream pr
 {"error":{"code":"placeholder_mismatch","message":"Agent changed protected markup; retry with a more reliable model"}}
 ```
 
-The OpenAI-compatible backend performs no automatic provider retries. AGY allows one fresh-session recovery for malformed output or operational-tool events, sharing the original deadline; authentication and quota failures are not retried. Provider billing remains the endpoint's responsibility.
+The OpenAI-compatible backend performs no automatic provider retries. AGY allows one fresh-session recovery per failed call for malformed output or operational-tool events. Rich-text calls contain at most 32 text fragments; all chunks and retries share the original job deadline. Completed chunks are not repeated when a later chunk retries; authentication and quota failures are not retried. Provider billing remains the endpoint's responsibility.
 
 ## Agent-facing API
 
@@ -93,6 +93,10 @@ A batch launches the configured `agy` executable with stdin/output `stream-json`
 The bridge accepts exactly one successful terminal result, permits only its built-in final-output `finish` tool event, rejects other/unknown tool events, and applies the shared ID/markup validation. Authentication, quota and timeout failures become bridge errors without forwarding CLI diagnostics. A timeout kills the process group on macOS/Linux. The bridge reads at most 2 MiB of captured stdout after the run; temporary output files may grow until the process exits or times out.
 
 Each process runs in a fresh temporary directory containing only our declarative translation profile. The profile selects `finish` for structured completion, opts out of inherited customizations and disables subagent invocation and automatic command execution. It is selected explicitly with `--agent`; slash command expansion is disabled. In AGY 1.3.2, the startup envelope still advertises the default tool list, so these settings are not treated as an execution barrier. It does not resume a conversation. User-level AGY settings, credentials, permissions, MCP tools and hooks remain applicable. Rejecting a reported tool event is output validation, not a tool-execution barrier. The bridge does not change global CLI configuration or persist a translation cache; the CLI and provider may keep their own history.
+
+## Rich-text completeness and model quality
+
+AGY formatting no longer depends on copying opaque tokens. Text split across links or styled runs is translated as separate items with its original paragraph supplied as context. This preserves every requested slot and the exact original formatting sequence, but phrase boundaries can affect fluency; structural completeness is not a guarantee of linguistic quality. Model timeouts, refusal, missing IDs or repeated invalid responses still fail explicitly. The direct OpenAI endpoint and OpenAI bridge retain their existing strict token-validation path.
 
 ## Scope of validation
 
