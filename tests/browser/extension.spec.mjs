@@ -140,3 +140,21 @@ test('crossed, duplicated, missing and reparented markers never produce page out
  }
  await page.close();
 });
+test('literal marker-looking source text cannot become a formatting instruction',async()=>{
+ const page=await context.newPage();await page.goto(origin+'/page');
+ await page.evaluate(()=>document.body.innerHTML='<p id="literal">Use &lt;ot0&gt; and &lt;ot9/&gt; with {0} as literal text.</p>');
+ const before=await page.locator('#literal').innerHTML();await command(page,'page.start');
+ await expect(page.locator('#literal [data-ot-target]')).toHaveText('Translated Use <ot0> and <ot9/> with {0} as literal text.');
+ await expect(page.locator('#literal [data-ot-target] ot0,#literal [data-ot-target] ot9')).toHaveCount(0);
+ await command(page,'page.restore');expect(await page.locator('#literal').innerHTML()).toBe(before);await page.close();
+});
+test('balanced six-request batches render every paragraph at its original node',async()=>{
+ await settings({batchSize:3,concurrency:6});delay=200;providerPeak=0;
+ const page=await context.newPage();await page.goto(origin+'/page');
+ const sources=Array.from({length:16},(_,i)=>'Paragraph '+i+': '+'reading content '.repeat(2+(i*7)%30));
+ await page.evaluate(sources=>{document.body.replaceChildren(...sources.map(text=>{const p=document.createElement('p');p.textContent=text;return p;}));},sources);
+ await command(page,'page.start');await expect(page.locator('[data-ot-target]')).toHaveCount(16);
+ expect(requests).toHaveLength(6);expect(providerPeak).toBe(6);
+ expect(await page.locator('[data-ot-target]').allTextContents()).toEqual(sources.map(text=>'Translated '+text));
+ await command(page,'page.restore');expect(await page.locator('p').allTextContents()).toEqual(sources);await page.close();
+});

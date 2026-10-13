@@ -22,6 +22,8 @@ Approved direction on 2026-10-12: preserve the recommended behavior differences 
 
 These are three incomplete reference observations, not confirmed vendor bugs or a claim of matching behavior. The historical 36-checkpoint comparison remains 28 matched, 5 different, 3 reference-unresolved. Its source/bundle hashes describe the historical build only. Later source changes must not inherit that evidence as current parity.
 
+Translated sibling phrases may change order to follow the target language's grammar. Each original link and formatting token must still occur exactly once, with its original attributes, pair and parent relationship. Crossed tags, omitted or duplicated markers, and moving a child outside its original formatting parent are rejected. Checks compare per-paragraph link and formatting multisets rather than requiring translated words to retain source-language order. This clarifies preservation; it does not permit dropping formatting to obtain faster timings.
+
 ## Independent visual identity
 
 The interface uses our original open-globe mark, ink sidebar, teal actions, warm paper surfaces, numbered workspace tools and linear popup task list. Light/dark palettes share spacing, typography, controls, focus states and status handling. The reference popup's pink palette, proportions, control arrangement and imitation-specific CSS have been removed. Product copy is our own; there are no vendor logos, copied interface assets or proprietary runtime bundles.
