@@ -1,13 +1,13 @@
 {
   "schema": 1,
   "suite": "media",
-  "testedAt": "2026-10-13T16:15:00.468Z",
-  "implementationSha256": "e3afb7ae177858dafe951de046357bd3ea5fb47748b5f1fdfc2e42e24d9f7629",
+  "testedAt": "2026-10-13T20:32:54.887Z",
+  "implementationSha256": "b51f01c0f74ad7304b639a4001314efffa6619dab86ec9c8fb8bff432c186c48",
   "buildEvidence": {
     "schema": 1,
     "browser": "chrome",
-    "implementationSha256": "e3afb7ae177858dafe951de046357bd3ea5fb47748b5f1fdfc2e42e24d9f7629",
-    "bundleSha256": "54b0173fefee66aa6e141bde98755273b2192f09531e81a104a949a9c000beb2"
+    "implementationSha256": "b51f01c0f74ad7304b639a4001314efffa6619dab86ec9c8fb8bff432c186c48",
+    "bundleSha256": "b469438a4a351fc6442860b16ea61bf616f427134c1a3c4a5ffa7e98e8455f86"
   },
   "testInputsSha256": "a285661b985873128793c1fb12f9f246b4282e1f6c6f95b406d21dcd84fff600",
   "status": "passed",
@@ -216,7 +216,7 @@
       "evidence": {
         "runner": "playwright",
         "name": "live AudioWorklet automatically emits complete low-latency WAV chunks",
-        "durationMs": 3671
+        "durationMs": 3651
       }
     },
     {
@@ -225,7 +225,7 @@
       "evidence": {
         "runner": "playwright",
         "name": "downloaded French OCR initializes safely and repeats from offline model cache",
-        "durationMs": 1674
+        "durationMs": 1744
       }
     },
     {
@@ -234,7 +234,7 @@
       "evidence": {
         "runner": "playwright",
         "name": "dynamic open-shadow captions translate and supplied sidecar timing survives",
-        "durationMs": 2113
+        "durationMs": 2094
       }
     },
     {
@@ -243,7 +243,7 @@
       "evidence": {
         "runner": "playwright",
         "name": "screen subtitle fallback captures visible text locally and releases sharing tracks",
-        "durationMs": 3269
+        "durationMs": 3193
       }
     },
     {
@@ -252,7 +252,7 @@
       "evidence": {
         "runner": "playwright",
         "name": "screen OCR preset and preview drag select the intended region and persist",
-        "durationMs": 4135
+        "durationMs": 4163
       }
     },
     {
@@ -261,7 +261,7 @@
       "evidence": {
         "runner": "playwright",
         "name": "CJK and mixed-language OCR translate colored images and preserve detailed backgrounds on export",
-        "durationMs": 3833
+        "durationMs": 3900
       }
     },
     {
@@ -270,7 +270,7 @@
       "evidence": {
         "runner": "playwright",
         "name": "live permission decline, silent AudioWorklet input and browser-ended sharing recover cleanly",
-        "durationMs": 5964
+        "durationMs": 6054
       }
     },
     {
@@ -279,7 +279,7 @@
       "evidence": {
         "runner": "playwright",
         "name": "native overlapping multiline RTL captions toggle, reselect tracks and follow fullscreen",
-        "durationMs": 2331
+        "durationMs": 2337
       }
     },
     {
@@ -288,7 +288,7 @@
       "evidence": {
         "runner": "playwright",
         "name": "screen OCR retries failed translation, maps letterboxed preview drag and stops on capture end",
-        "durationMs": 5368
+        "durationMs": 5407
       }
     }
   ],

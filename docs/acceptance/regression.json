@@ -2,56 +2,56 @@
   "schema": 1,
   "suite": "regression",
   "status": "passed",
-  "testedAt": "2026-10-13T16:14:00.463Z",
-  "implementationSha256": "e3afb7ae177858dafe951de046357bd3ea5fb47748b5f1fdfc2e42e24d9f7629",
-  "verificationSha256": "f4e9805bfdc3938c3d00be82d7936e5a4af8cc03d427cc93738a9242204acaac",
+  "testedAt": "2026-10-13T20:32:20.014Z",
+  "implementationSha256": "b51f01c0f74ad7304b639a4001314efffa6619dab86ec9c8fb8bff432c186c48",
+  "verificationSha256": "2fbfaddd900894f8be1165c28b36ef0ec72e3fb4fe13ebfdfc4c8b7185c51eff",
   "buildEvidence": {
     "schema": 1,
     "browser": "chrome",
-    "implementationSha256": "e3afb7ae177858dafe951de046357bd3ea5fb47748b5f1fdfc2e42e24d9f7629",
-    "bundleSha256": "54b0173fefee66aa6e141bde98755273b2192f09531e81a104a949a9c000beb2"
+    "implementationSha256": "b51f01c0f74ad7304b639a4001314efffa6619dab86ec9c8fb8bff432c186c48",
+    "bundleSha256": "b469438a4a351fc6442860b16ea61bf616f427134c1a3c4a5ffa7e98e8455f86"
   },
   "results": [
     {
       "id": "node",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 827,
-      "logSha256": "1df814cd8d93d00df1559f0cc7450c4814d5fa4f351736e65b7d8ae4951be156"
+      "durationMs": 856,
+      "logSha256": "2ccd4d8fea58e88168180097be05f05964841bcdd2d05e549f3bfd44bba5e593"
     },
     {
       "id": "python",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 2115,
-      "logSha256": "b8224d3f7d06d174510a451facbdff09bc8eea54d1ec7f25eab77321a2991718"
+      "durationMs": 2030,
+      "logSha256": "3fdfd43a7f22222872716950fd89d39e713ea5639a7954e865aa77e4208cbeed"
     },
     {
       "id": "build",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 10749,
+      "durationMs": 11436,
       "logSha256": "2e40c19f734ec4e440db36ed89837603052f7073da7e6711985e6751ebcdb008"
     },
     {
       "id": "chromium",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 118563,
-      "logSha256": "b3fca482136507dd496d46ce8bd0d8cd4189f63f474aef53696721d0cfc3af09"
+      "durationMs": 133962,
+      "logSha256": "5c18901dbdd73feb96bc1259e4591c6c6ee5ef18fbf72643027654e6f9014d6c"
     },
     {
       "id": "firefox",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 3184,
+      "durationMs": 3131,
       "logSha256": "924f41693f955e6f50bdbb54b8b9f51359d73f7e68128ac828ee5e74350eeb13"
     }
   ],
   "browser": {
-    "startTime": "2026-10-13T16:11:59.135Z",
-    "duration": 117805.284,
-    "expected": 63,
+    "startTime": "2026-10-13T20:30:03.391Z",
+    "duration": 133228.544,
+    "expected": 68,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0,
@@ -278,6 +278,31 @@
       },
       {
         "title": "final full-context tree recovery preserves nested nodes and exact restoration",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "long-page prefetch fills configured concurrency but stops before submitting the entire page",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "restoring a long page stops unsent prefetch and stale results",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "scroll jumps replace unsent prefetch with the current reading position",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "an omitted tree leaf is linked only when its exact translated phrase has a unique position",
+        "file": "extension.spec.mjs",
+        "status": "passed"
+      },
+      {
+        "title": "layout growth keeps already visible paragraphs queued beyond the prefetch window",
         "file": "extension.spec.mjs",
         "status": "passed"
       },
