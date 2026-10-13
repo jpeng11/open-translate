@@ -19,8 +19,9 @@ async function engineCall(type,job,config) {
   const contexts=await api.runtime.getContexts({contextTypes:['OFFSCREEN_DOCUMENT'],documentUrls:[api.runtime.getURL('engine.html')]});
   if(!contexts.length) {
     creating ||= api.offscreen.createDocument({url:'engine.html',reasons:['WORKERS'],justification:'Keep the user-owned translation engine available during long local model requests.'}).finally(()=>creating=null);
-    await creating;
   }
+  // getContexts can see the document before its message listener has loaded.
+  if(creating)await creating;
   const response=await api.runtime.sendMessage({destination:'engine',type,job,settings:config});
   if(!response?.ok)throw new TranslationError(response?.error?.code || 'engine_unavailable',response?.error?.message || 'Translation engine is unavailable.');
   return response.result;
