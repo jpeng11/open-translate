@@ -1,5 +1,57 @@
 # Translation performance
 
+## Release regression and current model catalogue
+
+Release implementation `c68d307` also retains already-visible queued paragraphs when inserting translations changes page height. It passes the 5,105-paragraph scroll-to-tail fixture and a dedicated no-scroll layout-growth regression. Its fresh DeepSeek checks completed the 977-word Chinese page in **5.88 s** and the 4,970-word Chinese page in **26.01 s** (batch 3 / concurrency 6). The complete multilingual matrix below retains its original per-run build identities.
+
+The same release was screened against all **57 route IDs** advertised by Magpie: **35 passed**, **22 failed or exceeded the 45-second translation deadline**, and **3 completed within five seconds**. Each route translated the same original-format 977-word English page into Chinese. Two different providers could run concurrently, so these observations do not establish an isolated model ranking.
+
+| Route completing within 5 seconds | Complete page |
+| --- | ---: |
+| `opencode-go/deepseek-v4.1-flash` | 3.24 s |
+| `opencode-go/gpt-6-luna` | 4.13 s |
+| `group/auto-glm-5-3-flash` | 4.21 s |
+
+All successful and failed attempts, requested reasoning levels and build hashes are in the [current catalogue record](acceptance/scheduling-catalog.json). Routing aliases are reported as advertised; their underlying models were not independently verified. The checks cover paragraph completion, expected script, formatting, links and exact source restoration, not sentence-level semantic quality.
+
+Two further sequential, isolated repeats were run after the catalogue for DeepSeek and the fastest other non-group route. They used the same settings and clean profiles. The initial release DeepSeek result of 5.88 s above is also retained; these repeats are not a latency guarantee.
+
+| Route | Isolated repeat 1 | Isolated repeat 2 |
+| --- | ---: | ---: |
+| `opencode-go/deepseek-v4.1-flash` | 6.21 s | 3.89 s |
+| `opencode-go/gpt-6-luna` | 10.68 s | 4.09 s |
+
+These release measurements do not establish a consistent five-second complete-page result or meet the earlier one-to-two-second target.
+
+## Bounded long-page prefetch
+
+The long-page scheduler now keeps a bounded amount of nearby work ready and prioritizes the current viewport. Previously, the configured six workers often received only enough paragraphs for two or three requests. Scrolling replaces unsent work from the old reading position; restoring stops further submission and blocks late DOM insertion. Model prompts and the configured request limits are unchanged.
+
+A fresh 4,970-word English-to-Chinese control took **68.33 s** before the change and **21.17 s** afterward (3.23× in these two runs). Measured request concurrency went from a peak of 3 / average 1.66 to a peak of 6 / average 4.18. Both runs retained all 55 paragraphs and 510 links. Upstream load and prompt caching were not controlled.
+
+The matrix below uses DeepSeek V4.1 Flash, batch size 3, concurrency 6, thinking disabled, and the same formatted article snapshots. 15/15 cases have a passing result: 13 on `d0f721c`, plus Japanese 5k and 10k reruns on `29ef304` after a narrow recovery fix and a recording-script fix. Each final result ran once in a fresh Chromium profile with the application cache disabled.
+
+| English words | Chinese | French | Spanish | Japanese | Korean |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 4,970 | 21.17 s | 19.52 s | 19.90 s | 28.51 s | 26.11 s |
+| 9,983 | 42.01 s | 43.48 s | 39.78 s | 47.20 s | 56.84 s |
+| 15,031 | 60.49 s | 63.42 s | 61.69 s | 72.99 s | 78.45 s |
+
+The separate 977-word Chinese regression passed in **4.44 s**. Long-page times include scroll-triggered scheduling, model work and DOM insertion; they are complete-page timings, not time to first output.
+
+The window targets two configured request waves, capped at 64 paragraphs and 48,000 source characters per document or open shadow root. Already visible paragraphs remain eligible above that budget. Nearby offscreen text can be sent before the user scrolls to it; a stationary reader does not automatically submit the whole long document.
+
+Full source/build hashes, first-output times, request activity, earlier recorded timings and limitations are in the [scheduling measurement record](acceptance/scheduling-performance.json). Historical comparisons are not a controlled speedup estimate. Completion and structural checks do not certify translation meaning.
+
+The final recovery also restores an omitted plain leaf reference when its model-provided translation occurs exactly once, without overlap, in plain text of the original parent. The translated characters remain unchanged; the result must pass the original full-tree and token checks. Ambiguous or missing matches remain errors.
+
+Additional recovery-build (`29ef304`) profile probes (single runs; the main matrix above retains batch 3 / concurrency 6):
+
+| Sample | Batch / concurrency | Complete page |
+| --- | --- | ---: |
+| 977 English words → Chinese | 2 / 8 | 4.22 s |
+| 4,970 English words → Chinese | 2 / 8 | 19.13 s |
+
 ## Long-article format recovery
 
 The extension now keeps valid results and repairs each paragraph that fails native-format validation individually. The first repair includes the complete source paragraph, its failed draft and the exact marker inventory. The final attempt discards the draft and translates a structured tree with stable node IDs. A complete native-markup paragraph wrapped in the root string is also accepted if it independently passes the full original preservation checks. Complete sibling nodes may move for target grammar. Duplicate or missing references, changed parents, invented nodes and HTML text are rejected before decoding back to native markers. At most two repair attempts share the original batch deadline and engine concurrency slot. No markers are guessed or appended locally; every repaired result must pass the same token, nesting and parent checks before rendering. A completed model response with malformed translation JSON or invalid IDs is re-requested paragraph by paragraph without guessing partial matches. Refusals, transport failures and still-invalid repair responses remain errors.
@@ -21,9 +73,9 @@ Request-level validation and repair counts are in the [format-recovery measureme
 
 Manual spot checks of recovered Chinese and Japanese paragraphs found all source sentences represented, with some literal or awkward Japanese phrasing. Formatting validation does not prove linked-phrase alignment or semantic accuracy.
 
-The target language is now named explicitly in system instructions. For long English prose, Chinese, Japanese and Korean output receives a narrow writing-system check. Wrong-language drafts are discarded and regenerated from the source within the same two-attempt limit. Short names and unknown source languages are exempt; this is not general language identification. These changes address failed translation validation; long-page throughput remains limited. The original viewport scheduling and full-paragraph translation path remain in use.
+The target language is now named explicitly in system instructions. For long English prose, Chinese, Japanese and Korean output receives a narrow writing-system check. Wrong-language drafts are discarded and regenerated from the source within the same two-attempt limit. Short names and unknown source languages are exempt; this is not general language identification. These changes address failed translation validation; long-page throughput remains limited. At that stage, the original viewport scheduling and full-paragraph translation path remained in use.
 
-The final-build 977-word Chinese regression passed in 3.66 seconds. This is a separate fresh-profile run; it is not a claim of sustained sub-five-second performance.
+The format-recovery build’s 977-word Chinese regression passed in 3.66 seconds. This is a separate fresh-profile run; it is not a claim of sustained sub-five-second performance.
 
 ## Baseline before format recovery: 5,000 / 10,000 / 15,000 words
 
@@ -118,7 +170,7 @@ node scripts/benchmark-page.mjs /private/deepseek.json 3 formatted 6 dist/benchm
 
 ### Other-model validation after the five-second gate
 
-The final frozen implementation was screened against all **57 model/route IDs** advertised by the configured Magpie catalogue, including six routing groups. **25 completed** within the 45-second test deadline and passed structural checks; **32 failed or timed out**. Only DeepSeek V4.1 Flash completed within five seconds in that screening run. These are endpoint-route observations with differing model capabilities, load and requested reasoning levels, not a controlled ranking of the underlying models.
+The earlier five-second qualification build was screened against all **57 model/route IDs** advertised by the configured Magpie catalogue, including six routing groups. **25 completed** within the 45-second test deadline and passed structural checks; **32 failed or timed out**. Only DeepSeek V4.1 Flash completed within five seconds in that screening run. These are endpoint-route observations with differing model capabilities, load and requested reasoning levels, not a controlled ranking of the underlying models.
 
 | Route | Complete page | First translated paragraphs |
 | --- | ---: | ---: |
