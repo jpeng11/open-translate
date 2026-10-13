@@ -274,3 +274,17 @@ test('an omitted tree leaf is linked only when its exact translated phrase has a
   await command(page,'page.restore');expect(await page.locator('#aligned').innerHTML()).toBe(original);await page.close();
  }
 });
+
+
+test('layout growth keeps already visible paragraphs queued beyond the prefetch window',async()=>{
+ await settings({batchSize:1,concurrency:1});delay=200;
+ const page=await context.newPage();await page.goto(origin+'/page');await page.setViewportSize({width:1000,height:900});
+ await page.evaluate(()=>{document.body.style.overflowAnchor='none';document.body.innerHTML=Array.from({length:120},(_,i)=>`<p id="growth-${i}" style="margin:0;line-height:20px">Growth paragraph ${i}: enough original reading material.</p>`).join('');});
+ const initiallyVisible=await page.locator('p').evaluateAll(nodes=>nodes.filter(n=>n.getBoundingClientRect().bottom<=innerHeight).map(n=>n.id));
+ const last=page.locator('#'+initiallyVisible.at(-1));
+ await command(page,'page.start');
+ await expect(last.locator('[data-ot-target]')).toHaveCount(1,{timeout:20000});
+ expect(await last.evaluate(n=>n.getBoundingClientRect().top)).toBeGreaterThan(900);
+ expect(await page.evaluate(()=>scrollY)).toBe(0);
+ await command(page,'page.restore');await page.close();
+});

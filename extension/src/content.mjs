@@ -5,7 +5,7 @@ import {readingWindow,viewportOrder} from './page-window.mjs';
 import {CaptionReader,CaptionOverlay,captionRoots,installSubtitleSidecar} from './captions.mjs';
 const api=globalThis.browser || chrome;
 let config={},active=false,epoch=0,processing=0,drainScheduled=false,scanTimer,viewportTimer,hovered,input,lastSelection='',captionOn=false,captionLast='';
-const states=new Map(),queue=new Set(),roots=new Set();let completed=0,failed=0,lastError='';
+const states=new Map(),queue=new Set(),roots=new Set(),visibleQueue=new Set(),readingAnchors=new Map();let completed=0,failed=0,lastError='';
 const send=async message=>{const response=await api.runtime.sendMessage(message);if(!response?.ok)throw new Error(response?.error?.message || 'Open Translate is unavailable.');return response.result;};
 const translate=texts=>send({type:'translate',job:{source_lang:config.source || 'auto',target_lang:config.target || 'en',text_list:texts}});
 let host,panel;
@@ -54,6 +54,13 @@ function scan() {
     for(const root of roots) {
       const eligible=candidates(root,pageRule(config,location.href));
       const measured=eligible.map(element=>({element,...bounds(element),characters:sourceNodes(element).reduce((sum,node)=>sum+(node.textContent?.length || 0),0)}));
+      const visible=measured.filter(item=>item.bottom>=0 && item.top<=innerHeight).map(item=>item.element);
+      const anchors=readingAnchors.get(root);
+      if(visible.length && (!anchors || !visible.some(element=>anchors.has(element)))){
+        readingAnchors.set(root,new Set(visible));
+        for(const element of visibleQueue)if(element.getRootNode()===root)visibleQueue.delete(element);
+      }
+      for(const element of visible)if(!states.has(element))visibleQueue.add(element);
       const eager=eligible.length<=32 && measured.reduce((sum,item)=>sum+item.characters,0)<=12000;
       const window=new Set(readingWindow(measured,{height:innerHeight,batchSize:config.batchSize,concurrency:config.concurrency,eager}).map(item=>item.element));
       for(const element of eligible){
@@ -64,7 +71,9 @@ function scan() {
     }
     // A jump in reading position retires unsent prefetch work. Active requests
     // remain bounded by the engine and keep their original result guards.
-    for(const element of queue)if(!wanted.has(element))queue.delete(element);
+    // Keep paragraphs the reader already saw when inserting translations pushes
+    // them below the viewport. A disjoint reading window releases that intent.
+    for(const element of queue)if(!element.isConnected || !wanted.has(element) && !visibleQueue.has(element)){queue.delete(element);visibleQueue.delete(element);}
   }catch(error){notification(error.message);}
 }
 function bounds(element){const {top,bottom}=element.getBoundingClientRect();return {top,bottom};}
@@ -85,7 +94,7 @@ function drain() {
   }
   while(active && queue.size && processing<(config.concurrency || 1)) {
     const currentEpoch=epoch;
-    const pending=planned.shift() || [];if(!pending.length){let chars=0;for(const element of queue){const length=serialize(element).text.length;if(pending.length && (pending.length>=(config.batchSize || 4) || chars+length>12000))break;pending.push(element);chars+=length;}}pending.forEach(el=>queue.delete(el));
+    const pending=planned.shift() || [];if(!pending.length){let chars=0;for(const element of queue){const length=serialize(element).text.length;if(pending.length && (pending.length>=(config.batchSize || 4) || chars+length>12000))break;pending.push(element);chars+=length;}}pending.forEach(el=>{queue.delete(el);visibleQueue.delete(el);});
     const work=pending.filter(el=>el.isConnected).map(element=>{const serialized=serialize(element);const state={element,serialized,text:serialized.text,status:'pending'};states.set(element,state);return state;});
     if(!work.length)continue;
     processing++;
@@ -108,7 +117,7 @@ async function start() {
   if(active || states.size)restore();
   active=true;completed=failed=0;lastError='';epoch++;addRoot(document);scan();return {active:true};
 }
-function restore(){active=false;epoch++;queue.clear();visibility.disconnect();for(const element of states.keys())restoreElement(element);states.clear();for(const root of roots)unwrapSegments(root);completed=failed=0;host?.remove();return {active:false};}
+function restore(){active=false;epoch++;queue.clear();visibleQueue.clear();readingAnchors.clear();visibility.disconnect();for(const element of states.keys())restoreElement(element);states.clear();for(const root of roots)unwrapSegments(root);completed=failed=0;host?.remove();return {active:false};}
 async function selection(text) {
   const selected=text || window.getSelection()?.toString() || lastSelection;
   if(!selected?.trim())throw new Error('Select some text first.');
