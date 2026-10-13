@@ -1,3 +1,4 @@
+import {domLayout,sameDomLayout,formatRepairPrompt} from './formatted-recovery.mjs';
 import {normalizeScreenRegion} from './screen-region.mjs';
 export const DEFAULTS = Object.freeze({
   provider: 'bridge', bridgeUrl: 'http://127.0.0.1:8765/translate', apiUrl: 'http://127.0.0.1:1234/v1',
@@ -105,6 +106,7 @@ export function protect(text, glossary=[], nonce=crypto.randomUUID().replaceAll(
   const domTag=token=>/^<\/?ot\d+\/?>$/.test(token);
   const tags=rawTokens.filter(token=>token.startsWith('<')&&!domTag(token));
   const domTags=rawTokens.filter(domTag).sort();
+  const layout=maskMarkup?null:domLayout(text);
   const placeholders=rawTokens.filter(token=>token.startsWith('{')).sort();
   let masked=maskMarkup?text.replace(markup,m=>put(m)):text;
   // Longest glossary phrases first. Tokens are opaque and must survive once.
@@ -123,6 +125,7 @@ export function protect(text, glossary=[], nonce=crypto.randomUUID().replaceAll(
     // pairing AND the original parent of every node before inserting anything.
     // Raw HTML and opaque glossary markers retain their stricter order check.
     if(JSON.stringify(translated.match(tokenPattern) || [])!==JSON.stringify(sequence) || (!maskMarkup && (JSON.stringify(translatedTokens.filter(token=>token.startsWith('<')&&!domTag(token)))!==JSON.stringify(tags) || JSON.stringify(translatedTokens.filter(domTag).sort())!==JSON.stringify(domTags) || JSON.stringify(translatedTokens.filter(token=>token.startsWith('{')).sort())!==JSON.stringify(placeholders)))) fail('placeholder_mismatch','Agent changed protected markup or terminology.');
+    if(layout && !sameDomLayout(layout,translated))fail('placeholder_mismatch','Agent changed inline formatting hierarchy.');
     for(const token of new Set(rawTokens))if(translated.split(token).length!==text.split(token).length)fail('placeholder_mismatch','Bridge changed protected markup. Try a smaller batch.');
     for (const [token,original] of tokens) {
       if (translated.split(token).length!==2) fail('placeholder_mismatch','Agent changed protected markup or terminology. Try a smaller batch.');
@@ -166,6 +169,20 @@ export async function bridgeJson(response) {
   const code=value?.error?.code;if(Object.hasOwn(messages,code))fail(code,messages[code]);
   fail('provider_http_'+response.status,`Translation service returned HTTP ${response.status}. Check URL, model, credentials and quota.`);
 }
+async function directEntries(items,messages,settings,fetcher,signal) {
+  const headers={'Content-Type':'application/json'}; if(settings.apiKey)headers.Authorization='Bearer '+settings.apiKey;
+  const body={model:settings.model,messages,stream:false};
+  if(settings.jsonMode)body.response_format={type:'json_object'};
+  // DeepSeek's Chat Completions API has a separate thinking switch. Some
+  // relays fit reasoning_effort=none to the lowest thinking level instead.
+  // Only translate an explicit user opt-out for these known model names.
+  if(settings.reasoningEffort==='none' && /(?:^|\/)deepseek-(?:v4(?:\.\d+)?-(?:flash|pro)|flash)$/i.test(settings.model)){body.thinking={type:'disabled'};body.temperature=0;}
+  else if(settings.reasoningEffort)body.reasoning_effort=settings.reasoningEffort;
+  const value=await responseJson(await fetcher(endpoint(settings.apiUrl),{method:'POST',headers,body:JSON.stringify(body),signal,credentials:'omit',redirect:'error'}));
+  const choice=value.choices?.[0];
+  if(!choice || ['length','content_filter','tool_calls','function_call'].includes(choice.finish_reason) || choice.message?.refusal || choice.message?.tool_calls?.length || choice.message?.function_call) fail('invalid_agent_response','Agent did not return a completed translation.');
+  return orderedResult(parseJson(choice.message?.content),items.map(i=>i.id));
+}
 export async function translateBatch(raw, settings, fetcher=fetch) {
   const job=validateJob(raw); const output=job.text_list.map(text=>({text,detected_source_lang:job.source_lang}));
   const pending=job.text_list.map((text,id)=>({text,id})).filter(i=>i.text.trim());
@@ -181,25 +198,37 @@ export async function translateBatch(raw, settings, fetcher=fetch) {
       if(!Array.isArray(value.translations)||value.translations.length!==items.length) fail('invalid_translation_batch','Bridge returned an incorrect item count.');
       entries=value.translations.map((item,index)=>({...item,id:items[index].id}));
     } else {
-      const headers={'Content-Type':'application/json'}; if(settings.apiKey)headers.Authorization='Bearer '+settings.apiKey;
-      const body={model:settings.model,messages:translationPrompt(job,items),stream:false};
-      if(settings.jsonMode)body.response_format={type:'json_object'};
-      // DeepSeek's Chat Completions API has a separate thinking switch. Some
-      // relays fit reasoning_effort=none to the lowest thinking level instead.
-      // Only translate an explicit user opt-out for these known model names.
-      if(settings.reasoningEffort==='none' && /(?:^|\/)deepseek-(?:v4(?:\.\d+)?-(?:flash|pro)|flash)$/i.test(settings.model)){body.thinking={type:'disabled'};body.temperature=0;}
-      else if(settings.reasoningEffort)body.reasoning_effort=settings.reasoningEffort;
-      const value=await responseJson(await fetcher(endpoint(settings.apiUrl),{method:'POST',headers,body:JSON.stringify(body),signal:controller.signal,credentials:'omit',redirect:'error'}));
-      const choice=value.choices?.[0];
-      if(!choice || ['length','content_filter','tool_calls','function_call'].includes(choice.finish_reason) || choice.message?.refusal || choice.message?.tool_calls?.length || choice.message?.function_call) fail('invalid_agent_response','Agent did not return a completed translation.');
-      entries=orderedResult(parseJson(choice.message?.content),items.map(i=>i.id));
+      entries=await directEntries(items,translationPrompt(job,items),settings,fetcher,controller.signal);
     }
-    entries.forEach((entry,index)=>{
-      const original=protectedItems[index];
+    const failed=[];
+    const accept=(original,entry)=>{
       const language=entry.detected_source_lang || job.source_lang;
       if(!/^[a-z][a-z0-9-]{0,34}$/i.test(language)) fail('invalid_translation_batch','Agent returned an invalid language code.');
       output[original.id]={text:original.protected.restore(entry.text),detected_source_lang:language};
+    };
+    entries.forEach((entry,index)=>{
+      const original=protectedItems[index];
+      try{accept(original,entry);}
+      catch(error){
+        // Only recover validated, extension-owned DOM markup. Transport errors,
+        // refusals and arbitrary malformed source/response schemas still fail.
+        if(settings.provider!=='openai' || error.code!=='placeholder_mismatch' || !domLayout(original.text))throw error;
+        failed.push({original,entry});
+      }
     });
+    // Repair individual failed paragraphs with full sentence context. Keep
+    // valid results, the original deadline and the engine concurrency slot.
+    for(const {original,entry} of failed){
+      let draft=entry.text;
+      for(let attempt=1;attempt<=2;attempt++){
+        const [repaired]=await directEntries([{id:original.id}],formatRepairPrompt(job,original,draft,attempt),settings,fetcher,controller.signal);
+        try{accept(original,repaired);break;}
+        catch(error){
+          if(error.code!=='placeholder_mismatch' || attempt===2)throw error;
+          draft=repaired.text;
+        }
+      }
+    }
     return {translations:output};
   } catch(error) {
     if(controller.signal.aborted) fail('translation_timeout','Translation timed out. Reduce batch size or increase the timeout.');

@@ -13,7 +13,7 @@ async function app(hash='home'){const page=await context.newPage();await page.go
 async function fileUpload(page,input,name,content,mimeType='application/octet-stream'){await page.locator(input).setInputFiles({name,mimeType,buffer:Buffer.from(content)});}
 async function downloaded(page,button){const result=page.waitForEvent('download');await page.locator(button).click();return readFile(await (await result).path());}
 test.beforeAll(async()=>{
- server=createServer(async(req,res)=>{res.setHeader('Access-Control-Allow-Origin','*');res.setHeader('Access-Control-Allow-Headers','*');if(req.method==='OPTIONS'){res.end();return;}if(req.url==='/page'){res.setHeader('Content-Type','text/html');res.end(html);return;}if(req.method==='GET'){res.writeHead(404);res.end();return;}let body='';for await(const chunk of req)body+=chunk; if(req.url==='/v1/audio/transcriptions'){res.setHeader('Content-Type','application/json');res.end(JSON.stringify({text:'Hello audio'}));return;}const value=JSON.parse(body);requests.push({path:req.url,authorization:req.headers.authorization,value});providerPeak=Math.max(providerPeak,++providerActive);res.once('finish',()=>providerActive--);if(delay)await new Promise(r=>setTimeout(r,delay));res.setHeader('Content-Type','application/json');if(bad){res.end(JSON.stringify({choices:[{message:{content:'bad JSON'}}]}));return;}const input=JSON.parse(value.messages.at(-1).content);const translations=input.items.map(item=>({id:item.id,text:translationOverride?translationOverride(item.text):'Translated '+item.text})).reverse();res.end(JSON.stringify({choices:[{finish_reason:'stop',message:{content:JSON.stringify({translations})}}]}));});
+ server=createServer(async(req,res)=>{res.setHeader('Access-Control-Allow-Origin','*');res.setHeader('Access-Control-Allow-Headers','*');if(req.method==='OPTIONS'){res.end();return;}if(req.url==='/page'){res.setHeader('Content-Type','text/html');res.end(html);return;}if(req.method==='GET'){res.writeHead(404);res.end();return;}let body='';for await(const chunk of req)body+=chunk; if(req.url==='/v1/audio/transcriptions'){res.setHeader('Content-Type','application/json');res.end(JSON.stringify({text:'Hello audio'}));return;}const value=JSON.parse(body);requests.push({path:req.url,authorization:req.headers.authorization,value});providerPeak=Math.max(providerPeak,++providerActive);res.once('finish',()=>providerActive--);if(delay)await new Promise(r=>setTimeout(r,delay));res.setHeader('Content-Type','application/json');if(bad){res.end(JSON.stringify({choices:[{message:{content:'bad JSON'}}]}));return;}const input=JSON.parse(value.messages.at(-1).content);const translations=input.items.map(item=>({id:item.id,text:translationOverride?translationOverride(item.text,input):'Translated '+item.text})).reverse();res.end(JSON.stringify({choices:[{finish_reason:'stop',message:{content:JSON.stringify({translations})}}]}));});
  await new Promise(r=>server.listen(0,'127.0.0.1',r));origin=`http://127.0.0.1:${server.address().port}`;profile=await mkdtemp(join(tmpdir(),'open-translate-browser-'));context=await chromium.launchPersistentContext(profile,{channel:'chromium',headless:true,ignoreDefaultArgs:['--disable-extensions'],args:['--no-sandbox',`--disable-extensions-except=${resolve('dist/chrome')}`,`--load-extension=${resolve('dist/chrome')}`]});worker=context.serviceWorkers()[0] || await context.waitForEvent('serviceworker');id=worker.url().split('/')[2];await settings();
 });
 test.afterAll(async()=>{await context?.close();await new Promise(r=>server?.close(r));await rm(profile,{recursive:true,force:true});});
@@ -157,4 +157,35 @@ test('balanced six-request batches render every paragraph at its original node',
  expect(requests).toHaveLength(6);expect(providerPeak).toBe(6);
  expect(await page.locator('[data-ot-target]').allTextContents()).toEqual(sources.map(text=>'Translated '+text));
  await command(page,'page.restore');expect(await page.locator('p').allTextContents()).toEqual(sources);await page.close();
+});
+
+test('dropped inline markers recover as a whole paragraph, preserving nested links, citations and exact source restoration',async()=>{
+ const page=await context.newPage();await page.goto(origin+'/page');
+ await page.evaluate(()=>document.body.innerHTML='<p id="recovery">Read <a href="https://example.com/guide">this <strong>guide</strong></a>.<sup><a href="#note">[7]</a></sup> Use <code>npm install</code>.</p><p id="valid">Already valid paragraph.</p>');
+ const original=await page.locator('#recovery').innerHTML();
+ translationOverride=(text,payload)=>payload.repair?'Traduit '+text.replace('guide','guide traduit'):'Traduit '+text.replace(/<\/?ot\d+\/?>/g,'');
+ await command(page,'page.start');await expect(page.locator('[data-ot-target]')).toHaveCount(2);
+ const translated=page.locator('#recovery > [data-ot-target]');
+ await expect(translated.locator('a')).toHaveCount(2);
+ await expect(translated.locator('a strong')).toHaveText('guide traduit');
+ await expect(translated.locator('sup a')).toHaveText('[7]');
+ await expect(translated.locator('code')).toHaveText('npm install');
+ const recovery=requests.map(r=>JSON.parse(r.value.messages.at(-1).content)).filter(p=>p.repair);
+ expect(recovery).toHaveLength(1);expect(recovery[0].items).toHaveLength(1);
+ expect(recovery[0].items[0].draft).not.toContain('<ot');
+ expect(recovery[0].items[0].required_markers.length).toBeGreaterThan(0);
+ expect((await command(page,'page.status')).failed).toBe(0);
+ await command(page,'page.restore');expect(await page.locator('#recovery').innerHTML()).toBe(original);await page.close();
+});
+
+test('restoring while format recovery is pending cannot reinsert translated DOM',async()=>{
+ const page=await context.newPage();await page.goto(origin+'/page');
+ await page.evaluate(()=>document.body.innerHTML='<p id="cancel-recovery">Cancelled recovery <b>words</b>.</p>');
+ const original=await page.locator('#cancel-recovery').innerHTML();delay=250;
+ translationOverride=(text,payload)=>payload.repair?'Traduit '+text.replace('guide','guide traduit'):'Traduit '+text.replace(/<\/?ot\d+\/?>/g,'');
+ await command(page,'page.start');
+ await expect.poll(()=>requests.some(r=>JSON.parse(r.value.messages.at(-1).content).repair)).toBe(true);
+ await command(page,'page.restore');await page.waitForTimeout(400);
+ await expect(page.locator('[data-ot-target]')).toHaveCount(0);
+ expect(await page.locator('#cancel-recovery').innerHTML()).toBe(original);await page.close();
 });
