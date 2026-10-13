@@ -2,7 +2,7 @@ import {normalizeScreenRegion} from './screen-region.mjs';
 export const DEFAULTS = Object.freeze({
   provider: 'bridge', bridgeUrl: 'http://127.0.0.1:8765/translate', apiUrl: 'http://127.0.0.1:1234/v1',
   apiKey: '', model: '', source: 'auto', target: 'en', inputTarget: 'en', mode: 'bilingual',
-  style: 'underline', batchSize: 4, concurrency: 1, timeout: 210, jsonMode: true,
+  style: 'underline', batchSize: 4, concurrency: 1, timeout: 210, jsonMode: true, reasoningEffort: '',
   autoTranslate: false, selection: false, hover: true, cache: false, glossary: [], rules: [],
   speechUrl: '', speechKey: '', speechModel: '', liveSegmentSeconds:3, liveVad:true, ocrLanguage: 'eng', captionSelector: '', screenCaptionRegion: Object.freeze({left:0,top:.7,width:1,height:.3})
 });
@@ -30,6 +30,7 @@ export function validateSettings(input) {
   for(const key of ['apiUrl','bridgeUrl','model','apiKey','speechUrl','speechKey','speechModel','ocrLanguage','captionSelector'])if(typeof value[key]!=='string' || value[key].length>16384)fail('configuration',`Invalid ${key}.`);
   for(const key of ['jsonMode','autoTranslate','selection','hover','cache','liveVad'])if(typeof value[key]!=='boolean')fail('configuration',`Invalid ${key}.`);
   if (!['bridge','openai'].includes(value.provider)) fail('configuration','Choose a supported provider.');
+  if (!['','none','low','medium','high'].includes(value.reasoningEffort)) fail('configuration','Invalid reasoning effort.');
   if (value.provider==='bridge') endpoint(value.bridgeUrl,'translate');
   else { endpoint(value.apiUrl); if (!value.model.trim()) fail('configuration','Enter your endpoint model name.'); }
   for (const name of ['source','target','inputTarget']) {
@@ -159,6 +160,7 @@ export async function translateBatch(raw, settings, fetcher=fetch) {
       const headers={'Content-Type':'application/json'}; if(settings.apiKey)headers.Authorization='Bearer '+settings.apiKey;
       const body={model:settings.model,messages:translationPrompt(job,items),stream:false};
       if(settings.jsonMode)body.response_format={type:'json_object'};
+      if(settings.reasoningEffort)body.reasoning_effort=settings.reasoningEffort;
       const value=await responseJson(await fetcher(endpoint(settings.apiUrl),{method:'POST',headers,body:JSON.stringify(body),signal:controller.signal,credentials:'omit',redirect:'error'}));
       const choice=value.choices?.[0];
       if(!choice || ['length','content_filter','tool_calls','function_call'].includes(choice.finish_reason) || choice.message?.refusal || choice.message?.tool_calls?.length || choice.message?.function_call) fail('invalid_agent_response','Agent did not return a completed translation.');

@@ -13,6 +13,7 @@ test('strict input and configuration validation',()=>{
  assert.throws(()=>validateJob({source_lang:'fr',target_lang:'auto',text_list:['Bonjour']}));
  assert.throws(()=>validateJob({source_lang:'fr',target_lang:'en',text_list:[3]}));
  assert.throws(()=>validateSettings({...settings,concurrency:100}));
+ assert.throws(()=>validateSettings({...settings,reasoningEffort:'unsupported'}));
  assert.throws(()=>validateSettings({...settings,glossary:[{source:'',target:'x'}]}));
  assert.equal(validateSettings(settings).provider,'openai');
 });
@@ -37,6 +38,22 @@ test('real request shape, reordered IDs and blank items',async()=>{
  assert.deepEqual(result.translations.map(i=>i.text),['Hello {0}',' ','Thanks']);
  assert.equal(request.init.headers.Authorization,'Bearer private-key');assert.equal(request.init.redirect,'error');
  assert.equal(JSON.parse(request.init.body).tools,undefined);
+ assert.equal(JSON.parse(request.init.body).reasoning_effort,undefined);
+});
+test('reasoning overrides reach direct endpoints without entering bridge jobs or page settings',async()=>{
+ const job={source_lang:'en',target_lang:'fr',text_list:['Hello']};
+ for(const reasoningEffort of ['none','low']){
+  const config=validateSettings({...settings,reasoningEffort});
+  await translateBatch(job,config,async(_url,init)=>{
+   assert.equal(JSON.parse(init.body).reasoning_effort,reasoningEffort);
+   return envelope({translations:[{id:0,text:'Bonjour'}]});
+  });
+  assert.equal(publicSettings(config).reasoningEffort,undefined);
+  await translateBatch(job,{...config,provider:'bridge'},async(_url,init)=>{
+   assert.deepEqual(JSON.parse(init.body),job);
+   return new Response(JSON.stringify({translations:[{text:'Bonjour'}]}));
+  });
+ }
 });
 test('bridge uses exact configured URL and normalizes ordered results',async()=>{
  const config={...DEFAULTS,bridgeUrl:'http://127.0.0.1:8765/translate?token=private'};

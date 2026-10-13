@@ -1,5 +1,12 @@
 // Authored UI translations. Message keys are the English fallback.
 export const MESSAGES = {
+  "Reasoning effort": {"zh": "推理强度", "fr": "Effort de raisonnement", "es": "Esfuerzo de razonamiento", "ja": "推論の強度", "ko": "추론 수준"},
+  "Model default": {"zh": "模型默认", "fr": "Valeur par défaut du modèle", "es": "Predeterminado del modelo", "ja": "モデルの既定値", "ko": "모델 기본값"},
+  "Request no reasoning": {"zh": "请求关闭推理", "fr": "Demander sans raisonnement", "es": "Solicitar sin razonamiento", "ja": "推論なしを要求", "ko": "추론 끄기 요청"},
+  "Low reasoning": {"zh": "低强度推理", "fr": "Raisonnement faible", "es": "Razonamiento bajo", "ja": "低い推論強度", "ko": "낮은 추론 수준"},
+  "Medium reasoning": {"zh": "中等强度推理", "fr": "Raisonnement moyen", "es": "Razonamiento medio", "ja": "中程度の推論強度", "ko": "중간 추론 수준"},
+  "High reasoning": {"zh": "高强度推理", "fr": "Raisonnement élevé", "es": "Razonamiento alto", "ja": "高い推論強度", "ko": "높은 추론 수준"},
+  "Optional. Use only if your endpoint supports reasoning settings; models may ignore them.": {"zh": "可选。仅在接口支持推理设置时使用；模型可能忽略这些设置。", "fr": "Facultatif. À utiliser si votre service accepte ces réglages ; les modèles peuvent les ignorer.", "es": "Opcional. Úsalo solo si tu servicio admite estos ajustes; los modelos pueden ignorarlos.", "ja": "任意の設定です。接続先が対応している場合に使用してください。モデルによっては無視されます。", "ko": "선택 사항입니다. 연결한 서비스가 지원할 때만 사용하세요. 모델이 설정을 무시할 수 있습니다。"},
   "Interface language": {
     "zh": "界面语言",
     "fr": "Langue de l’interface",

@@ -14,7 +14,7 @@ const transcripts=[];
 initializeUiLanguage();languages();
 for(const id of ['ocrLanguage','document-ocr-language'])$(id).replaceChildren(...[...OCR_LANGUAGES,...OCR_LANGUAGE_COMBINATIONS].map(([code,label])=>{const option=document.createElement('option');option.value=code;setUiText(option,label);return option;}));
 for(const id of ['ocrLanguage','document-ocr-language'])$(id).addEventListener('change',async()=>{try{config=await send({type:'settings.save',settings:{...config,ocrLanguage:$(id).value}});$('ocrLanguage').value=$('document-ocr-language').value=config.ocrLanguage;}catch(error){status(id==='ocrLanguage'?'image-status':'document-status',error.message,true);}});
-const connectionKeys=['provider','bridgeUrl','apiUrl','apiKey','model','jsonMode','timeout','concurrency','speechUrl','speechModel','speechKey','liveSegmentSeconds','liveVad'];
+const connectionKeys=['provider','bridgeUrl','apiUrl','apiKey','model','jsonMode','reasoningEffort','timeout','concurrency','speechUrl','speechModel','speechKey','liveSegmentSeconds','liveVad'];
 const preferenceKeys=['source','target','inputTarget','mode','style','batchSize','autoTranslate','selection','hover','cache','captionSelector'];
 function route(){const requested=location.hash.slice(1),name=Array.from(document.querySelectorAll('[data-page]')).some(n=>n.dataset.page===requested)?requested:'home';document.querySelectorAll('[data-page]').forEach(node=>node.hidden=node.dataset.page!==name);}
 window.addEventListener('hashchange',route);route();

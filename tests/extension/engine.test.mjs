@@ -14,3 +14,12 @@ test('cache clearing during an unfinished request prevents later persistence',as
  try{const engine=createEngine(),pending=engine.translate(job('pending'),settings);while(!release)await new Promise(r=>setTimeout(r,1));await engine.clear();release();await pending;await engine.translate(job('pending'),settings);assert.equal(calls,2);}finally{globalThis.fetch=original;}
 });
 test('cache entries are isolated by provider credentials',async()=>{const original=globalThis.fetch;let calls=0;globalThis.fetch=async(_,init)=>{calls++;return response(init);};try{const engine=createEngine();await engine.translate(job('same'),{...settings,apiKey:'one'});await engine.translate(job('same'),{...settings,apiKey:'two'});assert.equal(calls,2);}finally{globalThis.fetch=original;}});
+test('changing reasoning effort cannot reuse a translation generated with different settings',async()=>{
+ const original=globalThis.fetch;let calls=0;
+ globalThis.fetch=async(_,init)=>{calls++;return response(init);};
+ try{
+  const engine=createEngine();
+  for(const reasoningEffort of ['', 'low', 'none', 'low'])await engine.translate(job('same'),{...settings,reasoningEffort});
+  assert.equal(calls,3);
+ }finally{globalThis.fetch=original;}
+});
