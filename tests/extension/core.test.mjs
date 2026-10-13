@@ -29,6 +29,18 @@ test('protected markup and glossary must occur exactly once',()=>{
  assert.throws(()=>item.restore(item.text.replace(/⟦[^⟧]+⟧/,'')));
  assert.throws(()=>item.restore(item.text+item.text));
 });
+test('compact formatting markers avoid source and glossary collisions without weakening validation',()=>{
+ const original=crypto.randomUUID;let calls=0;
+ crypto.randomUUID=()=>['11111111','22222222','33333333'][calls++]+'-0000-0000-0000-000000000000';
+ try{
+  const source='Literal OT11111111 <b>Hello</b> product';
+  const item=protect(source,[{source:'product',target:'OT22222222'}]);
+  assert.equal(calls,3);
+  assert.deepEqual(item.text.match(/⟦[^⟧]+⟧/g),['⟦OT33333333_0⟧','⟦OT33333333_1⟧','⟦OT33333333_2⟧']);
+  assert.equal(item.restore(item.text.replace('Hello','Bonjour')),'Literal OT11111111 <b>Bonjour</b> OT22222222');
+  assert.throws(()=>item.restore(item.text.replace('⟦OT33333333_1⟧','')),error=>error.code==='placeholder_mismatch');
+ }finally{crypto.randomUUID=original;}
+});
 test('real request shape, reordered IDs and blank items',async()=>{
  let request;
  const result=await translateBatch({source_lang:'fr',target_lang:'en',text_list:['Bonjour {0}',' ','Merci']},settings,async(url,init)=>{

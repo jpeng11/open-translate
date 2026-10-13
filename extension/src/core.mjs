@@ -82,7 +82,13 @@ export function batches(items, size=4, maxChars=12000) {
   if (current.length) result.push(current);
   return result;
 }
-export function protect(text, glossary=[], nonce=crypto.randomUUID().replaceAll('-',''), maskMarkup=true) {
+export function protect(text, glossary=[], nonce, maskMarkup=true) {
+  // Markers identify formatting within one item; they are not credentials.
+  // Long UUIDs otherwise dominate model input/output on link-heavy pages.
+  if(nonce===undefined){
+    const source=[text,...glossary.flatMap(entry=>[entry.source,entry.target])].join('\n');
+    do{nonce=crypto.randomUUID().slice(0,8);}while(source.includes('OT'+nonce));
+  }
   const tokens=new Map();
   const put=(source,target=source)=>{ const key=`⟦OT${nonce}_${tokens.size}⟧`; tokens.set(key,target); return key; };
   const markup=/<[^>]+>|\{\{?\d+\}\}?/g;
