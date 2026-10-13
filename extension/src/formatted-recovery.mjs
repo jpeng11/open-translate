@@ -43,6 +43,9 @@ export function treeRepairMarkup(text) {
   }
   return {nodes,restore(value){
     if(!value||typeof value!=='object'||Array.isArray(value)||JSON.stringify(Object.keys(value).sort())!==JSON.stringify(Object.keys(nodes).sort()))return null;
+    // Some models wrap a complete native-tag paragraph in the root string.
+    // Accept only that unambiguous shape, with the full original tree intact.
+    if(Array.isArray(value.root)&&value.root.length===1&&typeof value.root[0]==='string'&&sameDomLayout(layout,value.root[0]))return value.root[0];
     const seen=new Set();
     for(const [parent,parts] of Object.entries(value)){
       if(nodes[parent]===null){if(parts!==null)return null;continue;}

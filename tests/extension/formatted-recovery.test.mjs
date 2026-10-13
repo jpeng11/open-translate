@@ -154,3 +154,12 @@ test('full-context tree recovery reorders sibling phrases and adds target gramma
  const result=await translateBatch({source_lang:'en',target_lang:'ja',text_list:[source]},settings,async(_url,init)=>reply([input(init).repair===2?{id:0,nodes:{root:['私は',{ref:'1'},'が',{ref:'0'},'。'],'0':['好きです'],'1':['お茶']}}:{id:0,text:'私はお茶が好きです。'}]));
  assert.equal(result.translations[0].text,'私は<ot1>お茶</ot1>が<ot0>好きです</ot0>。');
 });
+
+test('native paragraph wrapped in a tree root is accepted only with the entire original hierarchy',async()=>{
+ const source='<ot0>Read <ot1>guide</ot1></ot0><ot2/>';
+ for(const text of ['<ot0>Lisez <ot1>le guide</ot1></ot0><ot2/>','<ot0>Lisez</ot0><ot1>le guide</ot1><ot2/>','<ot0>Lisez <ot1>le guide</ot1><ot1>répété</ot1></ot0><ot2/>','<ot0>Lisez <ot1>le guide</ot1></ot0><ot2/><script>bad</script>']){
+  const run=()=>translateBatch(job([source]),settings,async(_url,init)=>{const p=input(init);return reply([p.repair===2?{id:0,nodes:{...p.items[0].nodes,root:[text]}}:{id:0,text:'Balises perdues'}]);});
+  if(text==='<ot0>Lisez <ot1>le guide</ot1></ot0><ot2/>')assert.equal((await run()).translations[0].text,text);
+  else await assert.rejects(run(),e=>e.code==='invalid_translation_batch');
+ }
+});
