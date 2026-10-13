@@ -117,3 +117,23 @@ test('transport errors, truncation and refusals during repair do not consume ano
   }),e=>e.code==='invalid_agent_response'||e.code==='provider_http_429');assert.equal(calls,2);
  }
 });
+
+test('explicit target language and script validation repair Chinese returned for Japanese prose',async()=>{
+ const text='This is a long English paragraph about <ot0>the city</ot0> and its history, buildings, people and schools.';
+ let calls=0;
+ const result=await translateBatch({source_lang:'en',target_lang:'ja',text_list:[text]},settings,async(_url,init)=>{
+  calls++;const body=JSON.parse(init.body),p=input(init);assert.ok(body.messages[0].content.includes('Japanese (ja)'));if(p.repair)assert.equal(p.items[0].draft,'');
+  return reply([{id:0,text:p.repair?'これは<ot0>都市</ot0>とその歴史や人々についての文章です。':'这是一段介绍<ot0>城市</ot0>及其历史的中文。'}]);
+ });
+ assert.equal(calls,2);assert.match(result.translations[0].text,/これは/);
+});
+
+test('wrong target scripts remain errors after bounded repairs; short proper names stay eligible',async()=>{
+ for(const [target,wrong] of [['ja','这是错误的中文。'],['ko','这是错误的中文。'],['zh-CN','This output is still in English and has not been translated at all.']]){
+  let calls=0;
+  await assert.rejects(translateBatch({source_lang:'en',target_lang:target,text_list:['This English sentence has enough words to require a real translation into the requested language.']},settings,async(_url,init)=>{calls++;const p=input(init);if(p.repair)assert.equal(p.items[0].draft,'');return reply([{id:0,text:wrong}]);}),e=>e.code==='target_language_mismatch');
+  assert.equal(calls,3);
+ }
+ const result=await translateBatch({source_lang:'en',target_lang:'ja',text_list:['<ot0>Tokyo</ot0>']},settings,async()=>reply([{id:0,text:'<ot0>東京</ot0>'}]));
+ assert.equal(result.translations[0].text,'<ot0>東京</ot0>');
+});

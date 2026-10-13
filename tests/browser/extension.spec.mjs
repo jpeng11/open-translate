@@ -202,3 +202,14 @@ test('malformed completed JSON is recovered without dropping plain or formatted 
  await expect(page.locator('#json-repair [data-ot-target] a')).toHaveAttribute('href','https://example.com/json');
  expect((await command(page,'page.status')).failed).toBe(0);await command(page,'page.restore');await page.close();
 });
+
+test('wrong-language long prose is repaired before it can appear as a completed paragraph',async()=>{
+ await settings({source:'en',target:'ja'});
+ const page=await context.newPage();await page.goto(origin+'/page');
+ await page.evaluate(()=>document.body.innerHTML='<p id="language-repair">This long English article has a <a href="https://example.com/language">link</a> and enough surrounding words to describe its history and culture.</p>');
+ translationOverride=(_text,payload)=>payload.repair?'これは<ot0>リンク</ot0>を含む長い記事の日本語訳です。':'这是包含<ot0>链接</ot0>的一段中文，而不是日语。';
+ await command(page,'page.start');await expect(page.locator('#language-repair [data-ot-target]')).toHaveText('これはリンクを含む長い記事の日本語訳です。');
+ expect(requests).toHaveLength(2);expect(requests.every(r=>r.value.messages[0].content.includes('Japanese (ja)'))).toBe(true);
+ expect(JSON.parse(requests[1].value.messages.at(-1).content).items[0].draft).toBe('');
+ expect((await command(page,'page.status')).failed).toBe(0);await command(page,'page.restore');await page.close();
+});
