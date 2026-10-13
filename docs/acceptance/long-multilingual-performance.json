@@ -1,0 +1,3326 @@
+{
+  "schema": 1,
+  "scope": "Sequential single-run desktop Chromium English long-article translation through Magpie / OpenCode Go DeepSeek V4.1 Flash",
+  "source": {
+    "url": "https://en.wikipedia.org/wiki/History_of_the_United_States",
+    "title": "History_of_the_United_States",
+    "stats": {
+      "paragraphs": 174,
+      "words": 15461
+    },
+    "capturedAt": "2026-10-13T13:30:42.185Z",
+    "revisionId": 1379968084,
+    "permanentUrl": "https://en.wikipedia.org/w/index.php?title=History_of_the_United_States&oldid=1379968084"
+  },
+  "snapshotSha256": "959f377ce8946204edb5166a66470c527cf21bcc2f51e9936fc8d39bff3e6a89",
+  "limitations": [
+    "One run per size/language; no latency distribution or SLA.",
+    "Paragraph prefixes from one fixed Wikipedia snapshot; tables, lists and paragraphs outside the eligibility filter are excluded.",
+    "Application cache disabled, upstream prompt caching and provider load uncontrolled.",
+    "Timer includes automatic scrolling to the first unfinished paragraph, model calls, scheduling and DOM rendering; page loading excluded.",
+    "A failed cell stops at the first observed extension error; its elapsed time is not successful full-page latency.",
+    "Structural preservation and script-presence checks do not guarantee sentence-level semantic completeness. Latin-language identity needs review."
+  ],
+  "results": [
+    {
+      "schema": 1,
+      "status": "failed",
+      "startedAt": "2026-10-13T13:31:43.832Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/History_of_the_United_States",
+      "sourceLanguage": "en",
+      "targetLanguage": "zh-CN",
+      "provider": "Configured OpenAI-compatible endpoint",
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "settings": {
+        "batchSize": 3,
+        "concurrency": 6,
+        "timeout": 45,
+        "reasoningEffort": "none",
+        "cache": false
+      },
+      "method": "Real public page in a clean Chromium extension profile. Select approximately the requested word count in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. Application cache disabled; upstream prompt caching is uncontrolled.",
+      "requests": [],
+      "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+        "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
+      },
+      "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+      "totalDeadlineSeconds": 600,
+      "scenario": {
+        "requestedWords": 5000,
+        "snapshotSha256": "959f377ce8946204edb5166a66470c527cf21bcc2f51e9936fc8d39bff3e6a89",
+        "sourceTitle": "History_of_the_United_States"
+      },
+      "browser": "156.0.8078.4",
+      "contentMode": "Original public page markup",
+      "sample": {
+        "words": 4970,
+        "paragraphs": 55,
+        "characters": 32117,
+        "sha256": "0a970e96b82a561ab6923dc09c3266a27568d904e35b0e35b45bec9122dc7595",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "progress": {
+        "done": 7,
+        "events": [
+          {
+            "paragraphs": 3,
+            "ms": 11960
+          },
+          {
+            "paragraphs": 5,
+            "ms": 16933
+          },
+          {
+            "paragraphs": 7,
+            "ms": 17272
+          }
+        ],
+        "elapsedMs": 21870
+      },
+      "firstTranslationMs": 11960,
+      "extensionState": {
+        "ok": true,
+        "active": true,
+        "completed": 7,
+        "failed": 3,
+        "error": "Agent changed protected markup or terminology."
+      },
+      "failedAt": "2026-10-13T13:32:08.410Z",
+      "error": "Translation failed: Agent changed protected markup or terminology.",
+      "exitCode": 1
+    },
+    {
+      "schema": 1,
+      "status": "passed",
+      "startedAt": "2026-10-13T13:32:08.846Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/History_of_the_United_States",
+      "sourceLanguage": "en",
+      "targetLanguage": "fr",
+      "provider": "Configured OpenAI-compatible endpoint",
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "settings": {
+        "batchSize": 3,
+        "concurrency": 6,
+        "timeout": 45,
+        "reasoningEffort": "none",
+        "cache": false
+      },
+      "method": "Real public page in a clean Chromium extension profile. Select approximately the requested word count in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. Application cache disabled; upstream prompt caching is uncontrolled.",
+      "requests": [],
+      "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+        "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
+      },
+      "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+      "totalDeadlineSeconds": 600,
+      "scenario": {
+        "requestedWords": 5000,
+        "snapshotSha256": "959f377ce8946204edb5166a66470c527cf21bcc2f51e9936fc8d39bff3e6a89",
+        "sourceTitle": "History_of_the_United_States"
+      },
+      "browser": "156.0.8078.4",
+      "contentMode": "Original public page markup",
+      "sample": {
+        "words": 4970,
+        "paragraphs": 55,
+        "characters": 32117,
+        "sha256": "0a970e96b82a561ab6923dc09c3266a27568d904e35b0e35b45bec9122dc7595",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "progress": {
+        "done": 55,
+        "events": [
+          {
+            "paragraphs": 3,
+            "ms": 10308
+          },
+          {
+            "paragraphs": 5,
+            "ms": 16939
+          },
+          {
+            "paragraphs": 7,
+            "ms": 17721
+          },
+          {
+            "paragraphs": 10,
+            "ms": 23106
+          },
+          {
+            "paragraphs": 13,
+            "ms": 23355
+          },
+          {
+            "paragraphs": 15,
+            "ms": 28803
+          },
+          {
+            "paragraphs": 17,
+            "ms": 29836
+          },
+          {
+            "paragraphs": 18,
+            "ms": 31282
+          },
+          {
+            "paragraphs": 20,
+            "ms": 33699
+          },
+          {
+            "paragraphs": 21,
+            "ms": 34023
+          },
+          {
+            "paragraphs": 24,
+            "ms": 35669
+          },
+          {
+            "paragraphs": 27,
+            "ms": 40067
+          },
+          {
+            "paragraphs": 30,
+            "ms": 40651
+          },
+          {
+            "paragraphs": 33,
+            "ms": 46094
+          },
+          {
+            "paragraphs": 36,
+            "ms": 47050
+          },
+          {
+            "paragraphs": 38,
+            "ms": 51198
+          },
+          {
+            "paragraphs": 41,
+            "ms": 52253
+          },
+          {
+            "paragraphs": 44,
+            "ms": 56139
+          },
+          {
+            "paragraphs": 46,
+            "ms": 57486
+          },
+          {
+            "paragraphs": 49,
+            "ms": 61633
+          },
+          {
+            "paragraphs": 51,
+            "ms": 61866
+          },
+          {
+            "paragraphs": 52,
+            "ms": 65199
+          },
+          {
+            "paragraphs": 55,
+            "ms": 65986
+          }
+        ],
+        "elapsedMs": 66044
+      },
+      "firstTranslationMs": 10308,
+      "extensionState": {
+        "ok": true,
+        "active": true,
+        "completed": 55,
+        "failed": 0,
+        "error": ""
+      },
+      "completeMs": 65986,
+      "wordsPerSecond": 75.32,
+      "preservation": {
+        "links": 510,
+        "comparison": "Exact per-paragraph multisets; complete sibling phrases may move with translated word order. Renderer independently enforces marker uniqueness, pairing and original parent relationships.",
+        "linksPreserved": true,
+        "formattingPreserved": true
+      },
+      "output": {
+        "translatedParagraphs": 55,
+        "targetScriptParagraphs": null,
+        "unchangedParagraphs": 0,
+        "languageValidation": "Nonempty changed output; language and meaning need separate review",
+        "characters": 36844,
+        "sha256": "093ca9b416acc2c1a79692958444d9dc225c6d660b4b3d1426a0c515fa0531fa"
+      },
+      "restored": true,
+      "finishedAt": "2026-10-13T13:33:17.689Z",
+      "exitCode": 0
+    },
+    {
+      "schema": 1,
+      "status": "passed",
+      "startedAt": "2026-10-13T13:33:18.105Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/History_of_the_United_States",
+      "sourceLanguage": "en",
+      "targetLanguage": "es",
+      "provider": "Configured OpenAI-compatible endpoint",
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "settings": {
+        "batchSize": 3,
+        "concurrency": 6,
+        "timeout": 45,
+        "reasoningEffort": "none",
+        "cache": false
+      },
+      "method": "Real public page in a clean Chromium extension profile. Select approximately the requested word count in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. Application cache disabled; upstream prompt caching is uncontrolled.",
+      "requests": [],
+      "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+        "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
+      },
+      "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+      "totalDeadlineSeconds": 600,
+      "scenario": {
+        "requestedWords": 5000,
+        "snapshotSha256": "959f377ce8946204edb5166a66470c527cf21bcc2f51e9936fc8d39bff3e6a89",
+        "sourceTitle": "History_of_the_United_States"
+      },
+      "browser": "156.0.8078.4",
+      "contentMode": "Original public page markup",
+      "sample": {
+        "words": 4970,
+        "paragraphs": 55,
+        "characters": 32117,
+        "sha256": "0a970e96b82a561ab6923dc09c3266a27568d904e35b0e35b45bec9122dc7595",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "progress": {
+        "done": 55,
+        "events": [
+          {
+            "paragraphs": 3,
+            "ms": 14235
+          },
+          {
+            "paragraphs": 5,
+            "ms": 18500
+          },
+          {
+            "paragraphs": 7,
+            "ms": 21274
+          },
+          {
+            "paragraphs": 10,
+            "ms": 25137
+          },
+          {
+            "paragraphs": 13,
+            "ms": 25457
+          },
+          {
+            "paragraphs": 15,
+            "ms": 30316
+          },
+          {
+            "paragraphs": 17,
+            "ms": 30871
+          },
+          {
+            "paragraphs": 20,
+            "ms": 34520
+          },
+          {
+            "paragraphs": 23,
+            "ms": 36520
+          },
+          {
+            "paragraphs": 26,
+            "ms": 40145
+          },
+          {
+            "paragraphs": 29,
+            "ms": 41790
+          },
+          {
+            "paragraphs": 32,
+            "ms": 45387
+          },
+          {
+            "paragraphs": 35,
+            "ms": 46028
+          },
+          {
+            "paragraphs": 37,
+            "ms": 50261
+          },
+          {
+            "paragraphs": 40,
+            "ms": 51156
+          },
+          {
+            "paragraphs": 43,
+            "ms": 56344
+          },
+          {
+            "paragraphs": 46,
+            "ms": 56714
+          },
+          {
+            "paragraphs": 49,
+            "ms": 61127
+          },
+          {
+            "paragraphs": 51,
+            "ms": 61141
+          },
+          {
+            "paragraphs": 53,
+            "ms": 64542
+          },
+          {
+            "paragraphs": 55,
+            "ms": 64958
+          }
+        ],
+        "elapsedMs": 65097
+      },
+      "firstTranslationMs": 14235,
+      "extensionState": {
+        "ok": true,
+        "active": true,
+        "completed": 55,
+        "failed": 0,
+        "error": ""
+      },
+      "completeMs": 64958,
+      "wordsPerSecond": 76.51,
+      "preservation": {
+        "links": 510,
+        "comparison": "Exact per-paragraph multisets; complete sibling phrases may move with translated word order. Renderer independently enforces marker uniqueness, pairing and original parent relationships.",
+        "linksPreserved": true,
+        "formattingPreserved": true
+      },
+      "output": {
+        "translatedParagraphs": 55,
+        "targetScriptParagraphs": null,
+        "unchangedParagraphs": 0,
+        "languageValidation": "Nonempty changed output; language and meaning need separate review",
+        "characters": 36230,
+        "sha256": "7a61a4b58885198841cb38819e3c9488837054043940d6e9df30091a80e5951a"
+      },
+      "restored": true,
+      "finishedAt": "2026-10-13T13:34:26.147Z",
+      "exitCode": 0
+    },
+    {
+      "schema": 1,
+      "status": "passed",
+      "startedAt": "2026-10-13T13:34:26.575Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/History_of_the_United_States",
+      "sourceLanguage": "en",
+      "targetLanguage": "ja",
+      "provider": "Configured OpenAI-compatible endpoint",
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "settings": {
+        "batchSize": 3,
+        "concurrency": 6,
+        "timeout": 45,
+        "reasoningEffort": "none",
+        "cache": false
+      },
+      "method": "Real public page in a clean Chromium extension profile. Select approximately the requested word count in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. Application cache disabled; upstream prompt caching is uncontrolled.",
+      "requests": [],
+      "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+        "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
+      },
+      "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+      "totalDeadlineSeconds": 600,
+      "scenario": {
+        "requestedWords": 5000,
+        "snapshotSha256": "959f377ce8946204edb5166a66470c527cf21bcc2f51e9936fc8d39bff3e6a89",
+        "sourceTitle": "History_of_the_United_States"
+      },
+      "browser": "156.0.8078.4",
+      "contentMode": "Original public page markup",
+      "sample": {
+        "words": 4970,
+        "paragraphs": 55,
+        "characters": 32117,
+        "sha256": "0a970e96b82a561ab6923dc09c3266a27568d904e35b0e35b45bec9122dc7595",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "progress": {
+        "done": 55,
+        "events": [
+          {
+            "paragraphs": 3,
+            "ms": 18306
+          },
+          {
+            "paragraphs": 5,
+            "ms": 25343
+          },
+          {
+            "paragraphs": 7,
+            "ms": 26851
+          },
+          {
+            "paragraphs": 10,
+            "ms": 32904
+          },
+          {
+            "paragraphs": 13,
+            "ms": 36546
+          },
+          {
+            "paragraphs": 15,
+            "ms": 42685
+          },
+          {
+            "paragraphs": 17,
+            "ms": 43095
+          },
+          {
+            "paragraphs": 18,
+            "ms": 46067
+          },
+          {
+            "paragraphs": 20,
+            "ms": 47426
+          },
+          {
+            "paragraphs": 21,
+            "ms": 48408
+          },
+          {
+            "paragraphs": 24,
+            "ms": 48780
+          },
+          {
+            "paragraphs": 27,
+            "ms": 54190
+          },
+          {
+            "paragraphs": 30,
+            "ms": 55545
+          },
+          {
+            "paragraphs": 33,
+            "ms": 62962
+          },
+          {
+            "paragraphs": 36,
+            "ms": 65748
+          },
+          {
+            "paragraphs": 38,
+            "ms": 71618
+          },
+          {
+            "paragraphs": 41,
+            "ms": 72174
+          },
+          {
+            "paragraphs": 44,
+            "ms": 77605
+          },
+          {
+            "paragraphs": 46,
+            "ms": 81698
+          },
+          {
+            "paragraphs": 49,
+            "ms": 84104
+          },
+          {
+            "paragraphs": 51,
+            "ms": 85453
+          },
+          {
+            "paragraphs": 52,
+            "ms": 88365
+          },
+          {
+            "paragraphs": 55,
+            "ms": 88670
+          }
+        ],
+        "elapsedMs": 88796
+      },
+      "firstTranslationMs": 18306,
+      "extensionState": {
+        "ok": true,
+        "active": true,
+        "completed": 55,
+        "failed": 0,
+        "error": ""
+      },
+      "completeMs": 88670,
+      "wordsPerSecond": 56.05,
+      "preservation": {
+        "links": 510,
+        "comparison": "Exact per-paragraph multisets; complete sibling phrases may move with translated word order. Renderer independently enforces marker uniqueness, pairing and original parent relationships.",
+        "linksPreserved": true,
+        "formattingPreserved": true
+      },
+      "output": {
+        "translatedParagraphs": 55,
+        "targetScriptParagraphs": 55,
+        "unchangedParagraphs": 0,
+        "languageValidation": "Expected target script present in every paragraph; not a linguistic quality guarantee",
+        "characters": 13529,
+        "sha256": "45564d42704548248b870144e45910bf7d077f1f3e0600d2ad2743b5d04102ea"
+      },
+      "restored": true,
+      "finishedAt": "2026-10-13T13:35:58.240Z",
+      "exitCode": 0
+    },
+    {
+      "schema": 1,
+      "status": "passed",
+      "startedAt": "2026-10-13T13:35:58.664Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/History_of_the_United_States",
+      "sourceLanguage": "en",
+      "targetLanguage": "ko",
+      "provider": "Configured OpenAI-compatible endpoint",
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "settings": {
+        "batchSize": 3,
+        "concurrency": 6,
+        "timeout": 45,
+        "reasoningEffort": "none",
+        "cache": false
+      },
+      "method": "Real public page in a clean Chromium extension profile. Select approximately the requested word count in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. Application cache disabled; upstream prompt caching is uncontrolled.",
+      "requests": [],
+      "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+        "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
+      },
+      "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+      "totalDeadlineSeconds": 600,
+      "scenario": {
+        "requestedWords": 5000,
+        "snapshotSha256": "959f377ce8946204edb5166a66470c527cf21bcc2f51e9936fc8d39bff3e6a89",
+        "sourceTitle": "History_of_the_United_States"
+      },
+      "browser": "156.0.8078.4",
+      "contentMode": "Original public page markup",
+      "sample": {
+        "words": 4970,
+        "paragraphs": 55,
+        "characters": 32117,
+        "sha256": "0a970e96b82a561ab6923dc09c3266a27568d904e35b0e35b45bec9122dc7595",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "progress": {
+        "done": 55,
+        "events": [
+          {
+            "paragraphs": 3,
+            "ms": 18275
+          },
+          {
+            "paragraphs": 5,
+            "ms": 24083
+          },
+          {
+            "paragraphs": 7,
+            "ms": 27476
+          },
+          {
+            "paragraphs": 10,
+            "ms": 32222
+          },
+          {
+            "paragraphs": 13,
+            "ms": 34612
+          },
+          {
+            "paragraphs": 15,
+            "ms": 40861
+          },
+          {
+            "paragraphs": 17,
+            "ms": 41119
+          },
+          {
+            "paragraphs": 18,
+            "ms": 44858
+          },
+          {
+            "paragraphs": 20,
+            "ms": 45940
+          },
+          {
+            "paragraphs": 21,
+            "ms": 47280
+          },
+          {
+            "paragraphs": 24,
+            "ms": 47918
+          },
+          {
+            "paragraphs": 27,
+            "ms": 53052
+          },
+          {
+            "paragraphs": 30,
+            "ms": 53075
+          },
+          {
+            "paragraphs": 33,
+            "ms": 58320
+          },
+          {
+            "paragraphs": 36,
+            "ms": 60607
+          },
+          {
+            "paragraphs": 39,
+            "ms": 65765
+          },
+          {
+            "paragraphs": 41,
+            "ms": 67363
+          },
+          {
+            "paragraphs": 44,
+            "ms": 72532
+          },
+          {
+            "paragraphs": 46,
+            "ms": 73361
+          },
+          {
+            "paragraphs": 47,
+            "ms": 75530
+          },
+          {
+            "paragraphs": 48,
+            "ms": 75987
+          },
+          {
+            "paragraphs": 50,
+            "ms": 78408
+          },
+          {
+            "paragraphs": 53,
+            "ms": 78853
+          },
+          {
+            "paragraphs": 55,
+            "ms": 85736
+          }
+        ],
+        "elapsedMs": 85937
+      },
+      "firstTranslationMs": 18275,
+      "extensionState": {
+        "ok": true,
+        "active": true,
+        "completed": 55,
+        "failed": 0,
+        "error": ""
+      },
+      "completeMs": 85736,
+      "wordsPerSecond": 57.97,
+      "preservation": {
+        "links": 510,
+        "comparison": "Exact per-paragraph multisets; complete sibling phrases may move with translated word order. Renderer independently enforces marker uniqueness, pairing and original parent relationships.",
+        "linksPreserved": true,
+        "formattingPreserved": true
+      },
+      "output": {
+        "translatedParagraphs": 55,
+        "targetScriptParagraphs": 55,
+        "unchangedParagraphs": 0,
+        "languageValidation": "Expected target script present in every paragraph; not a linguistic quality guarantee",
+        "characters": 15194,
+        "sha256": "6bb7e90a751a1ce2c92f5ede8ca56e6ca89b2e9ce083d4cb40da962251d541e2"
+      },
+      "restored": true,
+      "finishedAt": "2026-10-13T13:37:27.501Z",
+      "exitCode": 0
+    },
+    {
+      "schema": 1,
+      "status": "failed",
+      "startedAt": "2026-10-13T13:37:27.921Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/History_of_the_United_States",
+      "sourceLanguage": "en",
+      "targetLanguage": "zh-CN",
+      "provider": "Configured OpenAI-compatible endpoint",
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "settings": {
+        "batchSize": 3,
+        "concurrency": 6,
+        "timeout": 45,
+        "reasoningEffort": "none",
+        "cache": false
+      },
+      "method": "Real public page in a clean Chromium extension profile. Select approximately the requested word count in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. Application cache disabled; upstream prompt caching is uncontrolled.",
+      "requests": [],
+      "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+        "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
+      },
+      "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+      "totalDeadlineSeconds": 600,
+      "scenario": {
+        "requestedWords": 10000,
+        "snapshotSha256": "959f377ce8946204edb5166a66470c527cf21bcc2f51e9936fc8d39bff3e6a89",
+        "sourceTitle": "History_of_the_United_States"
+      },
+      "browser": "156.0.8078.4",
+      "contentMode": "Original public page markup",
+      "sample": {
+        "words": 9983,
+        "paragraphs": 115,
+        "characters": 64626,
+        "sha256": "b1da268ae6d2933f9b1e9538e710a48bdf98ae2bea27bcd824b4d7f5536182a5",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "progress": {
+        "done": 52,
+        "events": [
+          {
+            "paragraphs": 3,
+            "ms": 10816
+          },
+          {
+            "paragraphs": 5,
+            "ms": 15716
+          },
+          {
+            "paragraphs": 7,
+            "ms": 16194
+          },
+          {
+            "paragraphs": 10,
+            "ms": 20062
+          },
+          {
+            "paragraphs": 13,
+            "ms": 20927
+          },
+          {
+            "paragraphs": 15,
+            "ms": 25216
+          },
+          {
+            "paragraphs": 17,
+            "ms": 25894
+          },
+          {
+            "paragraphs": 20,
+            "ms": 30584
+          },
+          {
+            "paragraphs": 23,
+            "ms": 30821
+          },
+          {
+            "paragraphs": 26,
+            "ms": 35461
+          },
+          {
+            "paragraphs": 29,
+            "ms": 35490
+          },
+          {
+            "paragraphs": 32,
+            "ms": 39397
+          },
+          {
+            "paragraphs": 35,
+            "ms": 39727
+          },
+          {
+            "paragraphs": 37,
+            "ms": 44113
+          },
+          {
+            "paragraphs": 40,
+            "ms": 44130
+          },
+          {
+            "paragraphs": 43,
+            "ms": 48468
+          },
+          {
+            "paragraphs": 46,
+            "ms": 48742
+          },
+          {
+            "paragraphs": 49,
+            "ms": 52394
+          },
+          {
+            "paragraphs": 51,
+            "ms": 53164
+          },
+          {
+            "paragraphs": 52,
+            "ms": 54842
+          }
+        ],
+        "elapsedMs": 56589
+      },
+      "firstTranslationMs": 10816,
+      "extensionState": {
+        "ok": true,
+        "active": true,
+        "completed": 52,
+        "failed": 2,
+        "error": "Agent changed protected markup or terminology."
+      },
+      "failedAt": "2026-10-13T13:38:27.165Z",
+      "error": "Translation failed: Agent changed protected markup or terminology.",
+      "exitCode": 1
+    },
+    {
+      "schema": 1,
+      "status": "passed",
+      "startedAt": "2026-10-13T13:38:27.598Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/History_of_the_United_States",
+      "sourceLanguage": "en",
+      "targetLanguage": "fr",
+      "provider": "Configured OpenAI-compatible endpoint",
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "settings": {
+        "batchSize": 3,
+        "concurrency": 6,
+        "timeout": 45,
+        "reasoningEffort": "none",
+        "cache": false
+      },
+      "method": "Real public page in a clean Chromium extension profile. Select approximately the requested word count in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. Application cache disabled; upstream prompt caching is uncontrolled.",
+      "requests": [],
+      "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+        "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
+      },
+      "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+      "totalDeadlineSeconds": 600,
+      "scenario": {
+        "requestedWords": 10000,
+        "snapshotSha256": "959f377ce8946204edb5166a66470c527cf21bcc2f51e9936fc8d39bff3e6a89",
+        "sourceTitle": "History_of_the_United_States"
+      },
+      "browser": "156.0.8078.4",
+      "contentMode": "Original public page markup",
+      "sample": {
+        "words": 9983,
+        "paragraphs": 115,
+        "characters": 64626,
+        "sha256": "b1da268ae6d2933f9b1e9538e710a48bdf98ae2bea27bcd824b4d7f5536182a5",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "progress": {
+        "done": 115,
+        "events": [
+          {
+            "paragraphs": 3,
+            "ms": 10184
+          },
+          {
+            "paragraphs": 5,
+            "ms": 14949
+          },
+          {
+            "paragraphs": 7,
+            "ms": 21174
+          },
+          {
+            "paragraphs": 10,
+            "ms": 26664
+          },
+          {
+            "paragraphs": 13,
+            "ms": 26795
+          },
+          {
+            "paragraphs": 15,
+            "ms": 30530
+          },
+          {
+            "paragraphs": 17,
+            "ms": 32140
+          },
+          {
+            "paragraphs": 20,
+            "ms": 38557
+          },
+          {
+            "paragraphs": 23,
+            "ms": 41271
+          },
+          {
+            "paragraphs": 26,
+            "ms": 45427
+          },
+          {
+            "paragraphs": 29,
+            "ms": 47483
+          },
+          {
+            "paragraphs": 32,
+            "ms": 52677
+          },
+          {
+            "paragraphs": 35,
+            "ms": 52990
+          },
+          {
+            "paragraphs": 37,
+            "ms": 57097
+          },
+          {
+            "paragraphs": 40,
+            "ms": 57832
+          },
+          {
+            "paragraphs": 43,
+            "ms": 64079
+          },
+          {
+            "paragraphs": 46,
+            "ms": 64142
+          },
+          {
+            "paragraphs": 49,
+            "ms": 67766
+          },
+          {
+            "paragraphs": 51,
+            "ms": 68884
+          },
+          {
+            "paragraphs": 52,
+            "ms": 70230
+          },
+          {
+            "paragraphs": 54,
+            "ms": 72585
+          },
+          {
+            "paragraphs": 55,
+            "ms": 73172
+          },
+          {
+            "paragraphs": 58,
+            "ms": 74578
+          },
+          {
+            "paragraphs": 61,
+            "ms": 79580
+          },
+          {
+            "paragraphs": 63,
+            "ms": 79929
+          },
+          {
+            "paragraphs": 66,
+            "ms": 84439
+          },
+          {
+            "paragraphs": 69,
+            "ms": 85389
+          },
+          {
+            "paragraphs": 72,
+            "ms": 92808
+          },
+          {
+            "paragraphs": 75,
+            "ms": 93356
+          },
+          {
+            "paragraphs": 77,
+            "ms": 97686
+          },
+          {
+            "paragraphs": 80,
+            "ms": 98636
+          },
+          {
+            "paragraphs": 83,
+            "ms": 103595
+          },
+          {
+            "paragraphs": 85,
+            "ms": 104247
+          },
+          {
+            "paragraphs": 88,
+            "ms": 109246
+          },
+          {
+            "paragraphs": 90,
+            "ms": 110215
+          },
+          {
+            "paragraphs": 92,
+            "ms": 116276
+          },
+          {
+            "paragraphs": 95,
+            "ms": 117564
+          },
+          {
+            "paragraphs": 97,
+            "ms": 120981
+          },
+          {
+            "paragraphs": 99,
+            "ms": 121868
+          },
+          {
+            "paragraphs": 102,
+            "ms": 122113
+          },
+          {
+            "paragraphs": 105,
+            "ms": 125564
+          },
+          {
+            "paragraphs": 107,
+            "ms": 125697
+          },
+          {
+            "paragraphs": 109,
+            "ms": 125923
+          },
+          {
+            "paragraphs": 110,
+            "ms": 128887
+          },
+          {
+            "paragraphs": 111,
+            "ms": 130191
+          },
+          {
+            "paragraphs": 114,
+            "ms": 130677
+          },
+          {
+            "paragraphs": 115,
+            "ms": 131438
+          }
+        ],
+        "elapsedMs": 131454
+      },
+      "firstTranslationMs": 10184,
+      "extensionState": {
+        "ok": true,
+        "active": true,
+        "completed": 115,
+        "failed": 0,
+        "error": ""
+      },
+      "completeMs": 131438,
+      "wordsPerSecond": 75.95,
+      "preservation": {
+        "links": 923,
+        "comparison": "Exact per-paragraph multisets; complete sibling phrases may move with translated word order. Renderer independently enforces marker uniqueness, pairing and original parent relationships.",
+        "linksPreserved": true,
+        "formattingPreserved": true
+      },
+      "output": {
+        "translatedParagraphs": 115,
+        "targetScriptParagraphs": null,
+        "unchangedParagraphs": 0,
+        "languageValidation": "Nonempty changed output; language and meaning need separate review",
+        "characters": 75128,
+        "sha256": "c70258aa475cbdc6fa52f78158751a1e24c4e99358d834292a794563153d313f"
+      },
+      "restored": true,
+      "finishedAt": "2026-10-13T13:40:41.975Z",
+      "exitCode": 0
+    },
+    {
+      "schema": 1,
+      "status": "passed",
+      "startedAt": "2026-10-13T13:40:42.387Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/History_of_the_United_States",
+      "sourceLanguage": "en",
+      "targetLanguage": "es",
+      "provider": "Configured OpenAI-compatible endpoint",
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "settings": {
+        "batchSize": 3,
+        "concurrency": 6,
+        "timeout": 45,
+        "reasoningEffort": "none",
+        "cache": false
+      },
+      "method": "Real public page in a clean Chromium extension profile. Select approximately the requested word count in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. Application cache disabled; upstream prompt caching is uncontrolled.",
+      "requests": [],
+      "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+        "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
+      },
+      "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+      "totalDeadlineSeconds": 600,
+      "scenario": {
+        "requestedWords": 10000,
+        "snapshotSha256": "959f377ce8946204edb5166a66470c527cf21bcc2f51e9936fc8d39bff3e6a89",
+        "sourceTitle": "History_of_the_United_States"
+      },
+      "browser": "156.0.8078.4",
+      "contentMode": "Original public page markup",
+      "sample": {
+        "words": 9983,
+        "paragraphs": 115,
+        "characters": 64626,
+        "sha256": "b1da268ae6d2933f9b1e9538e710a48bdf98ae2bea27bcd824b4d7f5536182a5",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "progress": {
+        "done": 115,
+        "events": [
+          {
+            "paragraphs": 3,
+            "ms": 14171
+          },
+          {
+            "paragraphs": 5,
+            "ms": 18248
+          },
+          {
+            "paragraphs": 7,
+            "ms": 20963
+          },
+          {
+            "paragraphs": 10,
+            "ms": 24784
+          },
+          {
+            "paragraphs": 13,
+            "ms": 24923
+          },
+          {
+            "paragraphs": 15,
+            "ms": 29455
+          },
+          {
+            "paragraphs": 17,
+            "ms": 29797
+          },
+          {
+            "paragraphs": 20,
+            "ms": 34078
+          },
+          {
+            "paragraphs": 23,
+            "ms": 36430
+          },
+          {
+            "paragraphs": 26,
+            "ms": 40025
+          },
+          {
+            "paragraphs": 29,
+            "ms": 41775
+          },
+          {
+            "paragraphs": 32,
+            "ms": 45049
+          },
+          {
+            "paragraphs": 35,
+            "ms": 46526
+          },
+          {
+            "paragraphs": 37,
+            "ms": 50875
+          },
+          {
+            "paragraphs": 40,
+            "ms": 52066
+          },
+          {
+            "paragraphs": 43,
+            "ms": 57544
+          },
+          {
+            "paragraphs": 46,
+            "ms": 57702
+          },
+          {
+            "paragraphs": 49,
+            "ms": 62235
+          },
+          {
+            "paragraphs": 51,
+            "ms": 62634
+          },
+          {
+            "paragraphs": 52,
+            "ms": 65167
+          },
+          {
+            "paragraphs": 54,
+            "ms": 65731
+          },
+          {
+            "paragraphs": 55,
+            "ms": 67918
+          },
+          {
+            "paragraphs": 58,
+            "ms": 67960
+          },
+          {
+            "paragraphs": 61,
+            "ms": 72538
+          },
+          {
+            "paragraphs": 63,
+            "ms": 72886
+          },
+          {
+            "paragraphs": 66,
+            "ms": 78791
+          },
+          {
+            "paragraphs": 69,
+            "ms": 78805
+          },
+          {
+            "paragraphs": 72,
+            "ms": 86050
+          },
+          {
+            "paragraphs": 75,
+            "ms": 86097
+          },
+          {
+            "paragraphs": 77,
+            "ms": 91205
+          },
+          {
+            "paragraphs": 80,
+            "ms": 91472
+          },
+          {
+            "paragraphs": 82,
+            "ms": 96440
+          },
+          {
+            "paragraphs": 85,
+            "ms": 97876
+          },
+          {
+            "paragraphs": 87,
+            "ms": 103375
+          },
+          {
+            "paragraphs": 90,
+            "ms": 103924
+          },
+          {
+            "paragraphs": 93,
+            "ms": 110981
+          },
+          {
+            "paragraphs": 94,
+            "ms": 112786
+          },
+          {
+            "paragraphs": 96,
+            "ms": 112959
+          },
+          {
+            "paragraphs": 99,
+            "ms": 114388
+          },
+          {
+            "paragraphs": 102,
+            "ms": 118821
+          },
+          {
+            "paragraphs": 105,
+            "ms": 119500
+          },
+          {
+            "paragraphs": 108,
+            "ms": 123928
+          },
+          {
+            "paragraphs": 111,
+            "ms": 125291
+          },
+          {
+            "paragraphs": 113,
+            "ms": 129210
+          },
+          {
+            "paragraphs": 115,
+            "ms": 129510
+          }
+        ],
+        "elapsedMs": 129531
+      },
+      "firstTranslationMs": 14171,
+      "extensionState": {
+        "ok": true,
+        "active": true,
+        "completed": 115,
+        "failed": 0,
+        "error": ""
+      },
+      "completeMs": 129510,
+      "wordsPerSecond": 77.08,
+      "preservation": {
+        "links": 923,
+        "comparison": "Exact per-paragraph multisets; complete sibling phrases may move with translated word order. Renderer independently enforces marker uniqueness, pairing and original parent relationships.",
+        "linksPreserved": true,
+        "formattingPreserved": true
+      },
+      "output": {
+        "translatedParagraphs": 115,
+        "targetScriptParagraphs": null,
+        "unchangedParagraphs": 0,
+        "languageValidation": "Nonempty changed output; language and meaning need separate review",
+        "characters": 73838,
+        "sha256": "ce5a252e635b53b0d82209d7cd9886291782ca6611ba99fac98261e114b67c2f"
+      },
+      "restored": true,
+      "finishedAt": "2026-10-13T13:42:54.837Z",
+      "exitCode": 0
+    },
+    {
+      "schema": 1,
+      "status": "failed",
+      "startedAt": "2026-10-13T13:42:55.268Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/History_of_the_United_States",
+      "sourceLanguage": "en",
+      "targetLanguage": "ja",
+      "provider": "Configured OpenAI-compatible endpoint",
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "settings": {
+        "batchSize": 3,
+        "concurrency": 6,
+        "timeout": 45,
+        "reasoningEffort": "none",
+        "cache": false
+      },
+      "method": "Real public page in a clean Chromium extension profile. Select approximately the requested word count in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. Application cache disabled; upstream prompt caching is uncontrolled.",
+      "requests": [],
+      "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+        "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
+      },
+      "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+      "totalDeadlineSeconds": 600,
+      "scenario": {
+        "requestedWords": 10000,
+        "snapshotSha256": "959f377ce8946204edb5166a66470c527cf21bcc2f51e9936fc8d39bff3e6a89",
+        "sourceTitle": "History_of_the_United_States"
+      },
+      "browser": "156.0.8078.4",
+      "contentMode": "Original public page markup",
+      "sample": {
+        "words": 9983,
+        "paragraphs": 115,
+        "characters": 64626,
+        "sha256": "b1da268ae6d2933f9b1e9538e710a48bdf98ae2bea27bcd824b4d7f5536182a5",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "progress": {
+        "done": 13,
+        "events": [
+          {
+            "paragraphs": 3,
+            "ms": 17408
+          },
+          {
+            "paragraphs": 5,
+            "ms": 25298
+          },
+          {
+            "paragraphs": 7,
+            "ms": 26329
+          },
+          {
+            "paragraphs": 10,
+            "ms": 32422
+          },
+          {
+            "paragraphs": 13,
+            "ms": 36228
+          }
+        ],
+        "elapsedMs": 41760
+      },
+      "firstTranslationMs": 17408,
+      "extensionState": {
+        "ok": true,
+        "active": true,
+        "completed": 13,
+        "failed": 2,
+        "error": "Agent changed protected markup or terminology."
+      },
+      "failedAt": "2026-10-13T13:43:39.705Z",
+      "error": "Translation failed: Agent changed protected markup or terminology.",
+      "exitCode": 1
+    },
+    {
+      "schema": 1,
+      "status": "failed",
+      "startedAt": "2026-10-13T13:43:40.167Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/History_of_the_United_States",
+      "sourceLanguage": "en",
+      "targetLanguage": "ko",
+      "provider": "Configured OpenAI-compatible endpoint",
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "settings": {
+        "batchSize": 3,
+        "concurrency": 6,
+        "timeout": 45,
+        "reasoningEffort": "none",
+        "cache": false
+      },
+      "method": "Real public page in a clean Chromium extension profile. Select approximately the requested word count in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. Application cache disabled; upstream prompt caching is uncontrolled.",
+      "requests": [],
+      "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+        "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
+      },
+      "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+      "totalDeadlineSeconds": 600,
+      "scenario": {
+        "requestedWords": 10000,
+        "snapshotSha256": "959f377ce8946204edb5166a66470c527cf21bcc2f51e9936fc8d39bff3e6a89",
+        "sourceTitle": "History_of_the_United_States"
+      },
+      "browser": "156.0.8078.4",
+      "contentMode": "Original public page markup",
+      "sample": {
+        "words": 9983,
+        "paragraphs": 115,
+        "characters": 64626,
+        "sha256": "b1da268ae6d2933f9b1e9538e710a48bdf98ae2bea27bcd824b4d7f5536182a5",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "progress": {
+        "done": 5,
+        "events": [
+          {
+            "paragraphs": 3,
+            "ms": 20915
+          },
+          {
+            "paragraphs": 5,
+            "ms": 26987
+          }
+        ],
+        "elapsedMs": 29101
+      },
+      "firstTranslationMs": 20915,
+      "extensionState": {
+        "ok": true,
+        "active": true,
+        "completed": 5,
+        "failed": 2,
+        "error": "Agent changed protected markup or terminology."
+      },
+      "failedAt": "2026-10-13T13:44:11.995Z",
+      "error": "Translation failed: Agent changed protected markup or terminology.",
+      "exitCode": 1
+    },
+    {
+      "schema": 1,
+      "status": "failed",
+      "startedAt": "2026-10-13T13:44:12.431Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/History_of_the_United_States",
+      "sourceLanguage": "en",
+      "targetLanguage": "zh-CN",
+      "provider": "Configured OpenAI-compatible endpoint",
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "settings": {
+        "batchSize": 3,
+        "concurrency": 6,
+        "timeout": 45,
+        "reasoningEffort": "none",
+        "cache": false
+      },
+      "method": "Real public page in a clean Chromium extension profile. Select approximately the requested word count in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. Application cache disabled; upstream prompt caching is uncontrolled.",
+      "requests": [],
+      "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+        "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
+      },
+      "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+      "totalDeadlineSeconds": 600,
+      "scenario": {
+        "requestedWords": 15000,
+        "snapshotSha256": "959f377ce8946204edb5166a66470c527cf21bcc2f51e9936fc8d39bff3e6a89",
+        "sourceTitle": "History_of_the_United_States"
+      },
+      "browser": "156.0.8078.4",
+      "contentMode": "Original public page markup",
+      "sample": {
+        "words": 15031,
+        "paragraphs": 167,
+        "characters": 98620,
+        "sha256": "70d5edcc8a3cadf2b5c85a6cdb2c926e1b29e6b46cc16740b367d108eaf1ca63",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "progress": {
+        "done": 44,
+        "events": [
+          {
+            "paragraphs": 3,
+            "ms": 14290
+          },
+          {
+            "paragraphs": 5,
+            "ms": 19817
+          },
+          {
+            "paragraphs": 7,
+            "ms": 20038
+          },
+          {
+            "paragraphs": 8,
+            "ms": 22231
+          },
+          {
+            "paragraphs": 10,
+            "ms": 23285
+          },
+          {
+            "paragraphs": 13,
+            "ms": 25002
+          },
+          {
+            "paragraphs": 14,
+            "ms": 27933
+          },
+          {
+            "paragraphs": 17,
+            "ms": 29119
+          },
+          {
+            "paragraphs": 18,
+            "ms": 30679
+          },
+          {
+            "paragraphs": 20,
+            "ms": 32673
+          },
+          {
+            "paragraphs": 23,
+            "ms": 33068
+          },
+          {
+            "paragraphs": 24,
+            "ms": 33257
+          },
+          {
+            "paragraphs": 27,
+            "ms": 36281
+          },
+          {
+            "paragraphs": 30,
+            "ms": 37504
+          },
+          {
+            "paragraphs": 33,
+            "ms": 41652
+          },
+          {
+            "paragraphs": 36,
+            "ms": 42689
+          },
+          {
+            "paragraphs": 39,
+            "ms": 46088
+          },
+          {
+            "paragraphs": 41,
+            "ms": 46657
+          },
+          {
+            "paragraphs": 44,
+            "ms": 50839
+          }
+        ],
+        "elapsedMs": 50886
+      },
+      "firstTranslationMs": 14290,
+      "extensionState": {
+        "ok": true,
+        "active": true,
+        "completed": 44,
+        "failed": 2,
+        "error": "Agent changed protected markup or terminology."
+      },
+      "failedAt": "2026-10-13T13:45:06.061Z",
+      "error": "Translation failed: Agent changed protected markup or terminology.",
+      "exitCode": 1
+    },
+    {
+      "schema": 1,
+      "status": "failed",
+      "startedAt": "2026-10-13T13:45:06.494Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/History_of_the_United_States",
+      "sourceLanguage": "en",
+      "targetLanguage": "fr",
+      "provider": "Configured OpenAI-compatible endpoint",
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "settings": {
+        "batchSize": 3,
+        "concurrency": 6,
+        "timeout": 45,
+        "reasoningEffort": "none",
+        "cache": false
+      },
+      "method": "Real public page in a clean Chromium extension profile. Select approximately the requested word count in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. Application cache disabled; upstream prompt caching is uncontrolled.",
+      "requests": [],
+      "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+        "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
+      },
+      "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+      "totalDeadlineSeconds": 600,
+      "scenario": {
+        "requestedWords": 15000,
+        "snapshotSha256": "959f377ce8946204edb5166a66470c527cf21bcc2f51e9936fc8d39bff3e6a89",
+        "sourceTitle": "History_of_the_United_States"
+      },
+      "browser": "156.0.8078.4",
+      "contentMode": "Original public page markup",
+      "sample": {
+        "words": 15031,
+        "paragraphs": 167,
+        "characters": 98620,
+        "sha256": "70d5edcc8a3cadf2b5c85a6cdb2c926e1b29e6b46cc16740b367d108eaf1ca63",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "progress": {
+        "done": 137,
+        "events": [
+          {
+            "paragraphs": 3,
+            "ms": 9759
+          },
+          {
+            "paragraphs": 5,
+            "ms": 16124
+          },
+          {
+            "paragraphs": 7,
+            "ms": 17260
+          },
+          {
+            "paragraphs": 10,
+            "ms": 22780
+          },
+          {
+            "paragraphs": 13,
+            "ms": 23559
+          },
+          {
+            "paragraphs": 15,
+            "ms": 28472
+          },
+          {
+            "paragraphs": 17,
+            "ms": 29031
+          },
+          {
+            "paragraphs": 18,
+            "ms": 31097
+          },
+          {
+            "paragraphs": 20,
+            "ms": 33672
+          },
+          {
+            "paragraphs": 21,
+            "ms": 33785
+          },
+          {
+            "paragraphs": 24,
+            "ms": 35260
+          },
+          {
+            "paragraphs": 27,
+            "ms": 39838
+          },
+          {
+            "paragraphs": 30,
+            "ms": 40540
+          },
+          {
+            "paragraphs": 33,
+            "ms": 47048
+          },
+          {
+            "paragraphs": 36,
+            "ms": 49089
+          },
+          {
+            "paragraphs": 38,
+            "ms": 54067
+          },
+          {
+            "paragraphs": 41,
+            "ms": 55505
+          },
+          {
+            "paragraphs": 44,
+            "ms": 59131
+          },
+          {
+            "paragraphs": 46,
+            "ms": 60304
+          },
+          {
+            "paragraphs": 48,
+            "ms": 64734
+          },
+          {
+            "paragraphs": 51,
+            "ms": 64777
+          },
+          {
+            "paragraphs": 54,
+            "ms": 69735
+          },
+          {
+            "paragraphs": 57,
+            "ms": 70319
+          },
+          {
+            "paragraphs": 59,
+            "ms": 74832
+          },
+          {
+            "paragraphs": 62,
+            "ms": 75454
+          },
+          {
+            "paragraphs": 64,
+            "ms": 80122
+          },
+          {
+            "paragraphs": 66,
+            "ms": 81422
+          },
+          {
+            "paragraphs": 69,
+            "ms": 84841
+          },
+          {
+            "paragraphs": 70,
+            "ms": 85175
+          },
+          {
+            "paragraphs": 73,
+            "ms": 85921
+          },
+          {
+            "paragraphs": 75,
+            "ms": 91019
+          },
+          {
+            "paragraphs": 77,
+            "ms": 93026
+          },
+          {
+            "paragraphs": 78,
+            "ms": 94051
+          },
+          {
+            "paragraphs": 79,
+            "ms": 96408
+          },
+          {
+            "paragraphs": 80,
+            "ms": 97222
+          },
+          {
+            "paragraphs": 83,
+            "ms": 98455
+          },
+          {
+            "paragraphs": 85,
+            "ms": 105112
+          },
+          {
+            "paragraphs": 88,
+            "ms": 106075
+          },
+          {
+            "paragraphs": 91,
+            "ms": 111566
+          },
+          {
+            "paragraphs": 93,
+            "ms": 111774
+          },
+          {
+            "paragraphs": 96,
+            "ms": 116335
+          },
+          {
+            "paragraphs": 99,
+            "ms": 118126
+          },
+          {
+            "paragraphs": 102,
+            "ms": 123528
+          },
+          {
+            "paragraphs": 105,
+            "ms": 124523
+          },
+          {
+            "paragraphs": 108,
+            "ms": 130109
+          },
+          {
+            "paragraphs": 111,
+            "ms": 130427
+          },
+          {
+            "paragraphs": 114,
+            "ms": 134484
+          },
+          {
+            "paragraphs": 117,
+            "ms": 135596
+          },
+          {
+            "paragraphs": 119,
+            "ms": 139377
+          },
+          {
+            "paragraphs": 122,
+            "ms": 141077
+          },
+          {
+            "paragraphs": 125,
+            "ms": 147946
+          },
+          {
+            "paragraphs": 128,
+            "ms": 148174
+          },
+          {
+            "paragraphs": 131,
+            "ms": 153978
+          },
+          {
+            "paragraphs": 134,
+            "ms": 160656
+          },
+          {
+            "paragraphs": 137,
+            "ms": 162567
+          }
+        ],
+        "elapsedMs": 167263
+      },
+      "firstTranslationMs": 9759,
+      "extensionState": {
+        "ok": true,
+        "active": true,
+        "completed": 137,
+        "failed": 2,
+        "error": "Agent changed protected markup or terminology."
+      },
+      "failedAt": "2026-10-13T13:47:56.504Z",
+      "error": "Translation failed: Agent changed protected markup or terminology.",
+      "exitCode": 1
+    },
+    {
+      "schema": 1,
+      "status": "passed",
+      "startedAt": "2026-10-13T13:47:56.956Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/History_of_the_United_States",
+      "sourceLanguage": "en",
+      "targetLanguage": "es",
+      "provider": "Configured OpenAI-compatible endpoint",
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "settings": {
+        "batchSize": 3,
+        "concurrency": 6,
+        "timeout": 45,
+        "reasoningEffort": "none",
+        "cache": false
+      },
+      "method": "Real public page in a clean Chromium extension profile. Select approximately the requested word count in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. Application cache disabled; upstream prompt caching is uncontrolled.",
+      "requests": [],
+      "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+        "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
+      },
+      "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+      "totalDeadlineSeconds": 600,
+      "scenario": {
+        "requestedWords": 15000,
+        "snapshotSha256": "959f377ce8946204edb5166a66470c527cf21bcc2f51e9936fc8d39bff3e6a89",
+        "sourceTitle": "History_of_the_United_States"
+      },
+      "browser": "156.0.8078.4",
+      "contentMode": "Original public page markup",
+      "sample": {
+        "words": 15031,
+        "paragraphs": 167,
+        "characters": 98620,
+        "sha256": "70d5edcc8a3cadf2b5c85a6cdb2c926e1b29e6b46cc16740b367d108eaf1ca63",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "progress": {
+        "done": 167,
+        "events": [
+          {
+            "paragraphs": 3,
+            "ms": 13858
+          },
+          {
+            "paragraphs": 5,
+            "ms": 17817
+          },
+          {
+            "paragraphs": 7,
+            "ms": 20976
+          },
+          {
+            "paragraphs": 10,
+            "ms": 24746
+          },
+          {
+            "paragraphs": 13,
+            "ms": 25070
+          },
+          {
+            "paragraphs": 15,
+            "ms": 29970
+          },
+          {
+            "paragraphs": 17,
+            "ms": 30112
+          },
+          {
+            "paragraphs": 18,
+            "ms": 33293
+          },
+          {
+            "paragraphs": 20,
+            "ms": 33691
+          },
+          {
+            "paragraphs": 23,
+            "ms": 34508
+          },
+          {
+            "paragraphs": 24,
+            "ms": 35183
+          },
+          {
+            "paragraphs": 25,
+            "ms": 37084
+          },
+          {
+            "paragraphs": 27,
+            "ms": 39194
+          },
+          {
+            "paragraphs": 30,
+            "ms": 40233
+          },
+          {
+            "paragraphs": 33,
+            "ms": 43909
+          },
+          {
+            "paragraphs": 36,
+            "ms": 48900
+          },
+          {
+            "paragraphs": 38,
+            "ms": 53173
+          },
+          {
+            "paragraphs": 41,
+            "ms": 54552
+          },
+          {
+            "paragraphs": 44,
+            "ms": 57998
+          },
+          {
+            "paragraphs": 46,
+            "ms": 58137
+          },
+          {
+            "paragraphs": 49,
+            "ms": 62614
+          },
+          {
+            "paragraphs": 51,
+            "ms": 62995
+          },
+          {
+            "paragraphs": 52,
+            "ms": 65874
+          },
+          {
+            "paragraphs": 54,
+            "ms": 66632
+          },
+          {
+            "paragraphs": 57,
+            "ms": 68161
+          },
+          {
+            "paragraphs": 58,
+            "ms": 69504
+          },
+          {
+            "paragraphs": 59,
+            "ms": 71152
+          },
+          {
+            "paragraphs": 62,
+            "ms": 72198
+          },
+          {
+            "paragraphs": 63,
+            "ms": 73994
+          },
+          {
+            "paragraphs": 66,
+            "ms": 78685
+          },
+          {
+            "paragraphs": 69,
+            "ms": 79264
+          },
+          {
+            "paragraphs": 72,
+            "ms": 86116
+          },
+          {
+            "paragraphs": 75,
+            "ms": 86438
+          },
+          {
+            "paragraphs": 77,
+            "ms": 90690
+          },
+          {
+            "paragraphs": 80,
+            "ms": 92006
+          },
+          {
+            "paragraphs": 82,
+            "ms": 97156
+          },
+          {
+            "paragraphs": 85,
+            "ms": 98879
+          },
+          {
+            "paragraphs": 88,
+            "ms": 104929
+          },
+          {
+            "paragraphs": 90,
+            "ms": 107969
+          },
+          {
+            "paragraphs": 93,
+            "ms": 113918
+          },
+          {
+            "paragraphs": 94,
+            "ms": 115673
+          },
+          {
+            "paragraphs": 96,
+            "ms": 116620
+          },
+          {
+            "paragraphs": 99,
+            "ms": 117364
+          },
+          {
+            "paragraphs": 102,
+            "ms": 122951
+          },
+          {
+            "paragraphs": 105,
+            "ms": 123217
+          },
+          {
+            "paragraphs": 108,
+            "ms": 128213
+          },
+          {
+            "paragraphs": 111,
+            "ms": 128979
+          },
+          {
+            "paragraphs": 114,
+            "ms": 133123
+          },
+          {
+            "paragraphs": 117,
+            "ms": 133841
+          },
+          {
+            "paragraphs": 120,
+            "ms": 137686
+          },
+          {
+            "paragraphs": 122,
+            "ms": 138918
+          },
+          {
+            "paragraphs": 125,
+            "ms": 143974
+          },
+          {
+            "paragraphs": 128,
+            "ms": 145315
+          },
+          {
+            "paragraphs": 129,
+            "ms": 147023
+          },
+          {
+            "paragraphs": 131,
+            "ms": 149915
+          },
+          {
+            "paragraphs": 134,
+            "ms": 150900
+          },
+          {
+            "paragraphs": 137,
+            "ms": 154413
+          },
+          {
+            "paragraphs": 139,
+            "ms": 157171
+          },
+          {
+            "paragraphs": 141,
+            "ms": 159462
+          },
+          {
+            "paragraphs": 142,
+            "ms": 159758
+          },
+          {
+            "paragraphs": 144,
+            "ms": 162921
+          },
+          {
+            "paragraphs": 147,
+            "ms": 164917
+          },
+          {
+            "paragraphs": 149,
+            "ms": 170248
+          },
+          {
+            "paragraphs": 152,
+            "ms": 171993
+          },
+          {
+            "paragraphs": 154,
+            "ms": 177957
+          },
+          {
+            "paragraphs": 157,
+            "ms": 178444
+          },
+          {
+            "paragraphs": 160,
+            "ms": 184079
+          },
+          {
+            "paragraphs": 162,
+            "ms": 184106
+          },
+          {
+            "paragraphs": 164,
+            "ms": 189279
+          },
+          {
+            "paragraphs": 166,
+            "ms": 190674
+          },
+          {
+            "paragraphs": 167,
+            "ms": 193014
+          }
+        ],
+        "elapsedMs": 193060
+      },
+      "firstTranslationMs": 13858,
+      "extensionState": {
+        "ok": true,
+        "active": true,
+        "completed": 167,
+        "failed": 0,
+        "error": ""
+      },
+      "completeMs": 193014,
+      "wordsPerSecond": 77.88,
+      "preservation": {
+        "links": 1619,
+        "comparison": "Exact per-paragraph multisets; complete sibling phrases may move with translated word order. Renderer independently enforces marker uniqueness, pairing and original parent relationships.",
+        "linksPreserved": true,
+        "formattingPreserved": true
+      },
+      "output": {
+        "translatedParagraphs": 167,
+        "targetScriptParagraphs": null,
+        "unchangedParagraphs": 0,
+        "languageValidation": "Nonempty changed output; language and meaning need separate review",
+        "characters": 113110,
+        "sha256": "24d2af8611a65fcda1fae66687bec52f763e88c00bad3de6d471c65205fbbb7c"
+      },
+      "restored": true,
+      "finishedAt": "2026-10-13T13:51:12.922Z",
+      "exitCode": 0
+    },
+    {
+      "schema": 1,
+      "status": "failed",
+      "startedAt": "2026-10-13T13:51:13.352Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/History_of_the_United_States",
+      "sourceLanguage": "en",
+      "targetLanguage": "ja",
+      "provider": "Configured OpenAI-compatible endpoint",
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "settings": {
+        "batchSize": 3,
+        "concurrency": 6,
+        "timeout": 45,
+        "reasoningEffort": "none",
+        "cache": false
+      },
+      "method": "Real public page in a clean Chromium extension profile. Select approximately the requested word count in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. Application cache disabled; upstream prompt caching is uncontrolled.",
+      "requests": [],
+      "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+        "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
+      },
+      "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+      "totalDeadlineSeconds": 600,
+      "scenario": {
+        "requestedWords": 15000,
+        "snapshotSha256": "959f377ce8946204edb5166a66470c527cf21bcc2f51e9936fc8d39bff3e6a89",
+        "sourceTitle": "History_of_the_United_States"
+      },
+      "browser": "156.0.8078.4",
+      "contentMode": "Original public page markup",
+      "sample": {
+        "words": 15031,
+        "paragraphs": 167,
+        "characters": 98620,
+        "sha256": "70d5edcc8a3cadf2b5c85a6cdb2c926e1b29e6b46cc16740b367d108eaf1ca63",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "progress": {
+        "done": 13,
+        "events": [
+          {
+            "paragraphs": 3,
+            "ms": 18418
+          },
+          {
+            "paragraphs": 5,
+            "ms": 26033
+          },
+          {
+            "paragraphs": 7,
+            "ms": 28149
+          },
+          {
+            "paragraphs": 10,
+            "ms": 34635
+          },
+          {
+            "paragraphs": 13,
+            "ms": 37907
+          }
+        ],
+        "elapsedMs": 44351
+      },
+      "firstTranslationMs": 18418,
+      "extensionState": {
+        "ok": true,
+        "active": true,
+        "completed": 13,
+        "failed": 2,
+        "error": "Agent changed protected markup or terminology."
+      },
+      "failedAt": "2026-10-13T13:52:00.394Z",
+      "error": "Translation failed: Agent changed protected markup or terminology.",
+      "exitCode": 1
+    },
+    {
+      "schema": 1,
+      "status": "failed",
+      "startedAt": "2026-10-13T13:52:00.851Z",
+      "sourceUrl": "https://en.wikipedia.org/wiki/History_of_the_United_States",
+      "sourceLanguage": "en",
+      "targetLanguage": "ko",
+      "provider": "Configured OpenAI-compatible endpoint",
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "settings": {
+        "batchSize": 3,
+        "concurrency": 6,
+        "timeout": 45,
+        "reasoningEffort": "none",
+        "cache": false
+      },
+      "method": "Real public page in a clean Chromium extension profile. Select approximately the requested word count in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. Application cache disabled; upstream prompt caching is uncontrolled.",
+      "requests": [],
+      "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+      "buildEvidence": {
+        "schema": 1,
+        "browser": "chrome",
+        "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+        "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
+      },
+      "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+      "totalDeadlineSeconds": 600,
+      "scenario": {
+        "requestedWords": 15000,
+        "snapshotSha256": "959f377ce8946204edb5166a66470c527cf21bcc2f51e9936fc8d39bff3e6a89",
+        "sourceTitle": "History_of_the_United_States"
+      },
+      "browser": "156.0.8078.4",
+      "contentMode": "Original public page markup",
+      "sample": {
+        "words": 15031,
+        "paragraphs": 167,
+        "characters": 98620,
+        "sha256": "70d5edcc8a3cadf2b5c85a6cdb2c926e1b29e6b46cc16740b367d108eaf1ca63",
+        "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+      },
+      "progress": {
+        "done": 35,
+        "events": [
+          {
+            "paragraphs": 3,
+            "ms": 19117
+          },
+          {
+            "paragraphs": 5,
+            "ms": 25257
+          },
+          {
+            "paragraphs": 7,
+            "ms": 28855
+          },
+          {
+            "paragraphs": 10,
+            "ms": 33604
+          },
+          {
+            "paragraphs": 13,
+            "ms": 36152
+          },
+          {
+            "paragraphs": 15,
+            "ms": 42344
+          },
+          {
+            "paragraphs": 17,
+            "ms": 43635
+          },
+          {
+            "paragraphs": 20,
+            "ms": 51271
+          },
+          {
+            "paragraphs": 23,
+            "ms": 52930
+          },
+          {
+            "paragraphs": 26,
+            "ms": 60500
+          },
+          {
+            "paragraphs": 29,
+            "ms": 60776
+          },
+          {
+            "paragraphs": 32,
+            "ms": 65877
+          },
+          {
+            "paragraphs": 35,
+            "ms": 67352
+          }
+        ],
+        "elapsedMs": 73304
+      },
+      "firstTranslationMs": 19117,
+      "extensionState": {
+        "ok": true,
+        "active": true,
+        "completed": 35,
+        "failed": 2,
+        "error": "Agent changed protected markup or terminology."
+      },
+      "failedAt": "2026-10-13T13:53:16.862Z",
+      "error": "Translation failed: Agent changed protected markup or terminology.",
+      "exitCode": 1
+    }
+  ],
+  "environment": {
+    "os": "Linux",
+    "architecture": "x86_64",
+    "client": "Headless Chromium with the actual unpacked Chrome extension",
+    "gateway": "Local Magpie gateway; upstream OpenCode Go",
+    "deviceScope": "Linux desktop benchmark; not Mac, Safari or mobile device timing"
+  },
+  "benchmarkRunnerSha256": "5866660896c599f54d1582bd7d97c167c1031c7318c81b4ffe8ab73d53479802",
+  "benchmarkRunnerCommit": "79ed8b0",
+  "plainTextDiagnostics": {
+    "scope": "Plain-text diagnostics only; inline links/formatting removed before timing. Not full original-page acceptance.",
+    "results": [
+      {
+        "schema": 1,
+        "status": "passed",
+        "startedAt": "2026-10-13T13:53:19.110Z",
+        "sourceUrl": "https://en.wikipedia.org/wiki/History_of_the_United_States",
+        "sourceLanguage": "en",
+        "targetLanguage": "zh-CN",
+        "provider": "Configured OpenAI-compatible endpoint",
+        "model": "opencode-go/deepseek-v4.1-flash",
+        "settings": {
+          "batchSize": 3,
+          "concurrency": 6,
+          "timeout": 45,
+          "reasoningEffort": "none",
+          "cache": false
+        },
+        "method": "Real public page in a clean Chromium extension profile. Select approximately the requested word count in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. Application cache disabled; upstream prompt caching is uncontrolled.",
+        "requests": [],
+        "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+        "buildEvidence": {
+          "schema": 1,
+          "browser": "chrome",
+          "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+          "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
+        },
+        "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+        "totalDeadlineSeconds": 600,
+        "scenario": {
+          "requestedWords": 5000,
+          "snapshotSha256": "959f377ce8946204edb5166a66470c527cf21bcc2f51e9936fc8d39bff3e6a89",
+          "sourceTitle": "History_of_the_United_States"
+        },
+        "browser": "156.0.8078.4",
+        "contentMode": "Plain-text reading view: inline markup removed from selected paragraphs before timing; not original page formatting",
+        "sample": {
+          "words": 4970,
+          "paragraphs": 55,
+          "characters": 32117,
+          "sha256": "0a970e96b82a561ab6923dc09c3266a27568d904e35b0e35b45bec9122dc7595",
+          "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+        },
+        "progress": {
+          "done": 55,
+          "events": [
+            {
+              "paragraphs": 3,
+              "ms": 9055
+            },
+            {
+              "paragraphs": 5,
+              "ms": 13224
+            },
+            {
+              "paragraphs": 7,
+              "ms": 13808
+            },
+            {
+              "paragraphs": 10,
+              "ms": 16875
+            },
+            {
+              "paragraphs": 13,
+              "ms": 17023
+            },
+            {
+              "paragraphs": 15,
+              "ms": 21261
+            },
+            {
+              "paragraphs": 17,
+              "ms": 21417
+            },
+            {
+              "paragraphs": 20,
+              "ms": 25305
+            },
+            {
+              "paragraphs": 23,
+              "ms": 26215
+            },
+            {
+              "paragraphs": 26,
+              "ms": 29044
+            },
+            {
+              "paragraphs": 28,
+              "ms": 29267
+            },
+            {
+              "paragraphs": 30,
+              "ms": 32842
+            },
+            {
+              "paragraphs": 32,
+              "ms": 32863
+            },
+            {
+              "paragraphs": 35,
+              "ms": 33133
+            },
+            {
+              "paragraphs": 37,
+              "ms": 36924
+            },
+            {
+              "paragraphs": 40,
+              "ms": 37334
+            },
+            {
+              "paragraphs": 43,
+              "ms": 41126
+            },
+            {
+              "paragraphs": 46,
+              "ms": 41332
+            },
+            {
+              "paragraphs": 49,
+              "ms": 44742
+            },
+            {
+              "paragraphs": 51,
+              "ms": 44925
+            },
+            {
+              "paragraphs": 52,
+              "ms": 46819
+            },
+            {
+              "paragraphs": 55,
+              "ms": 49608
+            }
+          ],
+          "elapsedMs": 49740
+        },
+        "firstTranslationMs": 9055,
+        "extensionState": {
+          "ok": true,
+          "active": true,
+          "completed": 55,
+          "failed": 0,
+          "error": ""
+        },
+        "completeMs": 49608,
+        "wordsPerSecond": 100.19,
+        "preservation": {
+          "links": 0,
+          "comparison": "Exact per-paragraph multisets; complete sibling phrases may move with translated word order. Renderer independently enforces marker uniqueness, pairing and original parent relationships.",
+          "linksPreserved": true,
+          "formattingPreserved": true
+        },
+        "output": {
+          "translatedParagraphs": 55,
+          "targetScriptParagraphs": 55,
+          "unchangedParagraphs": 0,
+          "languageValidation": "Expected target script present in every paragraph; not a linguistic quality guarantee",
+          "characters": 9967,
+          "sha256": "e0997fe98bb535caba301e75de25f3122154aaedc6374d99509049dab1359f18"
+        },
+        "restored": true,
+        "finishedAt": "2026-10-13T13:54:11.706Z",
+        "exitCode": 0
+      },
+      {
+        "schema": 1,
+        "status": "passed",
+        "startedAt": "2026-10-13T13:54:12.128Z",
+        "sourceUrl": "https://en.wikipedia.org/wiki/History_of_the_United_States",
+        "sourceLanguage": "en",
+        "targetLanguage": "zh-CN",
+        "provider": "Configured OpenAI-compatible endpoint",
+        "model": "opencode-go/deepseek-v4.1-flash",
+        "settings": {
+          "batchSize": 3,
+          "concurrency": 6,
+          "timeout": 45,
+          "reasoningEffort": "none",
+          "cache": false
+        },
+        "method": "Real public page in a clean Chromium extension profile. Select approximately the requested word count in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. Application cache disabled; upstream prompt caching is uncontrolled.",
+        "requests": [],
+        "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+        "buildEvidence": {
+          "schema": 1,
+          "browser": "chrome",
+          "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+          "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
+        },
+        "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+        "totalDeadlineSeconds": 600,
+        "scenario": {
+          "requestedWords": 10000,
+          "snapshotSha256": "959f377ce8946204edb5166a66470c527cf21bcc2f51e9936fc8d39bff3e6a89",
+          "sourceTitle": "History_of_the_United_States"
+        },
+        "browser": "156.0.8078.4",
+        "contentMode": "Plain-text reading view: inline markup removed from selected paragraphs before timing; not original page formatting",
+        "sample": {
+          "words": 9983,
+          "paragraphs": 115,
+          "characters": 64626,
+          "sha256": "b1da268ae6d2933f9b1e9538e710a48bdf98ae2bea27bcd824b4d7f5536182a5",
+          "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+        },
+        "progress": {
+          "done": 115,
+          "events": [
+            {
+              "paragraphs": 3,
+              "ms": 8828
+            },
+            {
+              "paragraphs": 5,
+              "ms": 12923
+            },
+            {
+              "paragraphs": 7,
+              "ms": 12937
+            },
+            {
+              "paragraphs": 10,
+              "ms": 16368
+            },
+            {
+              "paragraphs": 13,
+              "ms": 16396
+            },
+            {
+              "paragraphs": 15,
+              "ms": 20746
+            },
+            {
+              "paragraphs": 17,
+              "ms": 21416
+            },
+            {
+              "paragraphs": 20,
+              "ms": 25116
+            },
+            {
+              "paragraphs": 23,
+              "ms": 25403
+            },
+            {
+              "paragraphs": 26,
+              "ms": 28136
+            },
+            {
+              "paragraphs": 28,
+              "ms": 28468
+            },
+            {
+              "paragraphs": 30,
+              "ms": 31825
+            },
+            {
+              "paragraphs": 32,
+              "ms": 31840
+            },
+            {
+              "paragraphs": 35,
+              "ms": 32665
+            },
+            {
+              "paragraphs": 37,
+              "ms": 36329
+            },
+            {
+              "paragraphs": 40,
+              "ms": 36688
+            },
+            {
+              "paragraphs": 43,
+              "ms": 41245
+            },
+            {
+              "paragraphs": 46,
+              "ms": 41627
+            },
+            {
+              "paragraphs": 49,
+              "ms": 45330
+            },
+            {
+              "paragraphs": 51,
+              "ms": 45635
+            },
+            {
+              "paragraphs": 52,
+              "ms": 47588
+            },
+            {
+              "paragraphs": 54,
+              "ms": 48401
+            },
+            {
+              "paragraphs": 55,
+              "ms": 48859
+            },
+            {
+              "paragraphs": 58,
+              "ms": 50071
+            },
+            {
+              "paragraphs": 61,
+              "ms": 53650
+            },
+            {
+              "paragraphs": 63,
+              "ms": 54432
+            },
+            {
+              "paragraphs": 66,
+              "ms": 57653
+            },
+            {
+              "paragraphs": 69,
+              "ms": 57700
+            },
+            {
+              "paragraphs": 72,
+              "ms": 61704
+            },
+            {
+              "paragraphs": 75,
+              "ms": 62888
+            },
+            {
+              "paragraphs": 78,
+              "ms": 66681
+            },
+            {
+              "paragraphs": 80,
+              "ms": 66803
+            },
+            {
+              "paragraphs": 82,
+              "ms": 71064
+            },
+            {
+              "paragraphs": 85,
+              "ms": 75347
+            },
+            {
+              "paragraphs": 88,
+              "ms": 79887
+            },
+            {
+              "paragraphs": 90,
+              "ms": 79950
+            },
+            {
+              "paragraphs": 93,
+              "ms": 83754
+            },
+            {
+              "paragraphs": 95,
+              "ms": 84355
+            },
+            {
+              "paragraphs": 97,
+              "ms": 87834
+            },
+            {
+              "paragraphs": 99,
+              "ms": 87951
+            },
+            {
+              "paragraphs": 102,
+              "ms": 88034
+            },
+            {
+              "paragraphs": 103,
+              "ms": 90486
+            },
+            {
+              "paragraphs": 106,
+              "ms": 90901
+            },
+            {
+              "paragraphs": 109,
+              "ms": 91692
+            },
+            {
+              "paragraphs": 110,
+              "ms": 93722
+            },
+            {
+              "paragraphs": 111,
+              "ms": 94395
+            },
+            {
+              "paragraphs": 114,
+              "ms": 95050
+            },
+            {
+              "paragraphs": 115,
+              "ms": 95900
+            }
+          ],
+          "elapsedMs": 96000
+        },
+        "firstTranslationMs": 8828,
+        "extensionState": {
+          "ok": true,
+          "active": true,
+          "completed": 115,
+          "failed": 0,
+          "error": ""
+        },
+        "completeMs": 95900,
+        "wordsPerSecond": 104.1,
+        "preservation": {
+          "links": 0,
+          "comparison": "Exact per-paragraph multisets; complete sibling phrases may move with translated word order. Renderer independently enforces marker uniqueness, pairing and original parent relationships.",
+          "linksPreserved": true,
+          "formattingPreserved": true
+        },
+        "output": {
+          "translatedParagraphs": 115,
+          "targetScriptParagraphs": 115,
+          "unchangedParagraphs": 0,
+          "languageValidation": "Expected target script present in every paragraph; not a linguistic quality guarantee",
+          "characters": 20374,
+          "sha256": "b5b433f3d968fb391183ccae9b8cb466f6238d9f5f23d294faae66c49d1de80f"
+        },
+        "restored": true,
+        "finishedAt": "2026-10-13T13:55:50.954Z",
+        "exitCode": 0
+      },
+      {
+        "schema": 1,
+        "status": "passed",
+        "startedAt": "2026-10-13T13:55:51.380Z",
+        "sourceUrl": "https://en.wikipedia.org/wiki/History_of_the_United_States",
+        "sourceLanguage": "en",
+        "targetLanguage": "zh-CN",
+        "provider": "Configured OpenAI-compatible endpoint",
+        "model": "opencode-go/deepseek-v4.1-flash",
+        "settings": {
+          "batchSize": 3,
+          "concurrency": 6,
+          "timeout": 45,
+          "reasoningEffort": "none",
+          "cache": false
+        },
+        "method": "Real public page in a clean Chromium extension profile. Select approximately the requested word count in complete article paragraphs, restrict translation to them, automatically scroll to untranslated paragraphs. Timer starts immediately before page.start. Model output is nonstreaming. Includes bridge, model, scheduling and DOM rendering; excludes browser/page load. Application cache disabled; upstream prompt caching is uncontrolled.",
+        "requests": [],
+        "requestTimingNote": "Browser network events may not expose offscreen worker requests; DOM timings are authoritative",
+        "buildEvidence": {
+          "schema": 1,
+          "browser": "chrome",
+          "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
+          "bundleSha256": "a32fd13dee5a9d0c5d8c605bb6db0fef0ce77dbe8af454e1af00dae7a620ba3c"
+        },
+        "bridgeSourceSha256": "f1c9d5eef09ffd903bb7ee7a961e4d1f4035db3d39ce9a73440d3b77b1a8c6e2",
+        "totalDeadlineSeconds": 600,
+        "scenario": {
+          "requestedWords": 15000,
+          "snapshotSha256": "959f377ce8946204edb5166a66470c527cf21bcc2f51e9936fc8d39bff3e6a89",
+          "sourceTitle": "History_of_the_United_States"
+        },
+        "browser": "156.0.8078.4",
+        "contentMode": "Plain-text reading view: inline markup removed from selected paragraphs before timing; not original page formatting",
+        "sample": {
+          "words": 15031,
+          "paragraphs": 167,
+          "characters": 98620,
+          "sha256": "70d5edcc8a3cadf2b5c85a6cdb2c926e1b29e6b46cc16740b367d108eaf1ca63",
+          "wordCountMethod": "Whitespace-separated tokens in selected complete paragraphs"
+        },
+        "progress": {
+          "done": 167,
+          "events": [
+            {
+              "paragraphs": 3,
+              "ms": 8852
+            },
+            {
+              "paragraphs": 5,
+              "ms": 13210
+            },
+            {
+              "paragraphs": 7,
+              "ms": 13394
+            },
+            {
+              "paragraphs": 10,
+              "ms": 16311
+            },
+            {
+              "paragraphs": 13,
+              "ms": 16531
+            },
+            {
+              "paragraphs": 15,
+              "ms": 20809
+            },
+            {
+              "paragraphs": 17,
+              "ms": 20980
+            },
+            {
+              "paragraphs": 20,
+              "ms": 24999
+            },
+            {
+              "paragraphs": 23,
+              "ms": 25068
+            },
+            {
+              "paragraphs": 26,
+              "ms": 28265
+            },
+            {
+              "paragraphs": 28,
+              "ms": 28298
+            },
+            {
+              "paragraphs": 30,
+              "ms": 31551
+            },
+            {
+              "paragraphs": 32,
+              "ms": 31551
+            },
+            {
+              "paragraphs": 35,
+              "ms": 31905
+            },
+            {
+              "paragraphs": 38,
+              "ms": 35851
+            },
+            {
+              "paragraphs": 40,
+              "ms": 35996
+            },
+            {
+              "paragraphs": 43,
+              "ms": 39254
+            },
+            {
+              "paragraphs": 44,
+              "ms": 39443
+            },
+            {
+              "paragraphs": 46,
+              "ms": 39764
+            },
+            {
+              "paragraphs": 49,
+              "ms": 43233
+            },
+            {
+              "paragraphs": 51,
+              "ms": 43744
+            },
+            {
+              "paragraphs": 52,
+              "ms": 45623
+            },
+            {
+              "paragraphs": 54,
+              "ms": 46476
+            },
+            {
+              "paragraphs": 55,
+              "ms": 47360
+            },
+            {
+              "paragraphs": 58,
+              "ms": 48444
+            },
+            {
+              "paragraphs": 61,
+              "ms": 51386
+            },
+            {
+              "paragraphs": 63,
+              "ms": 52138
+            },
+            {
+              "paragraphs": 66,
+              "ms": 55105
+            },
+            {
+              "paragraphs": 69,
+              "ms": 55738
+            },
+            {
+              "paragraphs": 72,
+              "ms": 60825
+            },
+            {
+              "paragraphs": 75,
+              "ms": 64514
+            },
+            {
+              "paragraphs": 77,
+              "ms": 68115
+            },
+            {
+              "paragraphs": 80,
+              "ms": 69016
+            },
+            {
+              "paragraphs": 83,
+              "ms": 73634
+            },
+            {
+              "paragraphs": 85,
+              "ms": 73815
+            },
+            {
+              "paragraphs": 87,
+              "ms": 77555
+            },
+            {
+              "paragraphs": 90,
+              "ms": 77922
+            },
+            {
+              "paragraphs": 93,
+              "ms": 81826
+            },
+            {
+              "paragraphs": 95,
+              "ms": 82127
+            },
+            {
+              "paragraphs": 97,
+              "ms": 85653
+            },
+            {
+              "paragraphs": 100,
+              "ms": 86031
+            },
+            {
+              "paragraphs": 102,
+              "ms": 86795
+            },
+            {
+              "paragraphs": 104,
+              "ms": 89365
+            },
+            {
+              "paragraphs": 106,
+              "ms": 89433
+            },
+            {
+              "paragraphs": 109,
+              "ms": 90297
+            },
+            {
+              "paragraphs": 110,
+              "ms": 92274
+            },
+            {
+              "paragraphs": 111,
+              "ms": 93572
+            },
+            {
+              "paragraphs": 112,
+              "ms": 94033
+            },
+            {
+              "paragraphs": 115,
+              "ms": 94156
+            },
+            {
+              "paragraphs": 117,
+              "ms": 96647
+            },
+            {
+              "paragraphs": 120,
+              "ms": 97652
+            },
+            {
+              "paragraphs": 122,
+              "ms": 97679
+            },
+            {
+              "paragraphs": 125,
+              "ms": 102552
+            },
+            {
+              "paragraphs": 128,
+              "ms": 103053
+            },
+            {
+              "paragraphs": 131,
+              "ms": 107864
+            },
+            {
+              "paragraphs": 134,
+              "ms": 112266
+            },
+            {
+              "paragraphs": 137,
+              "ms": 113100
+            },
+            {
+              "paragraphs": 139,
+              "ms": 117433
+            },
+            {
+              "paragraphs": 141,
+              "ms": 118467
+            },
+            {
+              "paragraphs": 144,
+              "ms": 122692
+            },
+            {
+              "paragraphs": 147,
+              "ms": 122789
+            },
+            {
+              "paragraphs": 149,
+              "ms": 126793
+            },
+            {
+              "paragraphs": 152,
+              "ms": 128150
+            },
+            {
+              "paragraphs": 154,
+              "ms": 130996
+            },
+            {
+              "paragraphs": 157,
+              "ms": 132964
+            },
+            {
+              "paragraphs": 159,
+              "ms": 136948
+            },
+            {
+              "paragraphs": 162,
+              "ms": 137639
+            },
+            {
+              "paragraphs": 163,
+              "ms": 140119
+            },
+            {
+              "paragraphs": 164,
+              "ms": 142715
+            },
+            {
+              "paragraphs": 167,
+              "ms": 145333
+            }
+          ],
+          "elapsedMs": 145447
+        },
+        "firstTranslationMs": 8852,
+        "extensionState": {
+          "ok": true,
+          "active": true,
+          "completed": 167,
+          "failed": 0,
+          "error": ""
+        },
+        "completeMs": 145333,
+        "wordsPerSecond": 103.42,
+        "preservation": {
+          "links": 0,
+          "comparison": "Exact per-paragraph multisets; complete sibling phrases may move with translated word order. Renderer independently enforces marker uniqueness, pairing and original parent relationships.",
+          "linksPreserved": true,
+          "formattingPreserved": true
+        },
+        "output": {
+          "translatedParagraphs": 167,
+          "targetScriptParagraphs": 167,
+          "unchangedParagraphs": 0,
+          "languageValidation": "Expected target script present in every paragraph; not a linguistic quality guarantee",
+          "characters": 31766,
+          "sha256": "a850fb7d62f09c722ebdc75b3920c84e519ca818ae7f2b6861e857152911102c"
+        },
+        "restored": true,
+        "finishedAt": "2026-10-13T13:58:19.699Z",
+        "exitCode": 0
+      }
+    ]
+  }
+}

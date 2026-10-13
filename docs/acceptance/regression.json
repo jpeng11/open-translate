@@ -2,9 +2,9 @@
   "schema": 1,
   "suite": "regression",
   "status": "passed",
-  "testedAt": "2026-10-13T03:14:03.057Z",
+  "testedAt": "2026-10-13T14:00:33.695Z",
   "implementationSha256": "357dc38fc3bb944b987d2eba10c9dd68a5332e24b93577799a783f38cfc1ca59",
-  "verificationSha256": "77a693dd15e83d7af2ae9d10941bfd6ad9401450a9d50a550056eeb8c3922a6b",
+  "verificationSha256": "90781128f3a0b7ee4f37424f81c9c08dc4f9bcf2e30691aef3532d40c4d826ce",
   "buildEvidence": {
     "schema": 1,
     "browser": "chrome",
@@ -16,41 +16,41 @@
       "id": "node",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 874,
-      "logSha256": "ef56cbc50a4d02f8fdfd632b7b2c134b8b116cea2b5375c4b24a94735d2d42e0"
+      "durationMs": 836,
+      "logSha256": "01bf69d5296ad82ac0929424f480e6df41aa7912ab370883878ab0394da154c2"
     },
     {
       "id": "python",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 2132,
-      "logSha256": "0f0d874d55bd77e241db59a4db390544d03df716732c2f9a3d84257c557634d1"
+      "durationMs": 2121,
+      "logSha256": "b8224d3f7d06d174510a451facbdff09bc8eea54d1ec7f25eab77321a2991718"
     },
     {
       "id": "build",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 11309,
-      "logSha256": "5cf1b293eb0bffa8d7cfc02eee27e03f6d5ad76a1a31c578c46288f43bd1ef28"
+      "durationMs": 10891,
+      "logSha256": "2a7a8008dc402b836a52a107677447c55c6d5defd64f0cbd37ab4683ec5adc15"
     },
     {
       "id": "chromium",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 117111,
-      "logSha256": "bcff320e6fd16e1fd6efc69e496e32b3ff6b95165ccbe63dda75a2a2a64b1979"
+      "durationMs": 116460,
+      "logSha256": "70ec81148f1d6ce9f8d7071dc2ba419e26ef7613d32f29e284ed55968b77b480"
     },
     {
       "id": "firefox",
       "status": "passed",
       "exitCode": 0,
-      "durationMs": 3083,
+      "durationMs": 3139,
       "logSha256": "924f41693f955e6f50bdbb54b8b9f51359d73f7e68128ac828ee5e74350eeb13"
     }
   ],
   "browser": {
-    "startTime": "2026-10-13T03:12:03.296Z",
-    "duration": 116369.168,
+    "startTime": "2026-10-13T13:58:34.568Z",
+    "duration": 115724.95999999999,
     "expected": 58,
     "skipped": 0,
     "unexpected": 0,

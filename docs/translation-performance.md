@@ -1,6 +1,66 @@
 # Translation performance
 
-## Current result: DeepSeek below five seconds
+## Long articles: 5,000 / 10,000 / 15,000 words, five languages
+
+On 2026-10-13, the same DeepSeek profile was tested on a different article: [History of the United States](https://en.wikipedia.org/wiki/History_of_the_United_States). A fixed HTML snapshot of [revision 1379968084](https://en.wikipedia.org/w/index.php?title=History_of_the_United_States&oldid=1379968084) supplied nested prefixes of complete body paragraphs. Each size/language combination ran once, sequentially, in a fresh Linux Chromium extension profile with the application translation cache disabled. These are not Mac, Safari or mobile-device timings. Upstream prompt caching and service load were not controlled.
+
+The settings remain batch size **3**, concurrency **6**, reasoning **none** (`thinking: disabled`, temperature `0`), JSON mode on, per-request timeout **45 seconds**, and whole-run deadline **600 seconds**. Long pages retain viewport scheduling; the harness scrolls to the first unfinished paragraph every 250 ms. These are whole-page workflow measurements, including scroll-triggered scheduling, rather than isolated model throughput.
+
+| Requested size | Actual English words / paragraphs | Chinese | French | Spanish | Japanese | Korean |
+| --- | --- | --- | --- | --- | --- | --- |
+| 5,000 | 4,970 / 55 | Failed (7/55 paragraphs) | 65.99 s | 64.96 s | 88.67 s | 85.74 s |
+| 10,000 | 9,983 / 115 | Failed (52/115 paragraphs) | 131.44 s | 129.51 s | Failed (13/115 paragraphs) | Failed (5/115 paragraphs) |
+| 15,000 | 15,031 / 167 | Failed (44/167 paragraphs) | Failed (137/167 paragraphs) | 193.01 s | Failed (13/167 paragraphs) | Failed (35/167 paragraphs) |
+
+**7 of 15 cases passed; 8 stopped after a protected-formatting-marker error.** Only fully completed, structurally valid runs receive a complete-page time. The paragraph counts beside failures show rendered progress when the run stopped, not a translation speed.
+
+| Requested words | Target | First translated paragraphs | Full result / failure time |
+| --- | --- | ---: | --- |
+| 5,000 | Chinese | 11.96 s | Stopped at 21.87 s: Translation failed: Agent changed protected markup or terminology. |
+| 5,000 | French | 10.31 s | Passed in 65.99 s |
+| 5,000 | Spanish | 14.23 s | Passed in 64.96 s |
+| 5,000 | Japanese | 18.31 s | Passed in 88.67 s |
+| 5,000 | Korean | 18.27 s | Passed in 85.74 s |
+| 10,000 | Chinese | 10.82 s | Stopped at 56.59 s: Translation failed: Agent changed protected markup or terminology. |
+| 10,000 | French | 10.18 s | Passed in 131.44 s |
+| 10,000 | Spanish | 14.17 s | Passed in 129.51 s |
+| 10,000 | Japanese | 17.41 s | Stopped at 41.76 s: Translation failed: Agent changed protected markup or terminology. |
+| 10,000 | Korean | 20.91 s | Stopped at 29.10 s: Translation failed: Agent changed protected markup or terminology. |
+| 15,000 | Chinese | 14.29 s | Stopped at 50.89 s: Translation failed: Agent changed protected markup or terminology. |
+| 15,000 | French | 9.76 s | Stopped at 167.26 s: Translation failed: Agent changed protected markup or terminology. |
+| 15,000 | Spanish | 13.86 s | Passed in 193.01 s |
+| 15,000 | Japanese | 18.42 s | Stopped at 44.35 s: Translation failed: Agent changed protected markup or terminology. |
+| 15,000 | Korean | 19.12 s | Stopped at 73.30 s: Translation failed: Agent changed protected markup or terminology. |
+
+Passing runs require every selected paragraph to contain changed, nonempty output, exact per-paragraph link and formatting multisets, and exact source DOM restoration. Chinese, Japanese and Korean also require the expected script in every paragraph. These checks do not establish sentence-level semantic completeness. The raw source/translation pairs and screenshots stay in ignored local benchmark artifacts; the public [measurement record](acceptance/long-multilingual-performance.json) contains counts, hashes, settings, progress events and failures.
+
+The earlier sub-five-second result applies to the 977-word sample below. It is not a result for these longer pages.
+
+### Plain-text Chinese diagnostic
+
+After all 15 original-format cases, the failed Chinese sizes were rerun with inline HTML removed before translation. The source text hashes remain identical. This is a diagnostic reading view, **not** an original-format acceptance pass: links and inline formatting are absent. It retains the same viewport scheduling and model settings.
+
+| Actual English words | First translated paragraphs | Complete plain reading view |
+| --- | ---: | ---: |
+| 4,970 | 9.05 s | 49.61 s |
+| 9,983 | 8.83 s | 95.90 s |
+| 15,031 | 8.85 s | 145.33 s |
+
+These runs isolate removal of inline formatting; they do not isolate pure model latency because scrolling, browser layout and request batching also remain part of the workflow.
+
+### Reproduce a long-article case
+
+Supply an optional final scenario argument to the existing page benchmark. The scenario JSON selects the URL, approximate word count, target language and optional local HTML snapshot. All cases should use the same snapshot to keep the source stable.
+
+```json
+{"url":"https://en.wikipedia.org/wiki/History_of_the_United_States","title":"History of the United States","words":5000,"target":"fr","snapshot":"/private/source.html","attribution":"Wikipedia contributors, History of the United States, CC BY-SA 4.0"}
+```
+
+```bash
+node scripts/benchmark-page.mjs /private/deepseek.json 3 formatted 6 dist/benchmarks/5000-fr 600 /private/scenario.json
+```
+
+## 977-word baseline: DeepSeek below five seconds
 
 On 2026-10-13, `opencode-go/deepseek-v4.1-flash` completed the same original-format 977-word English → Simplified Chinese page in **3.799 s, 4.327 s and 3.822 s** across three sequential fresh-profile runs. All 16 paragraphs, 70 links, formatting structure and exact source restoration passed. The median was **3.822 s**. This is a measured result for this sample and endpoint, not a five-second guarantee for every page or model. Full iteration history and request usage are in the [DeepSeek qualification record](acceptance/deepseek-five-second.json).
 
