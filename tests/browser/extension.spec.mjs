@@ -5,7 +5,7 @@ import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
 import {zipSync,strToU8,unzipSync,strFromU8} from 'fflate';
 import {PDFDocument,StandardFonts} from 'pdf-lib';
-let server,origin,context,worker,id,profile,requests=[],delay=0,bad=false;
+let server,origin,context,worker,id,profile,requests=[],delay=0,bad=false,providerActive=0,providerPeak=0;
 const html=`<!doctype html><html><head><title>Translation fixture</title></head><body><main><p id="plain">Hello world.</p><p id="inline">Read <a href="https://example.com" id="link">this link</a> and <strong>bold words</strong> {0}.</p><p id="code">Use <code>npm install</code> today.</p><pre id="pre">Do not translate this code</pre><textarea id="input">Hello input</textarea><input type="password" value="private"><p translate="no">Leave original</p><div id="dynamic"></div><div id="shadow"></div></main></body></html>`;
 async function settings(extra={}){await worker.evaluate(async settings=>{await chrome.storage.local.set({settings});}, {provider:'openai',apiUrl:origin+'/v1',model:'fixture',apiKey:'private-test-key',source:'auto',target:'fr',inputTarget:'es',mode:'bilingual',style:'underline',batchSize:4,concurrency:1,timeout:10,jsonMode:true,glossary:[],rules:[],cache:false,...extra});}
 async function command(page,type,extra={}){const tabId=await worker.evaluate(async url=>(await chrome.tabs.query({})).find(t=>t.url===url)?.id,page.url());return worker.evaluate(async({tabId,type,extra})=>chrome.tabs.sendMessage(tabId,{type,...extra}),{tabId,type,extra});}
@@ -13,7 +13,7 @@ async function app(hash='home'){const page=await context.newPage();await page.go
 async function fileUpload(page,input,name,content,mimeType='application/octet-stream'){await page.locator(input).setInputFiles({name,mimeType,buffer:Buffer.from(content)});}
 async function downloaded(page,button){const result=page.waitForEvent('download');await page.locator(button).click();return readFile(await (await result).path());}
 test.beforeAll(async()=>{
- server=createServer(async(req,res)=>{res.setHeader('Access-Control-Allow-Origin','*');res.setHeader('Access-Control-Allow-Headers','*');if(req.method==='OPTIONS'){res.end();return;}if(req.url==='/page'){res.setHeader('Content-Type','text/html');res.end(html);return;}if(req.method==='GET'){res.writeHead(404);res.end();return;}let body='';for await(const chunk of req)body+=chunk; if(req.url==='/v1/audio/transcriptions'){res.setHeader('Content-Type','application/json');res.end(JSON.stringify({text:'Hello audio'}));return;}const value=JSON.parse(body);requests.push({path:req.url,authorization:req.headers.authorization,value});if(delay)await new Promise(r=>setTimeout(r,delay));res.setHeader('Content-Type','application/json');if(bad){res.end(JSON.stringify({choices:[{message:{content:'bad JSON'}}]}));return;}const input=JSON.parse(value.messages.at(-1).content);const translations=input.items.map(item=>({id:item.id,text:'Translated '+item.text})).reverse();res.end(JSON.stringify({choices:[{finish_reason:'stop',message:{content:JSON.stringify({translations})}}]}));});
+ server=createServer(async(req,res)=>{res.setHeader('Access-Control-Allow-Origin','*');res.setHeader('Access-Control-Allow-Headers','*');if(req.method==='OPTIONS'){res.end();return;}if(req.url==='/page'){res.setHeader('Content-Type','text/html');res.end(html);return;}if(req.method==='GET'){res.writeHead(404);res.end();return;}let body='';for await(const chunk of req)body+=chunk; if(req.url==='/v1/audio/transcriptions'){res.setHeader('Content-Type','application/json');res.end(JSON.stringify({text:'Hello audio'}));return;}const value=JSON.parse(body);requests.push({path:req.url,authorization:req.headers.authorization,value});providerPeak=Math.max(providerPeak,++providerActive);res.once('finish',()=>providerActive--);if(delay)await new Promise(r=>setTimeout(r,delay));res.setHeader('Content-Type','application/json');if(bad){res.end(JSON.stringify({choices:[{message:{content:'bad JSON'}}]}));return;}const input=JSON.parse(value.messages.at(-1).content);const translations=input.items.map(item=>({id:item.id,text:'Translated '+item.text})).reverse();res.end(JSON.stringify({choices:[{finish_reason:'stop',message:{content:JSON.stringify({translations})}}]}));});
  await new Promise(r=>server.listen(0,'127.0.0.1',r));origin=`http://127.0.0.1:${server.address().port}`;profile=await mkdtemp(join(tmpdir(),'open-translate-browser-'));context=await chromium.launchPersistentContext(profile,{channel:'chromium',headless:true,ignoreDefaultArgs:['--disable-extensions'],args:['--no-sandbox',`--disable-extensions-except=${resolve('dist/chrome')}`,`--load-extension=${resolve('dist/chrome')}`]});worker=context.serviceWorkers()[0] || await context.waitForEvent('serviceworker');id=worker.url().split('/')[2];await settings();
 });
 test.afterAll(async()=>{await context?.close();await new Promise(r=>server?.close(r));await rm(profile,{recursive:true,force:true});});
@@ -71,4 +71,18 @@ test('popup language labels and display/cache controls persist through reopening
  await expect.poll(()=>worker.evaluate(async()=> (await chrome.storage.local.get('settings')).settings.cache)).toBe(true);
  await popup.close();popup=await context.newPage();await popup.goto(`chrome-extension://${id}/popup.html`);
  await expect(popup.locator('#mode')).toHaveValue('translation');await expect(popup.locator('#cache')).toBeChecked();await popup.close();
+});
+
+test('page scan fills initial batches, respects concurrency and discards parallel results after restore',async()=>{
+ await settings({batchSize:2,concurrency:2});delay=450;providerPeak=0;
+ const page=await context.newPage();await page.goto(origin+'/page');
+ await page.evaluate(()=>document.body.innerHTML=Array.from({length:6},(_,i)=>`<p>Parallel source ${i}.</p>`).join(''));
+ await command(page,'page.start');await expect(page.locator('[data-ot-target]')).toHaveCount(6);
+ expect(requests).toHaveLength(3);expect(providerPeak).toBe(2);
+ expect(JSON.parse(requests[0].value.messages.at(-1).content).items).toHaveLength(2);
+ expect(await page.locator('[data-ot-target]').allTextContents()).toEqual(Array.from({length:6},(_,i)=>`Translated Parallel source ${i}.`));
+ await command(page,'page.restore');requests=[];
+ await page.evaluate(()=>document.querySelectorAll('p').forEach((p,i)=>p.textContent=`Cancelled parallel source ${i}.`));
+ await command(page,'page.start');await expect.poll(()=>requests.length).toBe(2);await command(page,'page.restore');
+ await page.waitForTimeout(650);expect(requests).toHaveLength(2);await expect(page.locator('[data-ot-target]')).toHaveCount(0);await page.close();
 });

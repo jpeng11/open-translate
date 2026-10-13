@@ -55,7 +55,7 @@ export function validateSettings(input) {
   return value;
 }
 export function publicSettings(settings, pageUrl='') {
-  const keys=['source','target','inputTarget','mode','style','batchSize','selection','hover','autoTranslate','captionSelector'];
+  const keys=['source','target','inputTarget','mode','style','batchSize','concurrency','selection','hover','autoTranslate','captionSelector'];
   const result=Object.fromEntries(keys.map(k=>[k,settings[k]]));
   let host=''; try { host=new URL(pageUrl).host; } catch {}
   for (const rule of settings.rules || []) {

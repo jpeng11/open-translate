@@ -2,7 +2,7 @@ import {candidates,serialize,insertTranslation,restoreElement,sourceNodes,own,un
 import {pageRule} from './site-adapters.mjs';
 import {CaptionReader,CaptionOverlay,captionRoots,installSubtitleSidecar} from './captions.mjs';
 const api=globalThis.browser || chrome;
-let config={},active=false,epoch=0,processing=false,scanTimer,viewportTimer,hovered,input,lastSelection='',captionOn=false,captionLast='';
+let config={},active=false,epoch=0,processing=0,drainScheduled=false,scanTimer,viewportTimer,hovered,input,lastSelection='',captionOn=false,captionLast='';
 const states=new Map(),queue=new Set(),roots=new Set();let completed=0,failed=0,lastError='';
 const send=async message=>{const response=await api.runtime.sendMessage(message);if(!response?.ok)throw new Error(response?.error?.message || 'Open Translate is unavailable.');return response.result;};
 const translate=texts=>send({type:'translate',job:{source_lang:config.source || 'auto',target_lang:config.target || 'en',text_list:texts}});
@@ -24,7 +24,7 @@ function notification(text,result=false) {
 }
 function report(){notification(`Translated ${completed} paragraphs${failed?`; ${failed} failed. Restore and retry after checking your agent.`:''}`);}
 const visibility=new IntersectionObserver(entries=>{for(const entry of entries)if(entry.isIntersecting){visibility.unobserve(entry.target);enqueue(entry.target);}},{rootMargin:'600px 0px'});
-function enqueue(element) {if(!active || !element.isConnected)return;const state=states.get(element);if(state?.status==='pending'||state?.status==='done'||state?.status==='error')return;queue.add(element);void drain();}
+function enqueue(element) {if(!active || !element.isConnected)return;const state=states.get(element);if(state?.status==='pending'||state?.status==='done'||state?.status==='error')return;queue.add(element);scheduleDrain();}
 function viewportChanged(){if(active && !viewportTimer)viewportTimer=setTimeout(()=>{viewportTimer=undefined;if(active)scan();},120);}
 addEventListener('resize',viewportChanged,{passive:true});
 function addRoot(root) {
@@ -57,26 +57,32 @@ function scan() {
     }
   }catch(error){notification(error.message);}
 }
-async function drain() {
-  if(processing || !active)return;processing=true;
-  try {
-    while(active && queue.size) {
-      const currentEpoch=epoch;
-      const pending=[];let chars=0;for(const element of queue){const length=serialize(element).text.length;if(pending.length && (pending.length>=(config.batchSize || 4) || chars+length>12000))break;pending.push(element);chars+=length;}pending.forEach(el=>queue.delete(el));
-      const work=pending.filter(el=>el.isConnected).map(element=>{const serialized=serialize(element);const state={element,serialized,text:serialized.text,status:'pending'};states.set(element,state);return state;});
-      if(!work.length)continue;
-      try {
-        const response=await translate(work.map(item=>item.text));
-        if(currentEpoch!==epoch || !active)continue;
-        response.translations.forEach((entry,index)=>{
-          const state=work[index];
-          if(!state.element.isConnected || serialize(state.element).text!==state.text){states.delete(state.element);return;}
-          try{insertTranslation(state.element,state.serialized.render(entry.text),config);state.status='done';completed++;}
-          catch(error){state.status='error';failed++;lastError=error.message;notification(error.message);}
-        });report();
-      }catch(error){if(currentEpoch===epoch){for(const state of work)state.status='error';failed+=work.length;lastError=error.message;notification(error.message);}}
-    }
-  }finally{processing=false;if(active && queue.size)void drain();}
+function scheduleDrain() {
+  if(drainScheduled)return;
+  drainScheduled=true;
+  // Collect the synchronous scan before sending: the first paragraph should
+  // not consume a full CLI session while its neighbours are still enqueued.
+  queueMicrotask(()=>{drainScheduled=false;drain();});
+}
+function drain() {
+  while(active && queue.size && processing<(config.concurrency || 1)) {
+    const currentEpoch=epoch;
+    const pending=[];let chars=0;for(const element of queue){const length=serialize(element).text.length;if(pending.length && (pending.length>=(config.batchSize || 4) || chars+length>12000))break;pending.push(element);chars+=length;}pending.forEach(el=>queue.delete(el));
+    const work=pending.filter(el=>el.isConnected).map(element=>{const serialized=serialize(element);const state={element,serialized,text:serialized.text,status:'pending'};states.set(element,state);return state;});
+    if(!work.length)continue;
+    processing++;
+    translate(work.map(item=>item.text)).then(response=>{
+      if(currentEpoch!==epoch || !active)return;
+      response.translations.forEach((entry,index)=>{
+        const state=work[index];
+        if(!state.element.isConnected || serialize(state.element).text!==state.text){states.delete(state.element);return;}
+        try{insertTranslation(state.element,state.serialized.render(entry.text),config);state.status='done';completed++;}
+        catch(error){state.status='error';failed++;lastError=error.message;notification(error.message);}
+      });report();
+    }).catch(error=>{
+      if(currentEpoch===epoch){for(const state of work)state.status='error';failed+=work.length;lastError=error.message;notification(error.message);}
+    }).finally(()=>{processing--;if(active && queue.size)scheduleDrain();});
+  }
 }
 async function start() {
   config=await send({type:'settings.public'});

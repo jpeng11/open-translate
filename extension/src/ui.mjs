@@ -9,14 +9,25 @@ export function download(data,name,mime='text/plain') {
   const url=URL.createObjectURL(new Blob([data],{type:mime})),link=document.createElement('a');link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),10000);
 }
 export async function translateAll(items,config,progress=()=>{},signal) {
-  const output=[];let completed=0;
-  for(const batch of batches(items,config.batchSize,12000)) {
-    if(signal?.aborted)throw new DOMException('Translation cancelled.','AbortError');
-    const result=await send({type:'translate',job:{source_lang:config.source,target_lang:config.target,text_list:batch}});
-    if(signal?.aborted)throw new DOMException('Translation cancelled.','AbortError');
-    output.push(...result.translations.map(item=>item.text));completed+=batch.length;progress(completed,items.length);
+  const grouped=batches(items,config.batchSize,12000),results=new Array(grouped.length);
+  let cursor=0,completed=0,failure;
+  const cancelled=()=>new DOMException('Translation cancelled.','AbortError');
+  async function run(){
+    while(!failure && cursor<grouped.length){
+      if(signal?.aborted){failure=cancelled();return;}
+      const index=cursor++,batch=grouped[index];
+      try{
+        const result=await send({type:'translate',job:{source_lang:config.source,target_lang:config.target,text_list:batch}});
+        if(signal?.aborted){failure=cancelled();return;}
+        if(failure)return;
+        results[index]=result.translations.map(item=>item.text);completed+=batch.length;progress(completed,items.length);
+      }catch(error){failure ||= error;return;}
+    }
   }
-  return output;
+  await Promise.all(Array.from({length:Math.min(config.concurrency || 1,grouped.length)},run));
+  if(signal?.aborted)throw cancelled();
+  if(failure)throw failure;
+  return results.flat();
 }
 export function resultRows(id,items,translated,limit=100) {
   const root=$(id);root.replaceChildren();
