@@ -4,6 +4,14 @@ Acceptance date: 2026-10-12. The current product follows the [accepted behavior 
 
 The full functional acceptance at commit `775d87e` used implementation SHA-256 `959eda573d5da737ad0daa5926ca4631e011958af8310004a12033ee92b2b2df`. The Linux Chromium bundle is `2e9f0a1031df4b235bcc5be95cfe7d46058c01132d5d95118871b7f716a90452`; the Mac bundle is `176e45849b428105e5b7ec09e54d9f012c9b9129639dcb6d6d9ee8b5b38f0b7d`. They contain the same implementation inputs; platform-produced bundle bytes differ and are separately recorded.
 
+## Scheduling and regression refresh (2026-10-13)
+
+At `ae2b2a2`, page scans fill batches before dispatch and run independent requests up to the configured concurrency. Document, text and subtitle translation also use that limit while retaining item order and cancellation behavior. The default remains one; bridge concurrency must be raised separately before using concurrent AGY requests.
+
+The complete refresh passed 70 Node tests, 46 Python tests, 52 Chromium cases and actual Firefox MV3 acceptance. Five public sites and both long/dynamic-page stress fixtures passed. The document (19 cases) and media (33 cases) reports are subsets of that same complete regression. `npm run acceptance:verify` passed for all four current reports. These results bind implementation `87b571b53ad440d27264b85bb68e75cd2c88ddf9351a326bc37df67fc8e5eec7`; the sections below retain historical evidence and limitations. Safari/device testing remains separate.
+
+On the Mac, the original-format 977-word AGY benchmark with both extension and isolated bridge concurrency set to four finished in 31.502 seconds (first result 9.155 seconds). All 16 paragraphs, 70 links, formatting and exact restoration passed. This is one run with the same configured model, not an isolated attribution of the entire speed change to scheduling. It remains above the 1–2 second whole-page target.
+
 ## AGY rich-text fix (2026-10-13)
 
 The active Mac bridge uses AGY CLI 1.3.2 with `--model gemini-3.8-flash-low`. The previous 977-word Wikipedia benchmark failed when the model changed formatting markers. AGY now translates context-linked text fragments and reconstructs formatting locally; strict item validation still rejects incomplete results. The 66 Node and 46 Python tests pass, including seven new fragment regressions.
