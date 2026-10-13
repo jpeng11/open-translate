@@ -12,6 +12,7 @@ import tempfile
 import time
 
 from .agent import BatchTranslator, BridgeError, MAX_RESPONSE, INSTRUCTIONS
+from .fragments import PROTECTED, complete_chunk, translate_formatted
 
 
 SCHEMA = {
@@ -53,19 +54,24 @@ class AgyAgent(BatchTranslator):
             raise ValueError("Agent timeout must be positive")
 
     def translate(self, job):
-        # One bounded fresh-session recovery for malformed text or accidental tools.
-        # Never retry authentication/quota failures, and never accept a tool result.
         deadline = time.monotonic() + self.timeout
-        for attempt in range(2):
-            remaining = deadline - time.monotonic()
-            if remaining <= 0:
-                raise BridgeError(504, "agy_timeout", "AGY translation timed out")
-            try:
-                agent = replace(self, timeout=remaining)
-                return BatchTranslator.translate(agent, job)
-            except BridgeError as error:
-                if attempt or error.code not in {"agy_tool_use", "placeholder_mismatch", "invalid_agy_response", "invalid_translation_batch", "invalid_agent_response"}:
-                    raise
+
+        def run(operation):
+            # Each chunk may recover once; all calls share the original deadline.
+            for attempt in range(2):
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    raise BridgeError(504, "agy_timeout", "AGY translation timed out")
+                try:
+                    return operation(replace(self, timeout=remaining))
+                except BridgeError as error:
+                    if attempt or error.code not in {"agy_tool_use", "placeholder_mismatch", "invalid_agy_response", "invalid_translation_batch", "invalid_agent_response"}:
+                        raise
+
+        if any(PROTECTED.search(text) for text in job["text_list"]):
+            return translate_formatted(job, lambda items, contexts:
+                run(lambda agent: complete_chunk(agent, job, items, contexts)))
+        return run(lambda agent: BatchTranslator.translate(agent, job))
 
     def complete(self, payload):
         # Text travels over stdin, rather than appearing in a process command line.
