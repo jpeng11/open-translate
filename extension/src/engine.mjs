@@ -35,7 +35,7 @@ export function createEngine() {
   };
   return {
     async translate(job, settings) {
-      const signature=JSON.stringify({protocol:'literal-inline-v3',job,provider:settings.provider,url:settings.provider==='bridge'?settings.bridgeUrl:settings.apiUrl,
+      const signature=JSON.stringify({protocol:'structural-markers-v5',job,provider:settings.provider,url:settings.provider==='bridge'?settings.bridgeUrl:settings.apiUrl,
         model:settings.model,account:settings.apiKey,glossary:settings.glossary,jsonMode:settings.jsonMode,reasoningEffort:settings.reasoningEffort || ''});
       const hash=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(signature));
       const key=Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,'0')).join('');

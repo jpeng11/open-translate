@@ -62,6 +62,22 @@ test('bridge uses exact configured URL and normalizes ordered results',async()=>
   return new Response(JSON.stringify({translations:[{text:'Hello',detected_source_lang:'fr'}]}));
  });assert.equal(result.translations[0].text,'Hello');
 });
+test('explicit DeepSeek no-reasoning uses its thinking switch without a conflicting effort',async()=>{
+ const job={source_lang:'en',target_lang:'zh-CN',text_list:['Hello']};
+ for(const model of ['deepseek-v4.1-flash','opencode-go/deepseek-v4.1-flash','deepseek-v4-pro','deepseek-flash']){
+  await translateBatch(job,{...settings,model,reasoningEffort:'none'},async(_url,init)=>{
+   const body=JSON.parse(init.body);
+   assert.deepEqual(body.thinking,{type:'disabled'});assert.equal(body.reasoning_effort,undefined);
+   return envelope({translations:[{id:0,text:'你好'}]});
+  });
+ }
+ for(const [model,reasoningEffort] of [['opencode-go/deepseek-v4.1-flash','low'],['opencode-go/deepseek-v4.1-flash',''],['custom-deepseek-alias','none']]){
+  await translateBatch(job,{...settings,model,reasoningEffort},async(_url,init)=>{
+   const body=JSON.parse(init.body);assert.equal(body.thinking,undefined);assert.equal(body.reasoning_effort,reasoningEffort||undefined);
+   return envelope({translations:[{id:0,text:'你好'}]});
+  });
+ }
+});
 test('provider failures and incomplete batches never become translated text',async()=>{
  for(const response of [new Response('private-key source',{status:401}),envelope({translations:[]}),envelope({translations:[{id:2,text:'x'}]})]) {
   await assert.rejects(translateBatch({source_lang:'fr',target_lang:'en',text_list:['Bonjour']},settings,async()=>response),e=>!e.message.includes('private-key source'));
@@ -114,9 +130,14 @@ test('direct requests keep short native markers and omit redundant language dete
   return envelope({translations:[{id:0,text:'Lisez {0}ce lien{1}.'}]});
  });
  assert.equal(result.translations[0].text,'Lisez {0}ce lien{1}.');
- for(const text of ['Lisez ce lien.','Lisez {1}ce lien{0}.','Lisez {0}ce lien{1}{1}.']){
+ for(const text of ['Lisez ce lien.','Lisez {0}ce lien{2}.','Lisez {0}ce lien{1}{1}.']){
   await assert.rejects(translateBatch(job,settings,async()=>envelope({translations:[{id:0,text}]})),e=>e.code==='placeholder_mismatch');
  }
+});
+test('numeric markers allow phrase order changes but require the exact marker multiset',()=>{
+ const p=protect('{0}Translate{1} a {2}language{3}',[],'numeric',false);
+ assert.equal(p.restore('将一种{2}语言{3}{0}翻译{1}'),'将一种{2}语言{3}{0}翻译{1}');
+ for(const text of ['将一种语言{0}翻译{1}','{0}{1}{2}{3}{3}','{0}{1}{2}{9}'])assert.throws(()=>p.restore(text),e=>e.code==='placeholder_mismatch');
 });
 test('glossary substitutions do not modify native tags or their attributes',()=>{
  const p=protect('<a title="link">a link</a> {0}',[{source:'a',target:'un'},{source:'link',target:'lien'}],'terms',false);
